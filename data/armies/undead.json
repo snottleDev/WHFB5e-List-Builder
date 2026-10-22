@@ -1,0 +1,778 @@
+{
+  "id": "undead",
+  "name": "The Undead",
+  "source": "Warhammer Armies: The Undead (4th edition), army list pp.78-99 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the Undead bestiary (pp.58-71) and army list",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "regiments", "name": "Regiments", "min": 25},
+    {"id": "war-machines", "name": "War Machines", "max": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {
+    "necromancer": "Necromancer",
+    "vampire": "Vampire",
+    "liche": "Liche",
+    "mummy": "Mummy Tomb King",
+    "wight": "Wight",
+    "wraith": "Wraith",
+    "skeleton-horseman": "Skeleton Horseman"
+  },
+  "racePlurals": {"mummy": "Mummy Tomb Kings", "skeleton-horseman": "Skeleton Horsemen"},
+  "championName": "Champion",
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee"},
+    {"id": "flail", "name": "Flail", "cost": 1, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "lance", "name": "Lance (mounted only)", "cost": 2, "group": "melee", "mountedOnly": true},
+    {"id": "bow", "name": "Bow", "cost": 2, "group": "missile"},
+    {"id": "crossbow", "name": "Crossbow", "cost": 3, "group": "missile"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+    {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy"},
+    {"id": "barding", "name": "Barding for steed (mounted only)", "cost": 4, "armour": "barding", "mountedOnly": true}
+  ],
+  "mounts": [
+    {"id": "skeleton-steed", "name": "Skeleton Steed", "cost": 2, "profile": ["8","2","0","3","3","1","2","1","5"]},
+    {
+      "id": "undead-chariot",
+      "name": "Undead Chariot",
+      "cost": 40,
+      "noCavalry": true,
+      "chariot": true,
+      "profiles": [
+        {"name": "Undead Chariot", "profile": ["-","-","-","5","5","3","1","D6","-"]},
+        {"name": "Skeleton Steeds (2)", "profile": ["8","2","0","3","3","1","2","1","5"]},
+        {"name": "Skeleton crew (2)", "profile": ["4","2","2","3","3","1","2","1","5"]}
+      ]
+    },
+    {
+      "id": "undead-chariot-scythed",
+      "name": "Undead Chariot with scythed wheels",
+      "cost": 60,
+      "noCavalry": true,
+      "chariot": true,
+      "profiles": [
+        {"name": "Undead Chariot", "profile": ["-","-","-","5","5","3","1","D6","-"]},
+        {"name": "Skeleton Steeds (2)", "profile": ["8","2","0","3","3","1","2","1","5"]},
+        {"name": "Skeleton crew (2)", "profile": ["4","2","2","3","3","1","2","1","5"]}
+      ]
+    }
+  ],
+  "magic": {
+    "tags": ["undead"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": [
+      {"id": "mortis", "name": "Mortis - the Great Blade of Death", "type": "weapon", "points": 35, "page": 99, "only": "Nagash only", "entries": ["nagash"]},
+      {"id": "black-armour-of-nagash", "name": "The Black Armour of Nagash", "type": "armour", "points": 100, "page": 99, "only": "Nagash only", "entries": ["nagash"]},
+      {"id": "staff-of-power", "name": "Staff of Power", "type": "arcana", "points": 40, "page": 98, "only": "Nagash only", "entries": ["nagash"]}
+    ]
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one Undead General (p.81)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.81)."},
+    {
+      "type": "unitsBySize",
+      "entries": ["carrion", "wraiths"],
+      "per": 5,
+      "message": "Up to five form one unit, 6-10 up to two units, 11-15 up to three, and so on (p.85)."
+    }
+  ],
+  "entries": [
+    {
+      "id": "general",
+      "name": "Undead General",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["skeleton-steed", "undead-chariot", "undead-chariot-scythed"],
+      "page": 81,
+      "max": 1,
+      "tags": ["general"],
+      "monsters": true,
+      "notes": "If the General is slain, all Undead units are destroyed unless led by an Undead character who passes a Leadership test (bestiary p.58). Armour stops a Necromancer casting spells.",
+      "variants": [
+        {
+          "id": "necromancer-lord",
+          "race": "necromancer",
+          "wizard": true,
+          "name": "Necromancer Lord",
+          "cost": 410,
+          "magicItems": 4,
+          "profile": ["4","7","7","5","4","4","6","5","10"],
+          "rulesText": "Level 4 wizard"
+        },
+        {
+          "id": "vampire-lord",
+          "race": "vampire",
+          "name": "Vampire Lord",
+          "cost": 375,
+          "magicItems": 4,
+          "profile": ["6","8","6","7","6","4","9","4","10"],
+          "rulesText": "Transfixing glare"
+        },
+        {
+          "id": "liche",
+          "race": "liche",
+          "wizard": true,
+          "name": "Liche",
+          "cost": 350,
+          "magicItems": 4,
+          "profile": ["4","7","7","5","4","4","6","5","10"],
+          "rulesText": "Fear, Immune to psychology, Wizard"
+        }
+      ]
+    },
+    {
+      "id": "battle-standard",
+      "name": "Undead Battle Standard",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Wight Blade, Battle Standard",
+      "equipmentList": true,
+      "mounts": ["skeleton-steed", "undead-chariot", "undead-chariot-scythed"],
+      "page": 81,
+      "max": 1,
+      "tags": ["bsb"],
+      "race": "wight",
+      "cost": 87,
+      "magicItems": 1,
+      "profile": ["4","3","0","3","4","3","3","1","8"],
+      "monsters": true,
+      "rulesText": "Fear, Immune to psychology, Wight Blade (D3 wounds), Destroyed if Break test failed"
+    },
+    {
+      "id": "hero",
+      "name": "Undead Hero",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword (Wights have a Wight Blade instead)",
+      "equipmentList": true,
+      "mounts": ["skeleton-steed", "undead-chariot", "undead-chariot-scythed"],
+      "page": 82,
+      "monsters": true,
+      "variants": [
+        {
+          "id": "vampire-count",
+          "race": "vampire",
+          "name": "Vampire Count",
+          "cost": 200,
+          "magicItems": 2,
+          "profile": ["6","7","5","7","6","3","8","3","9"],
+          "rulesText": "Transfixing glare"
+        },
+        {
+          "id": "tomb-king",
+          "race": "mummy",
+          "name": "Mummy Tomb King",
+          "cost": 100,
+          "magicItems": 2,
+          "profile": ["3","4","0","5","5","4","4","3","9"],
+          "rulesText": "Fear, Immune to psychology, Double wounds from fire"
+        },
+        {
+          "id": "wight-lord",
+          "race": "wight",
+          "name": "Wight Lord",
+          "cost": 65,
+          "magicItems": 2,
+          "profile": ["4","4","0","4","4","3","4","2","9"],
+          "rulesText": "Fear, Immune to psychology, Wight Blade (D3 wounds), Destroyed if Break test failed"
+        }
+      ]
+    },
+    {
+      "id": "champion",
+      "name": "Undead Champion",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword (Wights have a Wight Blade instead)",
+      "equipmentList": true,
+      "mounts": ["skeleton-steed", "undead-chariot", "undead-chariot-scythed"],
+      "page": 82,
+      "attachTo": {
+        "entries": ["skeleton-warriors", "skeleton-horsemen", "zombies", "ghouls", "undead-chariots"],
+        "label": "Leading",
+        "required": true,
+        "requiredMessage": "an Undead Champion must lead a regiment of Skeletons, Zombies or Ghouls (including Horsemen or Chariots)",
+        "maxUnits": 1,
+        "hint": "may ride a Skeleton Steed only when leading Horsemen, or a chariot only when leading Chariots"
+      },
+      "variants": [
+        {
+          "id": "wight",
+          "race": "wight",
+          "name": "Wight Champion",
+          "cost": 37,
+          "magicItems": 1,
+          "profile": ["4","3","0","3","4","3","3","1","8"],
+          "rulesText": "Fear, Immune to psychology, Wight Blade (D3 wounds), Destroyed if Break test failed"
+        },
+        {
+          "id": "wraith",
+          "race": "wraith",
+          "name": "Wraith Champion",
+          "cost": 75,
+          "magicItems": 1,
+          "profile": ["4","3","0","3","4","3","3","2","5"],
+          "rulesText": "Terror, Ethereal, Immune to psychology, Chill attack, Destroyed if Break test failed"
+        }
+      ],
+      "notes": "Undead Champions need not be armed like their unit; they buy equipment freely and count against Characters."
+    },
+    {
+      "id": "necromancer",
+      "name": "Necromancer",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["skeleton-steed", "undead-chariot", "undead-chariot-scythed"],
+      "page": 82,
+      "wizard": true,
+      "monsters": true,
+      "variantsLabel": "Level",
+      "notes": "Wearing armour stops a Necromancer casting spells; barding on his steed does not.",
+      "variants": [
+        {
+          "id": "master",
+          "race": "necromancer",
+          "name": "Master Necromancer",
+          "cost": 278,
+          "magicItems": 3,
+          "rulesText": "Level 3 wizard",
+          "profile": ["4","6","6","5","4","3","5","4","9"]
+        },
+        {
+          "id": "champion",
+          "race": "necromancer",
+          "name": "Necromancer Champion",
+          "cost": 163,
+          "magicItems": 2,
+          "rulesText": "Level 2 wizard",
+          "profile": ["4","5","5","4","3","2","4","3","9"]
+        },
+        {
+          "id": "necromancer",
+          "race": "necromancer",
+          "name": "Necromancer",
+          "cost": 68,
+          "magicItems": 1,
+          "rulesText": "Level 1 wizard",
+          "profile": ["4","4","4","4","3","1","3","2","8"]
+        }
+      ]
+    },
+    {
+      "id": "nagash",
+      "name": "Nagash, Supreme Lord of the Undead",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 88,
+      "tags": ["general"],
+      "race": "necromancer",
+      "wizard": true,
+      "cost": 475,
+      "magicItems": 4,
+      "profile": ["6","7","7","7","7","7","6","6","10"],
+      "equipmentText": "Mortis, Black Armour of Nagash",
+      "save": "4+",
+      "startingItems": ["mortis", "black-armour-of-nagash", "book-of-nagash", "staff-of-power"],
+      "rulesText": "Level 4 wizard, Immune to psychology, Terror",
+      "notes": "Nagash must be the General and always takes his four magic items (added for you). His S7 includes +1 from Mortis. The Black Armour gives an unmodifiable 4+ save."
+    },
+    {
+      "id": "vlad",
+      "name": "Vlad von Carstein, Vampire Lord",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 89,
+      "race": "vampire",
+      "cost": 375,
+      "magicItems": 4,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["6","8","6","7","6","4","9","4","10"],
+      "equipmentText": "Sword of Unholy Power",
+      "mounts": ["skeleton-steed"],
+      "startingItems": ["the-carstein-ring", "sword-of-unholy-power"],
+      "allowedItems": ["sword-of-unholy-power"],
+      "rulesText": "Transfixing glare"
+    },
+    {
+      "id": "isabella",
+      "name": "Isabella von Carstein, Vampire Countess",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 90,
+      "race": "vampire",
+      "cost": 175,
+      "magicItems": 2,
+      "profile": ["6","7","5","6","5","3","8","3","9"],
+      "equipmentText": "Sword",
+      "mounts": ["skeleton-steed"],
+      "requires": [
+        {"entry": "vlad", "message": "Isabella may only be included if the army also includes Vlad von Carstein."}
+      ],
+      "rulesText": "Transfixing glare, Frenzy & Hatred if Vlad is slain"
+    },
+    {
+      "id": "mannfred",
+      "name": "Mannfred von Carstein, Vampire & Necromancer Lord",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 90,
+      "race": "vampire",
+      "wizard": true,
+      "itemRaces": ["necromancer"],
+      "cost": 475,
+      "magicItems": 4,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["6","7","5","6","5","3","8","3","9"],
+      "equipmentText": "Sword",
+      "mounts": ["skeleton-steed"],
+      "rulesText": "Level 4 wizard, Transfixing glare"
+    },
+    {
+      "id": "kemmler",
+      "name": "Heinrich Kemmler, the Lichemaster",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 92,
+      "race": "necromancer",
+      "wizard": true,
+      "cost": 350,
+      "magicItems": 4,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["4","7","7","5","4","4","6","5","10"],
+      "equipmentText": "Sword",
+      "mounts": ["skeleton-steed"],
+      "startingItems": ["chaos-tomb-blade", "skull-staff", "cloak-of-mists-and-shadows"],
+      "rulesText": "Level 4 wizard"
+    },
+    {
+      "id": "arkhan",
+      "name": "Arkhan the Black, the Liche King",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 93,
+      "race": "liche",
+      "wizard": true,
+      "cost": 350,
+      "magicItems": 3,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["4","7","7","5","4","4","6","5","10"],
+      "equipmentText": "Sword, staff",
+      "startingItems": ["staff-of-damnation", "the-tomb-blade-of-arkhan", "cursed-book"],
+      "options": [
+        {
+          "id": "chariot",
+          "name": "Arkhan's Chariot",
+          "cost": 50,
+          "extraProfiles": [
+            {"name": "Arkhan's Chariot", "profile": ["-","4","-","6","6","3","-","D6","-"]},
+            {"name": "Skeleton Steeds (2)", "profile": ["8","2","3","3","3","1","2","1","5"]}
+          ]
+        }
+      ],
+      "rulesText": "Wizard, Fear, Immune to psychology, Terror; chariot flies"
+    },
+    {
+      "id": "krell",
+      "name": "Krell, Lord of the Undead",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 94,
+      "race": "wight",
+      "itemRaces": ["necromancer", "vampire", "liche"],
+      "cost": 160,
+      "magicItems": 3,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["4","5","0","4","5","4","5","3","8"],
+      "equipmentText": "Double-handed axe, heavy armour",
+      "armour": ["heavy"],
+      "mounts": ["skeleton-steed"],
+      "startingItems": ["black-axe-of-krell", "armour-of-protection"],
+      "rulesText": "Immune to psychology, Terror",
+      "notes": "Krell may use magic items normally only available to Liches, Vampires or Necromancers."
+    },
+    {
+      "id": "settra",
+      "name": "Settra, the Tomb King of Khemri",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 96,
+      "race": "mummy",
+      "itemRaces": ["necromancer", "vampire", "liche"],
+      "cost": 210,
+      "magicItems": 3,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["3","5","0","5","6","5","5","4","9"],
+      "equipmentText": "Flail, staff",
+      "mounts": ["skeleton-steed"],
+      "startingItems": ["staff-of-osiris", "tomb-kings-crown", "flail-of-skulls"],
+      "allowedItems": ["staff-of-osiris"],
+      "rulesText": "Immune to psychology, Terror, Double wounds from fire",
+      "notes": "Settra may carry three items, more than a Mummy Tomb King normally may, and may use items normally only available to Liches, Vampires or Necromancers."
+    },
+    {
+      "id": "helsnicht",
+      "name": "Dieter Helsnicht, Doom Lord of Middenheim",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 97,
+      "race": "necromancer",
+      "wizard": true,
+      "cost": 410,
+      "magicItems": 4,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["4","7","7","5","4","4","6","5","10"],
+      "equipmentText": "Sword, staff",
+      "startingItems": ["chaos-runesword-of-grungni-ironheart", "staff-of-flaming-death"],
+      "options": [
+        {"id": "manticore", "name": "Manticore", "cost": 200, "mountProfile": {"name": "Manticore", "profile": ["6","6","0","7","7","5","4","4","8"]}}
+      ],
+      "rulesText": "Level 4 wizard; Manticore flies and causes terror",
+      "notes": "Profile without the Chaos Runesword's +1 WS, S and A."
+    },
+    {
+      "id": "skeleton-horsemen",
+      "name": "Skeleton Horsemen",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 83,
+      "race": "skeleton-horseman",
+      "cost": 18,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Skeleton Horseman", "profile": ["4","2","2","3","3","1","2","1","5"]},
+        {"name": "Skeleton Steed", "profile": ["8","2","0","3","3","1","2","1","5"]}
+      ],
+      "cavalry": true,
+      "equipmentText": "Sword, Skeleton Steed",
+      "magicStandard": "any",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 4, "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 2, "armour": "shield"},
+        {"id": "lances", "name": "Lances", "cost": 4, "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 2, "group": "weapon"},
+        {"id": "bows", "name": "Bows", "cost": 4, "group": "weapon"}
+      ],
+      "rulesText": "Fear, Immune to psychology, Unbreakable (extra casualties), No march, Steeds move through obstacles"
+    },
+    {
+      "id": "skeleton-warriors",
+      "name": "Skeleton Warriors",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 83,
+      "cost": 8,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Skeleton Warrior", "profile": ["4","2","2","3","3","1","2","1","5"]}
+      ],
+      "equipmentText": "Sword",
+      "magicStandard": "any",
+      "groupLabels": {"armour": "No armour"},
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light", "group": "armour"},
+        {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy", "group": "armour"},
+        {"id": "shields", "name": "Shields", "cost": 1, "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 1, "group": "weapon"},
+        {"id": "crossbows", "name": "Crossbows", "cost": 3, "group": "weapon"},
+        {"id": "bows", "name": "Bows", "cost": 2, "group": "weapon"}
+      ],
+      "rulesText": "Fear, Immune to psychology, Unbreakable (extra casualties), No march"
+    },
+    {
+      "id": "zombies",
+      "name": "Zombies",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 84,
+      "cost": 4,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Zombie", "profile": ["4","2","0","3","3","1","1","1","5"]}
+      ],
+      "equipmentText": "Sword, club or other hand weapon",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 0.5, "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 1}
+      ],
+      "rulesText": "Fear, Immune to psychology, Destroyed if Break test failed, No march"
+    },
+    {
+      "id": "ghosts",
+      "name": "Ghosts",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 84,
+      "cost": 35,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Ghost", "profile": ["4","2","0","3","3","3","3","1","5"]}
+      ],
+      "equipmentText": "None",
+      "rulesText": "Fear, Immune to psychology, Ethereal, Harmed only by magic, Destroyed if Break test failed, No march",
+      "options": []
+    },
+    {
+      "id": "ghouls",
+      "name": "Ghouls",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 84,
+      "cost": 8,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Ghoul", "profile": ["4","2","0","3","4","1","3","2","5"]}
+      ],
+      "equipmentText": "Sword, club or other hand weapon",
+      "rulesText": "Fear, Feed instead of pursuing, May march",
+      "options": []
+    },
+    {
+      "id": "wights",
+      "name": "Wights",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 84,
+      "race": "wight",
+      "cost": 37,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Wight", "profile": ["4","3","0","3","4","3","3","1","8"]}
+      ],
+      "equipmentText": "Wight Blade, light armour",
+      "armour": ["light"],
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "armour": "shield"},
+        {"id": "spears", "name": "Spears", "cost": 1},
+        {"id": "heavy-armour", "name": "Heavy armour (instead of light)", "cost": 3, "armour": "heavy", "replacesArmour": "light"},
+        {
+          "id": "steeds",
+          "name": "Skeleton Steeds",
+          "cost": 2,
+          "cavalry": true,
+          "extraProfile": {"name": "Skeleton Steed", "profile": ["8","2","0","3","3","1","2","1","5"]}
+        }
+      ],
+      "rulesText": "Fear, Immune to psychology, Wight Blades (D3 wounds), Destroyed if Break test failed, No march",
+      "notes": "The book does not say whether heavy armour replaces the light armour; it is treated as replacing it."
+    },
+    {
+      "id": "mummies",
+      "name": "Mummies",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 85,
+      "race": "mummy",
+      "cost": 45,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Mummy", "profile": ["3","3","0","4","5","4","3","2","8"]}
+      ],
+      "equipmentText": "Sword, mace or other hand weapon",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2}
+      ],
+      "rulesText": "Fear, Immune to psychology, Double wounds from fire, No march"
+    },
+    {
+      "id": "carrion",
+      "name": "Carrion",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 85,
+      "cost": 45,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Carrion", "profile": ["4","3","0","3","3","2","4","3+","7"]}
+      ],
+      "noCommand": true,
+      "single": "Carrion",
+      "equipmentText": "Rider: sword or other hand weapon",
+      "rulesText": "Fear, Immune to psychology, Fly, Ghost rider (extra attack per wound), Unbreakable (extra casualties)",
+      "options": []
+    },
+    {
+      "id": "wraiths",
+      "name": "Wraiths",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 85,
+      "race": "wraith",
+      "cost": 75,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Wraith", "profile": ["4","3","0","3","4","3","3","2","5"]}
+      ],
+      "noCommand": true,
+      "single": "Wraith",
+      "equipmentText": "Double-handed weapon (scythe)",
+      "rulesText": "Terror, Ethereal, Harmed only by magic, Immune to psychology, Chill attack, Destroyed if Break test failed",
+      "options": []
+    },
+    {
+      "id": "catapult",
+      "name": "Screaming Skull Catapults",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 86,
+      "cost": 74,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Catapult", "profile": ["-","-","-","-","5","3","-","-","-"]},
+        {"name": "Skeleton crew (3)", "profile": ["4","2","2","3","3","1","2","1","5"]}
+      ],
+      "sizeLabel": "catapults",
+      "noCommand": true,
+      "single": "Screaming Skull Catapult",
+      "equipmentText": "Crew: swords",
+      "rulesText": "Screaming skulls (48\", S7, D3 wounds, Panic test), Crew: Fear, Immune to psychology, Extra casualties",
+      "options": []
+    },
+    {
+      "id": "undead-chariots",
+      "name": "Undead Chariots",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 86,
+      "cost": 56,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Skeleton Warriors", "profile": ["4","2","2","3","3","1","2","1","5"]},
+        {"name": "Skeleton Steeds", "profile": ["8","2","0","3","3","1","2","1","5"]},
+        {"name": "Undead Chariot", "profile": ["-","-","-","5","5","3","1","D6","-"]}
+      ],
+      "sizeLabel": "chariots",
+      "noCommand": true,
+      "crew": 2,
+      "magicStandard": "one",
+      "single": "Undead Chariot",
+      "equipmentText": "Crew: swords",
+      "options": [
+        {"id": "light-armour", "name": "Crew light armour", "cost": 2, "per": "crew", "armour": "light"},
+        {"id": "shields", "name": "Crew shields", "cost": 1, "per": "crew", "armour": "shield"},
+        {"id": "bows", "name": "Crew bows", "cost": 2, "per": "crew"},
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"}
+      ],
+      "rulesText": "Fear, Immune to psychology, Extra wounds if beaten"
+    },
+    {
+      "id": "zombie-dragon",
+      "name": "Zombie Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 87,
+      "cost": 500,
+      "profile": ["4","4","0","7","6","7","3","6","8"],
+      "rulesText": "Terror, Immune to psychology, Cloud of flies, Pestilential breath, Scaly skin"
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 87,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {"id": "chimera", "name": "Chimera", "kind": "monster", "category": "monsters", "page": 87, "cost": 250, "profile": ["6","4","0","7","6","6","4","6","8"]},
+    {"id": "cockatrice", "name": "Cockatrice", "kind": "monster", "category": "monsters", "page": 87, "cost": 150, "profile": ["4","3","0","4","4","2","4","3","6"]},
+    {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 87, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
+    {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 87, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
+    {"id": "hydra", "name": "Hydra", "kind": "monster", "category": "monsters", "page": 87, "cost": 225, "profile": ["6","3","0","5","6","7","3","5","6"]},
+    {
+      "id": "gigantic-spider",
+      "name": "Gigantic Spider",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 87,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 87, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 87, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 87,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 87,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "rats", "name": "Rats", "profile": ["6","3","0","3","2","5","1","5","10"]},
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}
