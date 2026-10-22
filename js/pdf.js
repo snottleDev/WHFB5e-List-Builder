@@ -24,7 +24,7 @@ export function rosterRows(army, list) {
         lines.push(r.name.replace(/^as /, ""));
       }
       profiles.push({ name: base, profile: v?.profile || e.profile });
-      for (const p of e.extraProfiles || []) profiles.push(p);
+      for (const p of [...(e.extraProfiles || []), ...(v?.extraProfiles || [])]) profiles.push(p);
       for (const gid of s.gear || []) lines.push(army.equipment.find((g) => g.id === gid)?.name);
       for (const o of e.options || []) {
         if (!s.options?.[o.id]) continue;

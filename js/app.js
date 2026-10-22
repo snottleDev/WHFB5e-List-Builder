@@ -338,7 +338,7 @@ function renderCard(army, list, s) {
   if (e.kind === "character") {
     if (e.equipmentList) {
       body.append(field("Equipment", h("small", { class: "note" }, `${e.equipmentText}, plus:`),
-        army.equipment.filter((g) => !g.troopOnly).map((g) => h("label", { class: "opt" },
+        army.equipment.filter((g) => !g.troopOnly && (!g.races || g.races.includes(variantOf(e, s)?.race || e.race))).map((g) => h("label", { class: "opt" },
           h("input", { type: "checkbox", checked: (s.gear || []).includes(g.id), onchange: (ev) => {
             s.gear = (s.gear || []).filter((x) => x !== g.id); if (ev.target.checked) s.gear.push(g.id); change(); } }),
           g.name, h("small", {}, `+${g.cost}`)))));
@@ -392,7 +392,7 @@ function mountOptions(army, e, s) {
   }
   for (const id of e.mounts || []) {
     const m = army.mounts.find((x) => x.id === id);
-    if (m) out.push([`mount:${m.id}`, `${m.name} (+${m.cost})`]);
+    if (m && (!m.races || m.races.includes(race))) out.push([`mount:${m.id}`, `${m.name} (+${m.cost})`]);
   }
   if (e.chariots) {
     for (const id of army.characterChariots || []) {
