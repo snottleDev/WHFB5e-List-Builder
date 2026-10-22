@@ -24,10 +24,10 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 async function loadArmy(id) {
   if (armies[id]) return armies[id];
   const meta = armyIndex.find((a) => a.id === id);
-  const res = await fetch(`data/armies/${meta.file}`);
+  const res = await fetch(`data/armies/${meta.file}`, { cache: "no-cache" });
   const army = await res.json();
   const catIds = [...new Set((army.magic?.pools || []).flatMap((p) => p.catalogues || []))];
-  const catalogues = await Promise.all(catIds.map((c) => fetch(`data/magic/${c}.json`).then((r) => r.json())));
+  const catalogues = await Promise.all(catIds.map((c) => fetch(`data/magic/${c}.json`, { cache: "no-cache" }).then((r) => r.json())));
   armies[id] = attachMagic(army, catalogues);
   return armies[id];
 }
@@ -504,7 +504,7 @@ function download(name, content, type) {
 // ---------- boot ----------
 (async function boot() {
   try {
-    armyIndex = await (await fetch("data/armies/index.json")).json();
+    armyIndex = await (await fetch("data/armies/index.json", { cache: "no-cache" })).json();
   } catch (e) {
     app.replaceChildren(h("p", {}, "Could not load army data. If you opened index.html directly from disk, run a local web server instead (see README)."));
     return;
