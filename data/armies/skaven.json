@@ -1,0 +1,733 @@
+{
+  "id": "skaven",
+  "name": "Skaven",
+  "source": "Warhammer Armies: Skaven (4th edition), army list pp.58-74 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the Skaven bestiary (pp.50-57), war machines section (pp.24-33) and army list",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "regiments", "name": "Regiments", "min": 25},
+    {"id": "war-machines", "name": "War Machines", "max": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"skaven": "Skaven", "plague-monk": "Plague Monk", "assassin": "Assassin", "warlock-engineer": "Warlock Engineer"},
+  "championName": "Champion",
+  "bossCosts": {"skaven": 27, "plague-monk": 27, "assassin": 27, "warlock-engineer": 27},
+  "bossProfiles": {
+    "skaven": ["5", "4", "4", "4", "3", "1", "5", "2", "5"],
+    "plague-monk": ["5", "4", "4", "4", "3", "1", "5", "2", "5"],
+    "assassin": ["5", "4", "4", "4", "3", "1", "5", "2", "5"],
+    "warlock-engineer": ["5", "4", "4", "4", "3", "1", "5", "2", "5"]
+  },
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee"},
+    {"id": "flail", "name": "Flail", "cost": 1, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "javelin", "name": "Javelin", "cost": 1, "group": "missile"},
+    {"id": "sling", "name": "Sling", "cost": 1, "group": "missile"},
+    {"id": "hand-gun", "name": "Hand gun", "cost": 3, "group": "missile"},
+    {"id": "pistol", "name": "Pistol", "cost": 2, "group": "missile"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+    {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy"},
+    {"id": "throwing-stars", "name": "Throwing stars", "cost": 1, "troopOnly": true},
+    {"id": "net", "name": "Net (counts as shield)", "cost": 1, "troopOnly": true}
+  ],
+  "mounts": [],
+  "magic": {
+    "tags": ["skaven"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": []
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one General (p.61)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.61)."},
+    {"type": "perUnits", "entry": "plague-priest", "max": 1, "per": ["plague-monks"], "message": "Up to one Plague Priest for every regiment of Plague Monks (p.62)."},
+    {"type": "perUnits", "entry": "screaming-bell", "max": 1, "per": ["grey-seer", "thanquol"], "message": "One Screaming Bell for each Grey Seer (p.67)."},
+    {
+      "type": "perUnits",
+      "entry": "rat-swarms",
+      "model": "half",
+      "max": 1,
+      "per": ["stormvermin", "clanrats", "gutter-runners", "skavenslaves", "plague-monks"],
+      "message": "Half-price Rat Swarms: at most one per Skaven regiment (not counting Giant Rat or Rat Ogre packs, Censer Bearers or Globadiers); any more cost 100 points each (p.68)."
+    },
+    {"type": "unitsBySize", "entries": ["warpfire-throwers", "jezzails"], "per": 5, "message": "Up to five teams form one unit, 6-10 up to two units, and so on (p.67)."},
+    {
+      "type": "minCategoryIf",
+      "entry": "ikit-claw",
+      "category": "war-machines",
+      "min": 25,
+      "message": "With Ikit Claw as General you must spend at least 25% of your points on war machines (p.71)."
+    }
+  ],
+  "entries": [
+    {
+      "id": "warlord",
+      "name": "Skaven Warlord",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "page": 61,
+      "max": 1,
+      "tags": ["general"],
+      "race": "skaven",
+      "cost": 90,
+      "magicItems": 3,
+      "profile": ["5","6","6","4","4","3","7","4","7"],
+      "monsters": true,
+      "rulesText": "Ld bonus from ranks"
+    },
+    {
+      "id": "battle-standard",
+      "name": "Battle Standard Bearer",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword, Battle Standard",
+      "equipmentList": true,
+      "page": 61,
+      "max": 1,
+      "tags": ["bsb"],
+      "race": "skaven",
+      "cost": 77,
+      "magicItems": 1,
+      "profile": ["5","4","4","4","3","1","5","2","5"]
+    },
+    {
+      "id": "chieftain",
+      "name": "Chieftain",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "page": 61,
+      "race": "skaven",
+      "cost": 59,
+      "magicItems": 2,
+      "profile": ["5","5","5","4","4","2","6","3","6"]
+    },
+    {
+      "id": "plague-priest",
+      "name": "Clan Pestilens Plague Priest",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "page": 62,
+      "race": "plague-monk",
+      "cost": 73,
+      "magicItems": 2,
+      "profile": ["5","5","5","4","5","2","6","3","6"],
+      "rulesText": "Frenzy",
+      "requires": [
+        {"entry": "plague-monks", "message": "Plague Priests require a regiment of Plague Monks (one Priest per regiment)."}
+      ]
+    },
+    {
+      "id": "vermin-lord",
+      "name": "Vermin Lord",
+      "kind": "character",
+      "category": "characters",
+      "page": 62,
+      "cost": 600,
+      "magicItems": 0,
+      "wizard": true,
+      "profile": ["8","8","8","8","7","7","10","8","10"],
+      "equipmentText": "Doom Glaive",
+      "save": "4+",
+      "rulesText": "Greater Daemon, Terror, Doom Glaive (D3 wounds), Level 4 wizard",
+      "notes": "A Vermin Lord may not take extra weapons, armour or magic items. 4+ daemonic save (bestiary p.56)."
+    },
+    {
+      "id": "warlock",
+      "name": "Clan Skryre Warlock",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "page": 62,
+      "wizard": true,
+      "monsters": true,
+      "variantsLabel": "Level",
+      "notes": "Warlocks and Seers do not generally wear armour, as it would stop them casting spells.",
+      "variants": [
+        {
+          "id": "engineer",
+          "race": "warlock-engineer",
+          "name": "Warlock Engineer",
+          "rulesText": "Level 1 wizard",
+          "cost": 56,
+          "magicItems": 1,
+          "profile": ["5","3","3","3","4","1","5","1","5"]
+        },
+        {
+          "id": "champion",
+          "race": "warlock-engineer",
+          "name": "Warlock Champion",
+          "rulesText": "Level 2 wizard",
+          "cost": 118,
+          "magicItems": 2,
+          "profile": ["5","3","3","4","4","2","5","1","6"]
+        },
+        {
+          "id": "master",
+          "race": "warlock-engineer",
+          "name": "Warlock Master",
+          "rulesText": "Level 3 wizard",
+          "cost": 190,
+          "magicItems": 3,
+          "profile": ["5","3","3","4","4","3","6","2","7"]
+        }
+      ]
+    },
+    {
+      "id": "grey-seer",
+      "name": "Grey Seer",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "page": 62,
+      "wizard": true,
+      "monsters": true,
+      "race": "skaven",
+      "cost": 340,
+      "magicItems": 4,
+      "profile": ["5","6","6","4","4","4","7","4","7"],
+      "rulesText": "Level 4 wizard",
+      "notes": "A Grey Seer may ride the Screaming Bell: add the Bell from the War Machines section."
+    },
+    {
+      "id": "thanquol",
+      "name": "Grey Seer Thanquol",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 69,
+      "tags": ["general"],
+      "race": "skaven",
+      "wizard": true,
+      "cost": 380,
+      "magicItems": 4,
+      "profile": ["5","6","6","4","4","4","7","4","7"],
+      "equipmentText": "Sword, no armour",
+      "options": [
+        {
+          "id": "boneripper",
+          "name": "Boneripper (Rat Ogre bodyguard)",
+          "cost": 45,
+          "extraProfile": {"name": "Boneripper", "profile": ["6","5","0","5","5","3","6","3","5"]}
+        }
+      ],
+      "rulesText": "Level 4 wizard, Reroll Warp tests, Blessing of the Horned Rat",
+      "notes": "Thanquol replaces the Skaven Warlord as General. Boneripper causes fear and is subject to stupidity when away from Thanquol."
+    },
+    {
+      "id": "skrolk",
+      "name": "Lord Skrolk, Plaguelord of Clan Pestilens",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 70,
+      "race": "plague-monk",
+      "cost": 225,
+      "magicItems": 3,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","6","4","4","5","3","7","4","7"],
+      "equipmentText": "Plague censer, Rod of Corruption, no armour",
+      "startingItems": ["rod-of-corruption", "liber-bubonicus"],
+      "requires": [
+        {"entry": "plague-monks", "message": "Lord Skrolk requires at least one regiment of Plague Monks."}
+      ],
+      "rulesText": "Frenzy, Terror, Aura of Pestilence, Plague censer",
+      "notes": "Two of his three items are always the Rod of Corruption and the Liber Bubonicus; both are added for you."
+    },
+    {
+      "id": "ikit-claw",
+      "name": "Ikit Claw, Chief Warlock of Clan Skryre",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 71,
+      "tags": ["general"],
+      "race": "warlock-engineer",
+      "wizard": true,
+      "cost": 315,
+      "magicItems": 4,
+      "profile": ["5","5","3","5","4","4","8","3","9"],
+      "equipmentText": "Sword, warplock pistol, poison wind globes, no armour",
+      "startingItems": ["storm-daemon"],
+      "rulesText": "Level 4 wizard, Immune to psychology, Unbreakable, Ikit's Claw",
+      "notes": "Ikit Claw replaces the Skaven Warlord as General, and the army must then spend at least 25% on war machines. Storm-daemon is added as his first item."
+    },
+    {
+      "id": "throt",
+      "name": "Throt the Unclean",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 72,
+      "race": "skaven",
+      "cost": 70,
+      "magicItems": 2,
+      "profile": ["5","5","3","5","4","2","6","4","8"],
+      "equipmentText": "Heavy armour, sword, man-catcher",
+      "armour": ["heavy"],
+      "startingItems": ["warpstone-charm"],
+      "requires": [
+        {"entries": ["giant-rat-pack", "rat-ogre-pack"], "message": "Throt requires at least one Clan Moulder pack."}
+      ],
+      "rulesText": "Man-catcher",
+      "notes": "Throt counts as a Chieftain. He may lead a pack of Packmasters but no other unit."
+    },
+    {
+      "id": "snikch",
+      "name": "Deathmaster Snikch",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 73,
+      "race": "assassin",
+      "cost": 230,
+      "magicItems": 3,
+      "profile": ["6","8","6","4","4","3","10","5","9"],
+      "equipmentText": "Three Weeping Blades, throwing stars, no armour",
+      "startingItems": ["bands-of-power", "cloak-of-shadows"],
+      "rulesText": "Infiltration, Weeping weapons, Dodge (4+)",
+      "notes": "Snikch may only lead Gutter Runners or act on his own."
+    },
+    {
+      "id": "queek",
+      "name": "Warlord Queek Head-taker",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 74,
+      "race": "skaven",
+      "cost": 138,
+      "magicItems": 4,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","7","6","4","4","3","7","4","8"],
+      "equipmentText": "Heavy armour, sword and pick",
+      "armour": ["heavy"],
+      "startingItems": ["dwarf-gouger", "warpstone-armour"],
+      "requires": [
+        {"entry": "clanrats", "message": "Queek requires at least one regiment of Clanrat warriors."}
+      ],
+      "rulesText": "Hatred (Dwarfs, Orcs & Goblins), Challenge, Ld bonus from ranks"
+    },
+    {
+      "id": "stormvermin",
+      "name": "Stormvermin",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 63,
+      "max": 1,
+      "race": "skaven",
+      "cost": 9.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Stormvermin", "profile": ["5","4","3","4","3","1","5","1","5"]}
+      ],
+      "equipmentText": "Light armour, hand weapon",
+      "armour": ["light"],
+      "bossGear": ["light-armour"],
+      "magicStandard": "any",
+      "options": [
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "rulesText": "Ld bonus from ranks"
+    },
+    {
+      "id": "clanrats",
+      "name": "Clanrat Warriors",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 63,
+      "race": "skaven",
+      "cost": 6,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Skaven", "profile": ["5","3","3","3","3","1","4","1","5"]}
+      ],
+      "equipmentText": "Light armour, shield, hand weapon",
+      "armour": ["light", "shield"],
+      "bossGear": ["light-armour", "shield"],
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear"}
+      ],
+      "rulesText": "Ld bonus from ranks"
+    },
+    {
+      "id": "gutter-runners",
+      "name": "Clan Eshin Gutter Runners",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "max": 1,
+      "race": "skaven",
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Gutter Runner", "profile": ["6","4","4","4","3","1","5","1","7"]}
+      ],
+      "equipmentText": "Sword or other hand weapon",
+      "options": [
+        {"id": "additional-hand-weapon", "name": "Additional hand weapons", "cost": 1, "gear": "additional-hand-weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "throwing-stars", "name": "Throwing stars", "cost": 1, "gear": "throwing-stars"},
+        {"id": "slings", "name": "Slings", "cost": 1, "gear": "sling"},
+        {"id": "nets", "name": "Nets (count as shields)", "cost": 1, "gear": "net", "armour": "shield"}
+      ],
+      "rulesText": "Special deployment, Skirmish, Ld bonus from ranks"
+    },
+    {
+      "id": "assassins",
+      "name": "Clan Eshin Assassins",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "race": "assassin",
+      "cost": 30,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Assassin", "profile": ["6","5","4","4","3","1","5","2","7"]}
+      ],
+      "noCommand": true,
+      "single": "Assassin",
+      "equipmentText": "Weeping Blades, light armour",
+      "armour": ["light"],
+      "attachTo": {
+        "entries": ["stormvermin", "clanrats", "gutter-runners"],
+        "label": "Hidden in",
+        "alone": "Not hidden",
+        "maxModels": 2,
+        "hint": "up to two Assassins may hide in each regiment of Stormvermin, Clanrats or Gutter Runners"
+      },
+      "rulesText": "Disguise, Weeping Blades (-1 save, D3 wounds)",
+      "options": []
+    },
+    {
+      "id": "skavenslaves",
+      "name": "Skavenslaves",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 65,
+      "race": "skaven",
+      "cost": 2.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Skavenslave", "profile": ["5","2","2","3","3","1","4","1","4"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
+        {"id": "slings", "name": "Slings", "cost": 0.5, "gear": "sling", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"}
+      ],
+      "rulesText": "Only slaves panic at fleeing slaves, Ld bonus from ranks"
+    },
+    {
+      "id": "plague-monks",
+      "name": "Clan Pestilens Plague Monks",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 65,
+      "race": "plague-monk",
+      "cost": 6,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Plague Monk", "profile": ["5","3","3","3","4","1","4","1","5"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "magicStandard": "one",
+      "options": [
+        {"id": "additional-hand-weapon", "name": "Additional hand weapons", "cost": 1, "gear": "additional-hand-weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "rulesText": "Frenzy, Ld bonus from ranks"
+    },
+    {
+      "id": "censer-bearers",
+      "name": "Plague Censer Bearers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 65,
+      "race": "plague-monk",
+      "cost": 15,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Censer Bearer", "profile": ["5","4","0","4","4","1","4","1","5"]}
+      ],
+      "equipmentText": "Plague censer",
+      "attachTo": {
+        "entries": ["plague-monks"],
+        "label": "Accompanying",
+        "required": true,
+        "requiredMessage": "must accompany a regiment of Plague Monks",
+        "maxUnits": 1,
+        "maxFraction": 0.5,
+        "hint": "one unit per Plague Monk regiment, at most half its size"
+      },
+      "rulesText": "Skirmish, Frenzy, Hatred, Plague censer (Fog of Death), -2 to hit when shot",
+      "notes": "The book gives no smaller minimum, so the normal five-model minimum is applied.",
+      "options": []
+    },
+    {
+      "id": "giant-rat-pack",
+      "name": "Clan Moulder Giant Rat Pack",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 66,
+      "race": "skaven",
+      "minSize": 5,
+      "profiles": [
+        {"name": "Packmaster", "profile": ["5","4","4","3","3","1","4","1","7"]},
+        {"name": "Giant Rat", "profile": ["6","2","0","3","3","1","3","1","4"]}
+      ],
+      "models": [
+        {"id": "packmaster", "name": "Packmasters", "cost": 10, "min": 1},
+        {"id": "rat", "name": "Giant Rats", "cost": 2.5, "min": 0}
+      ],
+      "ratio": {"model": "rat", "per": "packmaster", "max": 6, "min": 1, "message": "Each Packmaster controls 1 to 6 Giant Rats (p.66)."},
+      "trooperCost": 10,
+      "bossReplaces": "packmaster",
+      "equipmentText": "Packmasters: sword or other hand weapon, light armour",
+      "armour": ["light"],
+      "bossGear": ["light-armour"],
+      "save": "6+/-",
+      "options": [
+        {"id": "additional-hand-weapon", "name": "Packmasters: additional hand weapons", "cost": 1, "perModel": "packmaster", "gear": "additional-hand-weapon"}
+      ],
+      "rulesText": "Always pursue, Overwhelm enemy, Only Giant Rats panic at fleeing Giant Rats",
+      "notes": "Packmasters have a 6+ save, the rats none. Standard bearer and musician are priced as double a Packmaster; a Champion replaces one Packmaster. Giant Rats and Rat Ogres can never be mixed in one pack."
+    },
+    {
+      "id": "rat-ogre-pack",
+      "name": "Clan Moulder Rat Ogre Pack",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 66,
+      "race": "skaven",
+      "minSize": 5,
+      "profiles": [
+        {"name": "Packmaster", "profile": ["5","4","4","3","3","1","4","1","7"]},
+        {"name": "Rat Ogre", "profile": ["6","4","0","5","5","3","5","2","5"]}
+      ],
+      "models": [
+        {"id": "packmaster", "name": "Packmasters", "cost": 10, "min": 1},
+        {"id": "ogre", "name": "Rat Ogres", "cost": 43, "min": 0}
+      ],
+      "ratio": {"model": "ogre", "per": "packmaster", "max": 6, "min": 1, "message": "Each Packmaster controls 1 to 6 Rat Ogres (p.66)."},
+      "trooperCost": 10,
+      "bossReplaces": "packmaster",
+      "equipmentText": "Packmasters: sword or other hand weapon, light armour",
+      "armour": ["light"],
+      "bossGear": ["light-armour"],
+      "save": "6+/-",
+      "options": [
+        {"id": "additional-hand-weapon", "name": "Packmasters: additional hand weapons", "cost": 1, "perModel": "packmaster", "gear": "additional-hand-weapon"}
+      ],
+      "rulesText": "Rat Ogres: Fear, Stupidity unless led by a Packmaster",
+      "notes": "Packmasters have a 6+ save, the Rat Ogres none. Standard bearer and musician are priced as double a Packmaster; a Champion replaces one Packmaster."
+    },
+    {
+      "id": "globadiers",
+      "name": "Clan Skryre Poison Wind Globadiers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 66,
+      "race": "skaven",
+      "cost": 20,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Globadier", "profile": ["5","3","3","3","3","1","4","1","5"]}
+      ],
+      "equipmentText": "Hand weapon, poison wind globes",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "gear": "light-armour", "armour": "light"}
+      ],
+      "attachTo": {
+        "entries": ["stormvermin", "clanrats"],
+        "label": "Accompanying",
+        "alone": "Skirmishing unit",
+        "maxModels": 2,
+        "hint": "a regiment of Stormvermin or Clanrats may have up to two Globadiers and one warpfire team"
+      },
+      "rulesText": "Poison wind globes, Skirmish",
+      "notes": "Globadiers with a regiment have no minimum; a separate skirmishing unit uses the normal five-model minimum."
+    },
+    {
+      "id": "warpfire-throwers",
+      "name": "Clan Skryre Warpfire Thrower Teams",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 67,
+      "race": "skaven",
+      "cost": 70,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Crew (2)", "profile": ["4","3","3","3","3","1","4","1","5"]}
+      ],
+      "sizeLabel": "teams",
+      "noCommand": true,
+      "single": "Warpfire Thrower Team",
+      "equipmentText": "Crew: hand weapons, heavy armour",
+      "armour": ["heavy"],
+      "attachTo": {
+        "entries": ["stormvermin", "clanrats"],
+        "label": "Accompanying",
+        "alone": "Skirmishing unit",
+        "maxModels": 1,
+        "hint": "a regiment of Stormvermin or Clanrats may have up to two Globadiers and one warpfire team"
+      },
+      "rulesText": "Warpfire thrower (template, S5, -2 save, D3 wounds), Stand and shoot, Misfire",
+      "options": []
+    },
+    {
+      "id": "jezzails",
+      "name": "Clan Skryre Jezzail Teams",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 67,
+      "race": "skaven",
+      "cost": 30,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Crew (2)", "profile": ["5","3","3","3","3","1","4","1","5"]}
+      ],
+      "sizeLabel": "teams",
+      "noCommand": true,
+      "single": "Jezzail Team",
+      "equipmentText": "Crew: hand weapons",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 4, "armour": "light"}
+      ],
+      "rulesText": "Jezzail (36\", S5, -3 save, D3 wounds), Skirmish"
+    },
+    {
+      "id": "doomwheel",
+      "name": "Doomwheel",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 67,
+      "race": "skaven",
+      "cost": 150,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Warpstone Generator", "profile": ["-","-","-","-","5","sp","-","-","-"]},
+        {"name": "Wheel", "profile": ["3D6\"","-","-","7","7","3","1","-","-"]},
+        {"name": "Warlock Engineer", "profile": ["5","4","4","4","3","1","5","2","10"]},
+        {"name": "Rats", "profile": ["-","3","0","3","2","6","1","6","10"]}
+      ],
+      "sizeLabel": "Doomwheels",
+      "noCommand": true,
+      "single": "Doomwheel",
+      "rulesText": "Random movement, Warp lightning, Lightning field, Misfire",
+      "options": []
+    },
+    {
+      "id": "screaming-bell",
+      "name": "Screaming Bell",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 67,
+      "race": "skaven",
+      "cost": 200,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Bell Carriage", "profile": ["-","-","-","7","7","6","1","-","-"]},
+        {"name": "Striker", "profile": ["5","3","3","4","3","1","4","1","4"]}
+      ],
+      "sizeLabel": "Bells",
+      "noCommand": true,
+      "single": "Screaming Bell",
+      "rulesText": "Ring the Bell, Warpstone brazier (Seer and Striker immune to psychology)",
+      "notes": "One Bell per Grey Seer, who rides it. The Bell's points count as war machines.",
+      "options": []
+    },
+    {
+      "id": "rat-swarms",
+      "name": "Rat Swarms",
+      "kind": "unit",
+      "category": "monsters",
+      "page": 68,
+      "max": 1,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Rat Swarm", "profile": ["6","3","0","3","2","5","1","5","10"]}
+      ],
+      "models": [
+        {"id": "half", "name": "Half-price bases", "cost": 50, "min": 0},
+        {"id": "full", "name": "Full-price bases", "cost": 100, "min": 0}
+      ],
+      "sizeLabel": "bases",
+      "noCommand": true,
+      "single": "Rat Swarm base",
+      "rulesText": "Immune to psychology, Unbreakable",
+      "notes": "All Rat Swarms form a single unit. One half-price base (50) per Skaven regiment; extra bases cost 100.",
+      "options": [],
+      "notMount": true
+    },
+    {"id": "chimera", "name": "Chimera", "kind": "monster", "category": "monsters", "page": 68, "cost": 250, "profile": ["6","4","0","7","6","6","4","6","8"]},
+    {"id": "cockatrice", "name": "Cockatrice", "kind": "monster", "category": "monsters", "page": 68, "cost": 150, "profile": ["4","3","0","4","4","2","4","3","6"]},
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 68,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "gigantic-spider",
+      "name": "Gigantic Spider",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 68,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {"id": "harpy", "name": "Harpy", "kind": "monster", "category": "monsters", "page": 68, "cost": 15, "profile": ["4","4","0","4","4","2","2","1","6"]},
+    {"id": "hydra", "name": "Hydra", "kind": "monster", "category": "monsters", "page": 68, "cost": 225, "profile": ["6","3","0","5","6","7","3","5","6"]},
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 68, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 68, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 68,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}
