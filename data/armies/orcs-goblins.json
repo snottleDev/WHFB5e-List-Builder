@@ -36,7 +36,9 @@
   },
   "magic": {
     "tags": ["orcs-goblins"],
-    "pools": [{"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
     "items": [
       {"id": "evil-sun-banner", "name": "The Evil Sun Banner", "type": "standard", "points": 10, "page": 100, "only": "Night Goblins only", "races": ["night-goblin"]}
     ]
@@ -70,10 +72,26 @@
       "variants": [
         {"id": "black-orc", "race": "black-orc", "name": "Black Orc Warlord", "cost": 140, "magicItems": 3, "profile": ["4","7","6","5","5","3","5","4","10"]},
         {"id": "orc", "race": "orc", "name": "Orc Warlord", "cost": 110, "magicItems": 3, "profile": ["4","6","6","4","5","3","5","4","9"]},
-        {"id": "savage-orc", "race": "savage-orc", "name": "Savage Orc Warlord", "cost": 150, "magicItems": 3, "profile": ["4","6","6","4","5","3","5","4","9"]},
-        {"id": "goblin", "race": "goblin", "name": "Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"]},
-        {"id": "forest-goblin", "race": "forest-goblin", "name": "Forest Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"]},
-        {"id": "night-goblin", "race": "night-goblin", "name": "Night Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"]}
+        {
+          "id": "savage-orc",
+          "race": "savage-orc",
+          "name": "Savage Orc Warlord",
+          "cost": 150,
+          "magicItems": 3,
+          "profile": ["4","6","6","4","5","3","5","4","9"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {"id": "goblin", "race": "goblin", "name": "Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"], "rulesText": "Fear Elves"},
+        {"id": "forest-goblin", "race": "forest-goblin", "name": "Forest Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"], "rulesText": "Fear Elves"},
+        {
+          "id": "night-goblin",
+          "race": "night-goblin",
+          "name": "Night Goblin Warlord",
+          "cost": 50,
+          "magicItems": 3,
+          "profile": ["4","5","6","4","4","3","5","4","7"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
+        }
       ]
     },
     {
@@ -93,15 +111,24 @@
       "variants": [
         {"id": "black-orc", "race": "black-orc", "name": "Black Orc Battle Standard", "cost": 92, "magicItems": 1, "profile": ["4","5","4","5","4","1","3","2","8"]},
         {"id": "orc", "race": "orc", "name": "Orc Battle Standard", "cost": 83, "magicItems": 1, "profile": ["4","4","4","4","4","1","3","2","7"]},
-        {"id": "savage-orc", "race": "savage-orc", "name": "Savage Orc Battle Standard", "cost": 95, "magicItems": 1, "profile": ["4","4","4","4","4","1","3","2","7"]},
-        {"id": "goblin", "race": "goblin", "name": "Goblin Battle Standard", "cost": 65, "magicItems": 1, "profile": ["4","3","4","4","3","1","3","2","5"]},
+        {
+          "id": "savage-orc",
+          "race": "savage-orc",
+          "name": "Savage Orc Battle Standard",
+          "cost": 95,
+          "magicItems": 1,
+          "profile": ["4","4","4","4","4","1","3","2","7"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {"id": "goblin", "race": "goblin", "name": "Goblin Battle Standard", "cost": 65, "magicItems": 1, "profile": ["4","3","4","4","3","1","3","2","5"], "rulesText": "Fear Elves"},
         {
           "id": "forest-goblin",
           "race": "forest-goblin",
           "name": "Forest Goblin Battle Standard",
           "cost": 65,
           "magicItems": 1,
-          "profile": ["4","3","4","4","3","1","3","2","5"]
+          "profile": ["4","3","4","4","3","1","3","2","5"],
+          "rulesText": "Fear Elves"
         },
         {
           "id": "night-goblin",
@@ -109,7 +136,8 @@
           "name": "Night Goblin Battle Standard",
           "cost": 65,
           "magicItems": 1,
-          "profile": ["4","3","4","4","3","1","3","2","5"]
+          "profile": ["4","3","4","4","3","1","3","2","5"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
         }
       ]
     },
@@ -128,10 +156,26 @@
       "variants": [
         {"id": "black-orc", "race": "black-orc", "name": "Black Orc Big Boss", "cost": 91, "magicItems": 2, "profile": ["4","6","5","5","5","2","4","3","9"]},
         {"id": "orc", "race": "orc", "name": "Orc Big Boss", "cost": 72, "magicItems": 2, "profile": ["4","5","5","4","5","2","4","3","8"]},
-        {"id": "savage-orc", "race": "savage-orc", "name": "Savage Orc Big Boss", "cost": 98, "magicItems": 2, "profile": ["4","5","5","4","5","2","4","3","8"]},
-        {"id": "goblin", "race": "goblin", "name": "Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"]},
-        {"id": "forest-goblin", "race": "forest-goblin", "name": "Forest Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"]},
-        {"id": "night-goblin", "race": "night-goblin", "name": "Night Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"]}
+        {
+          "id": "savage-orc",
+          "race": "savage-orc",
+          "name": "Savage Orc Big Boss",
+          "cost": 98,
+          "magicItems": 2,
+          "profile": ["4","5","5","4","5","2","4","3","8"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {"id": "goblin", "race": "goblin", "name": "Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"], "rulesText": "Fear Elves"},
+        {"id": "forest-goblin", "race": "forest-goblin", "name": "Forest Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"], "rulesText": "Fear Elves"},
+        {
+          "id": "night-goblin",
+          "race": "night-goblin",
+          "name": "Night Goblin Big Boss",
+          "cost": 33,
+          "magicItems": 2,
+          "profile": ["4","4","5","4","4","2","4","3","6"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
+        }
       ]
     },
     {
@@ -153,22 +197,63 @@
         {"id": "orc-2", "race": "orc", "name": "Orc Shaman Champion", "cost": 118, "magicItems": 2, "profile": ["4","3","3","4","5","2","3","1","7"]},
         {"id": "orc-3", "race": "orc", "name": "Orc Master Shaman", "cost": 211, "magicItems": 3, "profile": ["4","3","3","4","5","3","4","2","7"]},
         {"id": "orc-4", "race": "orc", "name": "Orc Shaman Lord", "cost": 287, "magicItems": 4, "profile": ["4","3","3","4","5","4","5","3","8"]},
-        {"id": "savage-orc-1", "race": "savage-orc", "name": "Savage Orc Shaman", "cost": 59, "magicItems": 1, "profile": ["4","3","3","3","5","1","3","1","7"]},
-        {"id": "savage-orc-2", "race": "savage-orc", "name": "Savage Orc Shaman Champion", "cost": 122, "magicItems": 2, "profile": ["4","3","3","4","5","2","3","1","7"]},
-        {"id": "savage-orc-3", "race": "savage-orc", "name": "Savage Orc Master Shaman", "cost": 219, "magicItems": 3, "profile": ["4","3","3","4","5","3","4","2","7"]},
-        {"id": "savage-orc-4", "race": "savage-orc", "name": "Savage Orc Shaman Lord", "cost": 303, "magicItems": 4, "profile": ["4","3","3","4","5","4","5","3","8"]},
-        {"id": "goblin-1", "race": "goblin", "name": "Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"]},
-        {"id": "goblin-2", "race": "goblin", "name": "Goblin Shaman Champion", "cost": 83, "magicItems": 2, "profile": ["4","2","3","4","4","2","3","1","5"]},
-        {"id": "goblin-3", "race": "goblin", "name": "Goblin Master Shaman", "cost": 159, "magicItems": 3, "profile": ["4","2","3","4","4","3","4","2","5"]},
-        {"id": "goblin-4", "race": "goblin", "name": "Goblin Shaman Lord", "cost": 253, "magicItems": 4, "profile": ["4","2","3","4","4","4","5","3","6"]},
-        {"id": "night-goblin-1", "race": "night-goblin", "name": "Night Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"]},
+        {
+          "id": "savage-orc-1",
+          "race": "savage-orc",
+          "name": "Savage Orc Shaman",
+          "cost": 59,
+          "magicItems": 1,
+          "profile": ["4","3","3","3","5","1","3","1","7"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {
+          "id": "savage-orc-2",
+          "race": "savage-orc",
+          "name": "Savage Orc Shaman Champion",
+          "cost": 122,
+          "magicItems": 2,
+          "profile": ["4","3","3","4","5","2","3","1","7"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {
+          "id": "savage-orc-3",
+          "race": "savage-orc",
+          "name": "Savage Orc Master Shaman",
+          "cost": 219,
+          "magicItems": 3,
+          "profile": ["4","3","3","4","5","3","4","2","7"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {
+          "id": "savage-orc-4",
+          "race": "savage-orc",
+          "name": "Savage Orc Shaman Lord",
+          "cost": 303,
+          "magicItems": 4,
+          "profile": ["4","3","3","4","5","4","5","3","8"],
+          "rulesText": "Frenzy, Protective tattoos"
+        },
+        {"id": "goblin-1", "race": "goblin", "name": "Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"], "rulesText": "Fear Elves"},
+        {"id": "goblin-2", "race": "goblin", "name": "Goblin Shaman Champion", "cost": 83, "magicItems": 2, "profile": ["4","2","3","4","4","2","3","1","5"], "rulesText": "Fear Elves"},
+        {"id": "goblin-3", "race": "goblin", "name": "Goblin Master Shaman", "cost": 159, "magicItems": 3, "profile": ["4","2","3","4","4","3","4","2","5"], "rulesText": "Fear Elves"},
+        {"id": "goblin-4", "race": "goblin", "name": "Goblin Shaman Lord", "cost": 253, "magicItems": 4, "profile": ["4","2","3","4","4","4","5","3","6"], "rulesText": "Fear Elves"},
+        {
+          "id": "night-goblin-1",
+          "race": "night-goblin",
+          "name": "Night Goblin Shaman",
+          "cost": 28,
+          "magicItems": 1,
+          "profile": ["4","2","3","3","4","1","3","1","5"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
+        },
         {
           "id": "night-goblin-2",
           "race": "night-goblin",
           "name": "Night Goblin Shaman Champion",
           "cost": 83,
           "magicItems": 2,
-          "profile": ["4","2","3","4","4","2","3","1","5"]
+          "profile": ["4","2","3","4","4","2","3","1","5"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
         },
         {
           "id": "night-goblin-3",
@@ -176,7 +261,8 @@
           "name": "Night Goblin Master Shaman",
           "cost": 159,
           "magicItems": 3,
-          "profile": ["4","2","3","4","4","3","4","2","5"]
+          "profile": ["4","2","3","4","4","3","4","2","5"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
         },
         {
           "id": "night-goblin-4",
@@ -184,16 +270,18 @@
           "name": "Night Goblin Shaman Lord",
           "cost": 253,
           "magicItems": 4,
-          "profile": ["4","2","3","4","4","4","5","3","6"]
+          "profile": ["4","2","3","4","4","4","5","3","6"],
+          "rulesText": "Fear Elves, Hate Dwarfs"
         },
-        {"id": "forest-goblin-1", "race": "forest-goblin", "name": "Forest Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"]},
+        {"id": "forest-goblin-1", "race": "forest-goblin", "name": "Forest Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"], "rulesText": "Fear Elves"},
         {
           "id": "forest-goblin-2",
           "race": "forest-goblin",
           "name": "Forest Goblin Shaman Champion",
           "cost": 83,
           "magicItems": 2,
-          "profile": ["4","2","3","4","4","2","3","1","5"]
+          "profile": ["4","2","3","4","4","2","3","1","5"],
+          "rulesText": "Fear Elves"
         },
         {
           "id": "forest-goblin-3",
@@ -201,7 +289,8 @@
           "name": "Forest Goblin Master Shaman",
           "cost": 159,
           "magicItems": 3,
-          "profile": ["4","2","3","4","4","3","4","2","5"]
+          "profile": ["4","2","3","4","4","3","4","2","5"],
+          "rulesText": "Fear Elves"
         },
         {
           "id": "forest-goblin-4",
@@ -209,7 +298,8 @@
           "name": "Forest Goblin Shaman Lord",
           "cost": 253,
           "magicItems": 4,
-          "profile": ["4","2","3","4","4","4","5","3","6"]
+          "profile": ["4","2","3","4","4","4","5","3","6"],
+          "rulesText": "Fear Elves"
         }
       ]
     },
@@ -282,15 +372,9 @@
       "profile": ["4","5","6","4","4","3","5","4","7"],
       "equipmentText": "Light armour, Axe of Grom",
       "armour": ["light"],
-      "rulesText": "Regenerate",
+      "rulesText": "Regenerate, Fear Elves",
       "options": [
-        {
-          "id": "niblit",
-          "name": "Niblit with Battle Standard",
-          "cost": 65,
-          "tags": ["bsb"],
-          "extraProfile": {"name": "Niblit", "profile": ["4","3","4","4","3","1","3","2","5"]}
-        },
+        {"id": "niblit", "name": "Niblit with Battle Standard", "cost": 65, "tags": ["bsb"], "extraProfile": {"name": "Niblit", "profile": ["4","3","4","4","3","1","3","2","5"]}},
         {
           "id": "chariot",
           "name": "Chariot (three giant wolves)",
@@ -397,7 +481,8 @@
       "startingItems": ["skarsniks-prodder"],
       "options": [
         {"id": "gobbla", "name": "Gobbla", "cost": 50, "extraProfile": {"name": "Gobbla", "profile": ["-","6","0","6","4","3","6","4","2"]}}
-      ]
+      ],
+      "rulesText": "Fear Elves, Hate Dwarfs"
     },
     {
       "id": "savage-orc-boar-boyz",
@@ -418,7 +503,7 @@
       "saveBonus": 1,
       "bossGear": ["shield"],
       "bossMount": "war-boar",
-      "rulesText": "Frenzy",
+      "rulesText": "Animosity, Frenzy, Protective tattoos, War boars",
       "magicStandard": "one",
       "options": [
         {"id": "spears", "name": "Spears", "cost": 2, "gear": "spear"},
@@ -448,7 +533,8 @@
       "magicStandard": "any",
       "options": [
         {"id": "spears", "name": "Spears", "cost": 2, "gear": "spear"}
-      ]
+      ],
+      "rulesText": "Animosity, War boars"
     },
     {
       "id": "wolf-riders",
@@ -471,7 +557,8 @@
         {"id": "short-bows", "name": "Short bows", "cost": 1, "gear": "short-bow"},
         {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
         {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
-      ]
+      ],
+      "rulesText": "Animosity, Fear Elves"
     },
     {
       "id": "spider-riders",
@@ -493,7 +580,8 @@
         {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
         {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear"},
         {"id": "short-bows", "name": "Short bows", "cost": 1, "gear": "short-bow"}
-      ]
+      ],
+      "rulesText": "Animosity, Fear Elves, Spiders ignore difficult terrain"
     },
     {
       "id": "big-uns",
@@ -516,7 +604,8 @@
         {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
         {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
         {"id": "bows", "name": "Bows", "cost": 2, "gear": "bow", "group": "weapon"}
-      ]
+      ],
+      "rulesText": "Animosity"
     },
     {
       "id": "orc-boyz",
@@ -539,7 +628,8 @@
         {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
         {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
         {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"}
-      ]
+      ],
+      "rulesText": "Animosity"
     },
     {
       "id": "arrer-boyz",
@@ -559,7 +649,8 @@
         {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
         {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
         {"id": "crossbows", "name": "Crossbows instead of bows", "cost": 1, "gear": "crossbow", "replacesGear": "bow"}
-      ]
+      ],
+      "rulesText": "Animosity"
     },
     {
       "id": "black-orcs",
@@ -584,7 +675,8 @@
         {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
         {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"},
         {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
-      ]
+      ],
+      "rulesText": "No Animosity"
     },
     {
       "id": "savage-orcs",
@@ -600,7 +692,7 @@
       ],
       "equipmentText": "Crude hand weapon",
       "armour": ["light"],
-      "rulesText": "Skirmish, Frenzy",
+      "rulesText": "Animosity, Frenzy, Skirmish, Protective tattoos",
       "magicStandard": "one",
       "options": [
         {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
@@ -632,7 +724,8 @@
         {"id": "halberds", "name": "Halberds", "cost": 1, "gear": "halberd", "group": "weapon"},
         {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
         {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"}
-      ]
+      ],
+      "rulesText": "Animosity, Fear Elves"
     },
     {
       "id": "forest-goblins",
@@ -653,7 +746,8 @@
         {"id": "double-handed", "name": "Double-handed weapons", "cost": 1, "gear": "double-handed-weapon", "group": "weapon"},
         {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
         {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"}
-      ]
+      ],
+      "rulesText": "Animosity, Fear Elves"
     },
     {
       "id": "night-goblins",
@@ -675,16 +769,9 @@
         {"id": "halberds", "name": "Halberds", "cost": 1, "gear": "halberd", "group": "weapon"},
         {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
         {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"},
-        {
-          "id": "fanatics",
-          "name": "Hidden Fanatics",
-          "cost": 30,
-          "per": "unit",
-          "max": 3,
-          "count": true,
-          "extraProfile": {"name": "Fanatic", "profile": ["2D6","sp","sp","5","3","1","-","D6","-"]}
-        }
-      ]
+        {"id": "fanatics", "name": "Hidden Fanatics", "cost": 30, "per": "unit", "max": 3, "count": true, "extraProfile": {"name": "Fanatic", "profile": ["2D6","sp","sp","5","3","1","-","D6","-"]}}
+      ],
+      "rulesText": "Animosity, Fear Elves, Hate Dwarfs"
     },
     {
       "id": "squig-hunters",
@@ -711,7 +798,8 @@
       "bossGearText": "Sword or other hand weapon instead of a prodder",
       "trooperCost": 4,
       "options": [],
-      "notes": "A Hunter team counts as two models. Standard/musician cost assumed as double a single hunter (4 pts), i.e. 8 - please check."
+      "notes": "A Hunter team counts as two models. Standard/musician cost assumed as double a single hunter (4 pts), i.e. 8 - please check.",
+      "rulesText": "Animosity, Fear Elves, Hate Dwarfs, Wild Squigs"
     },
     {
       "id": "netters",
@@ -733,7 +821,8 @@
       "bossOptions": [
         {"id": "club", "name": "Club", "cost": 1}
       ],
-      "options": []
+      "options": [],
+      "rulesText": "Animosity, Fear Elves, Hate Dwarfs, Nets & clubs"
     },
     {
       "id": "squig-hoppers",
@@ -752,7 +841,8 @@
       "save": "6+",
       "options": [],
       "notes": "Each Squig Hopper is an individual model; add them as one entry and set the number.",
-      "single": "Squig Hopper"
+      "single": "Squig Hopper",
+      "rulesText": "Immune to psychology, Random movement"
     },
     {
       "id": "giants",
@@ -808,11 +898,12 @@
       "variantsLabel": "Type",
       "variants": [
         {"id": "troll", "name": "Trolls", "single": "Troll"},
-        {"id": "stone", "name": "Stone Trolls", "single": "Stone Troll"},
-        {"id": "river", "name": "River Trolls", "single": "River Troll"}
+        {"id": "stone", "name": "Stone Trolls", "single": "Stone Troll", "rulesText": "Magic resistance (dispel on 4+)"},
+        {"id": "river", "name": "River Trolls", "single": "River Troll", "rulesText": "-1 to hit in close combat"}
       ],
       "options": [],
-      "notes": "Up to 5 Trolls form one unit; 6-10 one or two units; 11-15 up to three; +1 unit per extra 5. Units must be of one Troll type."
+      "notes": "Up to 5 Trolls form one unit; 6-10 one or two units; 11-15 up to three; +1 unit per extra 5. Units must be of one Troll type.",
+      "rulesText": "Fear, Stupidity, Regenerate, Vomit"
     },
     {
       "id": "snotlings",
@@ -829,7 +920,8 @@
       ],
       "options": [],
       "notes": "Up to 5 bases form one unit; 6-10 one or two units; 11-15 up to three; +1 unit per extra 5 bases.",
-      "single": "Snotling base"
+      "single": "Snotling base",
+      "rulesText": "Mimic"
     },
     {
       "id": "rock-lobber",
@@ -999,26 +1091,10 @@
     {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 95, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
     {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 95, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
     {"id": "hydra", "name": "Hydra", "kind": "monster", "category": "monsters", "page": 95, "cost": 225, "profile": ["6","3","0","5","6","7","3","5","6"]},
-    {
-      "id": "gigantic-spider",
-      "name": "Gigantic Spider",
-      "kind": "monster",
-      "category": "monsters",
-      "page": 95,
-      "cost": 50,
-      "profile": ["5","3","0","5","4","4","1","2","7"]
-    },
+    {"id": "gigantic-spider", "name": "Gigantic Spider", "kind": "monster", "category": "monsters", "page": 95, "cost": 50, "profile": ["5","3","0","5","4","4","1","2","7"]},
     {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 95, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
     {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 95, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
-    {
-      "id": "giant-scorpion",
-      "name": "Giant Scorpion",
-      "kind": "monster",
-      "category": "monsters",
-      "page": 95,
-      "cost": 50,
-      "profile": ["5","3","0","5","4","4","1","2","7"]
-    },
+    {"id": "giant-scorpion", "name": "Giant Scorpion", "kind": "monster", "category": "monsters", "page": 95, "cost": 50, "profile": ["5","3","0","5","4","4","1","2","7"]},
     {
       "id": "swarms",
       "name": "Swarm",
@@ -1038,5 +1114,6 @@
         {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
       ]
     }
-  ]
+  ],
+  "keywordsSource": "Special rule keywords from the Orc & Goblin Bestiary (pp.16, 66-81)"
 }
