@@ -13,13 +13,14 @@
 export function attachMagic(army, catalogues) {
   const conf = army.magic || { tags: [], pools: [], items: [] };
   const tags = new Set(conf.tags || []);
+  const excluded = new Set(conf.excludeItems || []);
   army.itemById = new Map();
   army.itemTypes = {};
   army.magicPools = (conf.pools || []).map((p) => ({ ...p, items: [] }));
   const poolFor = (catId) => army.magicPools.find((p) => (p.catalogues || []).includes(catId));
 
   const add = (item, pool, catalogue) => {
-    const usable = (!item.tags || item.tags.some((t) => tags.has(t))) && !(item.excludeTags || []).some((t) => tags.has(t));
+    const usable = (!item.tags || item.tags.some((t) => tags.has(t))) && !(item.excludeTags || []).some((t) => tags.has(t)) && !excluded.has(item.id);
     const it = { ...item, pool: pool?.id || "magic", catalogue: catalogue?.id || army.id, usable };
     army.itemById.set(it.id, it);
     if (usable && pool) pool.items.push(it);

@@ -144,8 +144,8 @@ export function selectionCost(army, sel) {
       const trooper = entry.trooperCost != null ? entry.trooperCost : perModelCost(entry, sel);
       // Standard bearers and musicians cost double an ordinary trooper (p.82):
       // the model is already counted in the unit size, so add one extra trooper cost.
-      if (sel.standard) add(cat, trooper, "Standard bearer (double cost)");
-      if (sel.musician) add(cat, trooper, "Musician (double cost)");
+      if (sel.standard && !entry.freeStandard) add(cat, trooper, "Standard bearer (double cost)");
+      if (sel.musician && !entry.freeMusician) add(cat, trooper, "Musician (double cost)");
       if (sel.boss?.enabled && canHaveBoss(army, entry)) {
         add("characters", bossCost(army, entry, sel), army.championName ? army.championName : `${army.races[entry.race]} Boss`);
       }
@@ -154,7 +154,9 @@ export function selectionCost(army, sel) {
   for (const x of sel.extras || []) {
     // magic items belong with whoever carries them: a Boss's item counts as Characters
     const xcat = x.onBoss ? "characters" : cat;
-    add(xcat, extraPoints(army, x), extraName(army, x) || "Item");
+    let pts = extraPoints(army, x);
+    if (!x.onBoss && entry.magicStandardFactor != null && extraType(army, x) === "standard") pts *= entry.magicStandardFactor;
+    add(xcat, pts, extraName(army, x) || "Item");
   }
   return out;
 }
@@ -185,6 +187,9 @@ export function describeMount(army, mount) {
 export function computeSave(army, sel) {
   const entry = findEntry(army, sel.entryId);
   if (!entry) return "";
+  const v0 = variantOf(entry, sel);
+  for (const o of entry.options || []) if (sel.options?.[o.id] && o.save) return o.save;
+  if (v0?.save) return v0.save;
   if (entry.save) return entry.save;
   if (entry.kind === "monster") return "-";
   const armour = new Set(entry.armour || []);
@@ -195,6 +200,7 @@ export function computeSave(army, sel) {
     if (o.armour) armour.add(o.armour);
     if (o.replacesArmour) armour.delete(o.replacesArmour);
     if (o.cavalry) cavalry = true;
+    if (o.saveBonus) bonus += o.saveBonus;
   }
   if (entry.kind === "character") {
     for (const gid of sel.gear || []) {
@@ -211,7 +217,11 @@ export function computeSave(army, sel) {
   }
   let save = 7; // 7 = no save
   const s = armour.has("shield"), l = armour.has("light"), h = armour.has("heavy");
-  if (s && h) save = 4;
+  const natural = v0?.naturalSave ?? entry.naturalSave;
+  if (natural) {
+    // Lizardmen: scaly skin gives a base save; light armour and a shield each improve it by 1
+    save = natural - (l ? 1 : 0) - (s ? 1 : 0);
+  } else if (s && h) save = 4;
   else if ((s && l) || h) save = 5;
   else if (s || l) save = 6;
   if (cavalry) save -= 1;
@@ -307,9 +317,12 @@ export function validate(army, list) {
     if (r.type === "exactlyTag" && tagCount(r.tag) !== r.count) warn(`${r.message} (currently ${tagCount(r.tag)})`);
     if (r.type === "maxTag" && tagCount(r.tag) > r.count) warn(`${r.message} (currently ${tagCount(r.tag)})`);
     if (r.type === "perUnits") {
-      const have = list.selections.filter((s) => s.entryId === r.entry).reduce((n, s) => n + countOf(army, s, r.model), 0);
-      const units = list.selections.filter((s) => r.per.includes(s.entryId)).length;
-      if (have > units * r.max) warn(`${r.message} You have ${have}, the maximum is ${units * r.max}.`);
+      const entries = Array.isArray(r.entry) ? r.entry : [r.entry];
+      const mine = list.selections.filter((s) => entries.includes(s.entryId));
+      const have = r.units ? mine.length : mine.reduce((n, s) => n + countOf(army, s, r.model), 0);
+      const units = list.selections.filter((s) => r.per.includes(s.entryId) && !s.attachedTo).length;
+      const allowed = Math.max(r.atLeast || 0, units * r.max);
+      if (have > allowed) warn(`${r.message} You have ${have}, the maximum is ${allowed}.`);
     }
     if (r.type === "unitsBySize") {
       // e.g. up to five warpfire teams form one unit, 6-10 up to two units, and so on
@@ -320,6 +333,8 @@ export function validate(army, list) {
         if (units.length > allowed) warn(`${findEntry(army, id).name}: ${models} in ${units.length} units, at most ${allowed} unit${allowed > 1 ? "s" : ""}. ${r.message}`);
       }
     }
+    if (r.type === "requireEntry" && !list.selections.some((s) => (Array.isArray(r.entry) ? r.entry : [r.entry]).includes(s.entryId)))
+      warn(r.message);
     if (r.type === "minCategoryIf" && list.selections.some((s) => s.entryId === r.entry)) {
       const pts = byCategory[r.category] || 0;
       if (pts < (limit * r.min) / 100) warn(`${r.message} (currently ${fmt(pts)} pts)`);
@@ -342,12 +357,16 @@ export function validate(army, list) {
       if (race && !hasMobOfRace(army, list, race))
         warn(`${label}: requires at least one Mob of ${army.races[race]}s.`, s.uid);
     }
-    for (const req of e.requires || []) {
+    for (const req of [...(e.requires || []), ...(variantOf(e, s)?.requires || [])]) {
       const ok = req.race ? hasMobOfRace(army, list, req.race)
         : req.entries ? list.selections.some((x) => req.entries.includes(x.entryId))
         : list.selections.some((x) => x.entryId === req.entry);
       if (!ok) warn(`${label}: ${req.message}`, s.uid);
     }
+    for (const rg of e.requiredGroups || []) {
+      if (!(e.options || []).some((o) => o.group === rg.group && s.options?.[o.id])) warn(`${label}: ${rg.message}`, s.uid);
+    }
+    if (e.requireStandard && !s.standard) warn(`${label}: ${e.requireStandard}`, s.uid);
     if (e.kind === "unit") {
       const size = unitSize(e, s);
       if (e.minSize && size < e.minSize && !s.attachedTo) warn(`${label}: ${size} ${e.sizeLabel || "models"}, the minimum is ${e.minSize}.`, s.uid);
@@ -374,6 +393,9 @@ export function validate(army, list) {
         warn(`${label}: cannot wield both a double-handed weapon and a halberd.`, s.uid);
       const missile = g.filter((id) => gearItem(army, id)?.group === "missile");
       if (missile.length > 1) warn(`${label}: more than one missile weapon selected.`, s.uid);
+      const mt = describeMount(army, s.mount);
+      if (mt?.kind === "monster" && e.monsterRaces && !e.monsterRaces.includes(selectionRace(army, s)))
+        warn(`${label}: only a ${e.monsterRaces.map((r) => army.races[r]).join(" or ")} may ride a monster.`, s.uid);
       if (!isMounted(army, s)) for (const id of g) {
         const it = gearItem(army, id);
         if (it?.mountedOnly) warn(`${label}: ${it.name.replace(/ \(mounted only\)/, "")} can only be used by a mounted model.`, s.uid);
@@ -421,6 +443,10 @@ function checkAttached(army, list) {
   for (const { units, models, e, p, pe } of per.values()) {
     const who = p.name || pe.name;
     if (e.attachTo.maxModels != null && models > e.attachTo.maxModels) warn(`${who}: ${models} ${e.name} with it, the maximum is ${e.attachTo.maxModels}.`, p.uid);
+    if (e.attachTo.perParentModels) {
+      const max = Math.floor(unitSize(pe, p) / e.attachTo.perParentModels);
+      if (models > max) warn(`${who}: ${models} ${e.name} with it, the maximum is ${max} (one per ${e.attachTo.perParentModels} models).`, p.uid);
+    }
     if (e.attachTo.maxUnits != null && units > e.attachTo.maxUnits) warn(`${who}: ${units} units of ${e.name} with it, the maximum is ${e.attachTo.maxUnits}.`, p.uid);
   }
   return issues;
