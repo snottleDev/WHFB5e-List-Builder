@@ -2,7 +2,7 @@
 // and the A4 roster sheet PDF, laid out after the classic Warhammer roster sheet.
 import { MiniPdf } from "./minipdf.js";
 import { extraName } from "./magic.js";
-import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss, defaultNotes, parentOf } from "./calc.js";
+import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss, defaultNotes, parentOf, attachedParent } from "./calc.js";
 
 export function rosterRows(army, list) {
   const order = (s) => army.categories.findIndex((c) => c.id === findEntry(army, s.entryId)?.category);
@@ -37,8 +37,11 @@ export function rosterRows(army, list) {
       if (m) {
         lines.push(m.kind === "chariot" ? `in ${m.name}` : `on ${m.name}`);
         if (m.profile) profiles.push({ name: m.name, profile: m.profile });
-        if (m.profiles) for (const p of m.profiles.slice(1)) profiles.push(p);
+        // a chariot unit's first profile is its crew; a chariot mount lists only what the character adds
+        if (m.profiles) for (const p of m.kind === "chariot" ? m.profiles.slice(1) : m.profiles) profiles.push(p);
       }
+      const ap = attachedParent(list, s);
+      if (ap) lines.push(`${e.attachTo.label || "With"} ${ap.name || findEntry(army, ap.entryId).name}`);
     } else if (e.kind === "monster") {
       title = s.name || v?.name || e.name;
       if (s.name || (s.size || 1) > 1) lines.push(`${s.size || 1} ${v?.name || e.name}`);
@@ -54,6 +57,8 @@ export function rosterRows(army, list) {
       }
       const parent = parentOf(list, s);
       if (parent) lines.push(`Detachment of ${parent.name || findEntry(army, parent.entryId).name}`);
+      const ap = attachedParent(list, s);
+      if (ap) lines.push(`${e.attachTo.label || "With"} ${ap.name || findEntry(army, ap.entryId).name}`);
       for (const p of e.profiles || []) profiles.push(p);
       if (s.standard) lines.push("Standard");
       if (s.musician) lines.push("Musician");

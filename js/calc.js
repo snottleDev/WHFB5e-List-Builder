@@ -32,9 +32,17 @@ function perModelCost(entry, sel) {
   const v = variantOf(entry, sel);
   let c = v && v.cost != null ? v.cost : entry.cost || 0;
   for (const o of entry.options || []) {
-    if ((o.per || "model") === "model" && !o.count && sel.options?.[o.id]) c += o.cost;
+    if ((o.per || "model") === "model" && !o.count && !o.perModel && sel.options?.[o.id]) c += o.cost;
   }
   return c;
+}
+
+// how many models a selection adds to a count: units/monsters by size, characters count as one
+export function countOf(army, s, model) {
+  const e = findEntry(army, s.entryId);
+  if (!e) return 0;
+  if (model) return s.models?.[model] || 0;
+  return e.kind === "character" ? 1 : unitSize(e, s);
 }
 
 function crewCount(entry, sel) {
@@ -102,8 +110,10 @@ export function selectionCost(army, sel) {
   } else {
     const size = unitSize(entry, sel);
     if (entry.models) {
+      const replaced = sel.boss?.enabled && canHaveBoss(army, entry) ? entry.bossReplaces : null;
       for (const m of entry.models) {
-        const n = sel.models?.[m.id] || 0;
+        let n = sel.models?.[m.id] || 0;
+        if (m.id === replaced) n = Math.max(0, n - 1); // the champion takes the place of one of these
         if (n) add(cat, n * m.cost, `${n} ${m.name}`);
       }
     } else {
@@ -117,6 +127,11 @@ export function selectionCost(army, sel) {
     for (const o of entry.options || []) {
       const val = sel.options?.[o.id];
       if (!val) continue;
+      if (o.perModel) { // e.g. extra hand weapons for the Packmasters only
+        const n = sel.models?.[o.perModel] || 0;
+        if (n) add(cat, n * o.cost, o.name);
+        continue;
+      }
       const per = o.per || "model";
       if (per === "model" && !o.count) continue;
       const n = o.count ? Number(val) : 1;
@@ -149,7 +164,7 @@ export function describeMount(army, mount) {
   const [kind, id] = mount.split(":");
   if (kind === "mount") {
     const m = mountItem(army, id);
-    return m && { name: m.name, cost: m.cost, profile: m.profile, kind, saveBonus: m.saveBonus || 0 };
+    return m && { name: m.name, cost: m.cost, profile: m.profile, profiles: m.profiles, kind, saveBonus: m.saveBonus || 0, noCavalry: !!m.noCavalry, chariot: !!m.chariot };
   }
   if (kind === "monster") {
     const [mid, vid] = id.split("/");
@@ -175,14 +190,19 @@ export function computeSave(army, sel) {
   const armour = new Set(entry.armour || []);
   let cavalry = !!entry.cavalry;
   let bonus = entry.saveBonus || 0;
-  for (const o of entry.options || []) if (sel.options?.[o.id] && o.armour) armour.add(o.armour);
+  for (const o of entry.options || []) {
+    if (!sel.options?.[o.id]) continue;
+    if (o.armour) armour.add(o.armour);
+    if (o.replacesArmour) armour.delete(o.replacesArmour);
+    if (o.cavalry) cavalry = true;
+  }
   if (entry.kind === "character") {
     for (const gid of sel.gear || []) {
       const g = gearItem(army, gid);
       if (g?.armour) armour.add(g.armour);
     }
     const m = describeMount(army, sel.mount);
-    if (m && m.kind === "mount") {
+    if (m && m.kind === "mount" && !m.noCavalry) {
       cavalry = true;
       bonus += m.saveBonus;
     }
@@ -287,9 +307,22 @@ export function validate(army, list) {
     if (r.type === "exactlyTag" && tagCount(r.tag) !== r.count) warn(`${r.message} (currently ${tagCount(r.tag)})`);
     if (r.type === "maxTag" && tagCount(r.tag) > r.count) warn(`${r.message} (currently ${tagCount(r.tag)})`);
     if (r.type === "perUnits") {
-      const have = list.selections.filter((s) => s.entryId === r.entry).reduce((n, s) => n + unitSize(findEntry(army, r.entry), s), 0);
+      const have = list.selections.filter((s) => s.entryId === r.entry).reduce((n, s) => n + countOf(army, s, r.model), 0);
       const units = list.selections.filter((s) => r.per.includes(s.entryId)).length;
       if (have > units * r.max) warn(`${r.message} You have ${have}, the maximum is ${units * r.max}.`);
+    }
+    if (r.type === "unitsBySize") {
+      // e.g. up to five warpfire teams form one unit, 6-10 up to two units, and so on
+      for (const id of r.entries) {
+        const units = list.selections.filter((s) => s.entryId === id && !s.attachedTo);
+        const models = units.reduce((n, s) => n + countOf(army, s), 0);
+        const allowed = Math.max(1, Math.ceil(models / (r.per || 5)));
+        if (units.length > allowed) warn(`${findEntry(army, id).name}: ${models} in ${units.length} units, at most ${allowed} unit${allowed > 1 ? "s" : ""}. ${r.message}`);
+      }
+    }
+    if (r.type === "minCategoryIf" && list.selections.some((s) => s.entryId === r.entry)) {
+      const pts = byCategory[r.category] || 0;
+      if (pts < (limit * r.min) / 100) warn(`${r.message} (currently ${fmt(pts)} pts)`);
     }
     if (r.type === "itemLimit") {
       const carriers = list.selections.filter((s) => !r.exceptEntries.includes(s.entryId) && (s.extras || []).some((x) => x.itemId === r.item));
@@ -317,10 +350,10 @@ export function validate(army, list) {
     }
     if (e.kind === "unit") {
       const size = unitSize(e, s);
-      if (e.minSize && size < e.minSize) warn(`${label}: ${size} ${e.sizeLabel || "models"}, the minimum is ${e.minSize}.`, s.uid);
+      if (e.minSize && size < e.minSize && !s.attachedTo) warn(`${label}: ${size} ${e.sizeLabel || "models"}, the minimum is ${e.minSize}.`, s.uid);
       if (e.ratio) {
         const a = s.models?.[e.ratio.model] || 0, b = s.models?.[e.ratio.per] || 0;
-        if (a > b * e.ratio.max) warn(`${label}: ${e.ratio.message}`, s.uid);
+        if (a > b * e.ratio.max || (e.ratio.min && a < b * e.ratio.min)) warn(`${label}: ${e.ratio.message}`, s.uid);
       }
       const ms = (s.extras || []).filter((x) => !x.onBoss && extraType(army, x) === "standard");
       if (ms.length) {
@@ -351,7 +384,45 @@ export function validate(army, list) {
     const e = findEntry(army, id);
     if (e.magicStandard === "one" && n > 1) warn(`${e.name}: only one Mob of this type may carry a Magic Standard (${n} do).`);
   }
+  issues.push(...checkAttached(army, list));
   if (army.itemById) issues.push(...checkItems(army, list, (s) => itemContext(army, s)));
+  return issues;
+}
+
+// Units or characters that go with a regiment (Skaven war teams, hidden Assassins, Undead Champions).
+// entry.attachTo = { entries, label, required?, maxModels?, maxUnits?, maxFraction? }
+export function attachedParent(list, s) {
+  return s.attachedTo ? list.selections.find((x) => x.uid === s.attachedTo) || null : null;
+}
+function checkAttached(army, list) {
+  const issues = [];
+  const warn = (msg, uid) => issues.push({ msg, uid });
+  const per = new Map(); // `${entryId}|${parentUid}` -> {units, models}
+  for (const s of list.selections) {
+    const e = findEntry(army, s.entryId);
+    const a = e?.attachTo;
+    if (!a) continue;
+    const label = s.name || e.name;
+    const p = attachedParent(list, s);
+    if (!p) {
+      if (s.attachedTo) warn(`${label}: the regiment it was with is no longer in the list.`, s.uid);
+      else if (a.required) warn(`${label}: ${a.requiredMessage || "must go with a regiment"}.`, s.uid);
+      continue;
+    }
+    const pe = findEntry(army, p.entryId);
+    if (!a.entries.includes(p.entryId)) warn(`${label}: cannot go with ${pe?.name || "that unit"}.`, s.uid);
+    if (a.maxFraction && unitSize(e, s) > unitSize(pe, p) * a.maxFraction)
+      warn(`${label}: may be at most ${a.maxFraction === 0.5 ? "half" : `${a.maxFraction * 100}%`} the size of ${p.name || pe.name} (${Math.floor(unitSize(pe, p) * a.maxFraction)}).`, s.uid);
+    const key = `${e.id}|${p.uid}`;
+    const t = per.get(key) || { units: 0, models: 0, e, p, pe };
+    t.units += 1; t.models += countOf(army, s);
+    per.set(key, t);
+  }
+  for (const { units, models, e, p, pe } of per.values()) {
+    const who = p.name || pe.name;
+    if (e.attachTo.maxModels != null && models > e.attachTo.maxModels) warn(`${who}: ${models} ${e.name} with it, the maximum is ${e.attachTo.maxModels}.`, p.uid);
+    if (e.attachTo.maxUnits != null && units > e.attachTo.maxUnits) warn(`${who}: ${units} units of ${e.name} with it, the maximum is ${e.attachTo.maxUnits}.`, p.uid);
+  }
   return issues;
 }
 
@@ -367,6 +438,9 @@ export function itemContext(army, s) {
     entryId: e.id,
     kind: e.kind,
     race: v?.race || e.race || null,
+    // e.g. Krell and Settra may use items meant for Liches, Vampires or Necromancers
+    races: [v?.race || e.race, ...(e.itemRaces || [])].filter(Boolean),
+    allowedItems: e.allowedItems || [],
     wizard: !!(v?.wizard ?? e.wizard),
     canStandard: e.kind === "character" && tags.includes("bsb"),
     allowance: { magicItems: v?.magicItems ?? e.magicItems ?? 0, ...(v?.allowances || e.allowances || {}) },
@@ -377,7 +451,7 @@ export function isMounted(army, s) {
   const e = findEntry(army, s.entryId);
   if (e?.cavalry) return true;
   const m = describeMount(army, s.mount);
-  return !!m;
+  return !!m && !m.noCavalry;
 }
 
 // Default text for the roster's Notes column: entry rules plus variant (race/type) rules

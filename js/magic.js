@@ -84,8 +84,8 @@ export function checkItems(army, list, ctxFor) {
       }
     }
     const groups = [
-      { who: ctx.label, items: extras.filter((x) => !x.onBoss), race: ctx.race, wizard: ctx.wizard, canStandard: ctx.canStandard, kind: ctx.kind },
-      { who: `${ctx.label} ${army.championName || "Boss"}`, items: extras.filter((x) => x.onBoss), race: ctx.race, wizard: false, canStandard: false, kind: "boss" },
+      { who: ctx.label, items: extras.filter((x) => !x.onBoss), races: ctx.races || [ctx.race], wizard: ctx.wizard, canStandard: ctx.canStandard, kind: ctx.kind },
+      { who: `${ctx.label} ${army.championName || "Boss"}`, items: extras.filter((x) => x.onBoss), races: ctx.races || [ctx.race], wizard: false, canStandard: false, kind: "boss" },
     ];
     for (const g of groups) {
       const wards = g.items.filter((x) => extraType(army, x) === "ward");
@@ -99,12 +99,13 @@ export function checkItems(army, list, ctxFor) {
         if (g.kind === "unit" && !x.onBoss && type && type !== "standard")
           warn(`${g.who}: ${name} is not a Magic Standard.`, s.uid);
         if (!it) continue;
+        if (g.kind !== "boss" && (ctx.allowedItems || []).includes(it.id)) { taken.set(it.id, (taken.get(it.id) || 0) + 1); continue; }
         if (!it.usable) warn(`${g.who}: ${it.name} is not available to this army (${it.only || "restricted"}).`, s.uid);
         if (army.itemTypes[it.type]?.wizardOnly && !g.wizard) warn(`${g.who}: ${it.name} is Wizard Arcana and can only be used by wizards.`, s.uid);
         if (it.notWizard && g.wizard) warn(`${g.who}: ${it.name} cannot be used by a wizard.`, s.uid);
         if (it.entries && (g.kind === "boss" || !it.entries.includes(ctx.entryId))) warn(`${g.who}: ${it.name} is ${it.only || "a special character's item"}.`, s.uid);
-        if (it.races && !(g.race && it.races.includes(g.race))) {
-          const who = it.races.map((r) => `${army.races?.[r] || r}s`).join(" or ");
+        if (it.races && !g.races.some((r) => it.races.includes(r))) {
+          const who = it.races.filter((r) => army.races?.[r]).map((r) => army.racePlurals?.[r] || `${army.races[r]}s`).join(" or ") || it.only;
           warn(`${g.who}: ${it.name} may only be used by ${who} (${it.only}).`, s.uid);
         }
         taken.set(it.id, (taken.get(it.id) || 0) + 1);
