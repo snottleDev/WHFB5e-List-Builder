@@ -42,6 +42,38 @@ Unit `options`: `{id, name, cost, per?, group?, count?, max?, gear?, armour?, ad
 - `count` makes it a number input (e.g. hidden Fanatics, extra crewmen)
 - `gear` names the `equipment` item a Boss must pay for when the unit has this option
 
+## Magic items
+
+Shared catalogues live in `data/magic/` (e.g. `warhammer-magic.json`). Each item is
+`{id, name, type, points, page, only?, tags?, excludeTags?, races?, notWizard?, uses?, multiple?}`:
+
+- `type`: `weapon`, `armour`, `ward`, `enchanted`, `arcana`, `standard`, `bound` (defined under `types` in the catalogue,
+  with `maxPerModel`, `wizardOnly`, `standardOnly` flags)
+- `tags`: armies that may use it ("Skaven only" → `["skaven"]`); no tags = any army.
+  `excludeTags` for "may not be used by Orcs or Goblins"
+- `races`: race restriction inside an army ("Night Goblins only" → `["night-goblin"]`), warned about, not blocked
+- `only`: the restriction text as printed, shown in the picker. Effect text is deliberately not copied
+
+An army file opts in with:
+
+```json
+"magic": {
+  "tags": ["orcs-goblins"],
+  "pools": [{ "id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems" }],
+  "items": [ { "id": "evil-sun-banner", "type": "standard", "points": 10, ... } ]
+}
+```
+
+`items` holds army-book items missing from the shared catalogue. Characters get their allowance from
+`magicItems` (per variant), wizards are marked with `"wizard": true`, and `startingItems` pre-adds signature
+items (e.g. Gorbad's Morgor the Mangler) that the player can still remove.
+
+**Planned extensions** (not built yet):
+- *Chaos gifts*: a second pool, e.g. `{ "id": "gifts", "catalogues": ["chaos-gifts"], "allowance": "gifts" }`,
+  with `"gifts": n` on the character variants. Gifts are then counted separately from magic items.
+- *Dwarf runes*: a `runes` pool replacing `magic`, with rune-specific checks (runes per item, master runes once per
+  army, etc.) added as new rule types in `js/magic.js`.
+
 ## Army-wide rules
 
 ```json

@@ -1,5 +1,7 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
+import { attachMagic, extraItem, pickerGroups } from "./magic.js";
+import { itemContext } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
 const app = document.getElementById("app");
@@ -23,7 +25,10 @@ async function loadArmy(id) {
   if (armies[id]) return armies[id];
   const meta = armyIndex.find((a) => a.id === id);
   const res = await fetch(`data/armies/${meta.file}`);
-  armies[id] = await res.json();
+  const army = await res.json();
+  const catIds = [...new Set((army.magic?.pools || []).flatMap((p) => p.catalogues || []))];
+  const catalogues = await Promise.all(catIds.map((c) => fetch(`data/magic/${c}.json`).then((r) => r.json())));
+  armies[id] = attachMagic(army, catalogues);
   return armies[id];
 }
 
@@ -176,6 +181,7 @@ function newSelection(army, e) {
     if (!e.noCommand) s.boss = { enabled: false, options: {} };
   }
   if (e.kind === "monster") s.size = 1;
+  for (const id of e.startingItems || []) s.extras.push({ itemId: id });
   return s;
 }
 
@@ -367,24 +373,56 @@ function mountOptions(army, e, s) {
 
 function renderExtras(army, e, s, change) {
   s.extras = s.extras || [];
+  const ctx = itemContext(army, s);
   const isChar = e.kind === "character";
   const canStd = e.kind === "unit" && e.magicStandard;
   const bossOk = e.kind === "unit" && s.boss?.enabled;
   if (!isChar && !canStd && !bossOk && !s.extras.length) return document.createDocumentFragment();
-  const rows = s.extras.map((x, i) => h("div", { class: "extras-row" },
-    h("input", { type: "text", value: x.name || "", placeholder: "Item name", oninput: (ev) => { x.name = ev.target.value; persist(); }, onchange: change }),
-    h("input", { type: "number", value: x.points ?? 0, min: 0, "aria-label": "points", onchange: (ev) => { x.points = Number(ev.target.value) || 0; change(); } }),
-    h("small", {}, x.kind === "standard" ? "magic standard" : x.onBoss ? "Boss's item (Characters)" : "magic item"),
-    h("button", { class: "btn small ghost", onclick: () => { s.extras.splice(i, 1); change(); } }, "×")));
-  const v = variantOf(e, s);
-  const allowed = isChar ? (v?.magicItems ?? e.magicItems ?? 0) : null;
-  const buttons = [];
-  if (isChar) buttons.push(h("button", { class: "btn small", onclick: () => { s.extras.push({ name: "", points: 0, kind: "item" }); change(); } }, "+ Magic item"));
-  if (canStd) buttons.push(h("button", { class: "btn small", onclick: () => { s.extras.push({ name: "", points: 0, kind: "standard" }); change(); } }, "+ Magic standard"));
-  if (bossOk) buttons.push(h("button", { class: "btn small", onclick: () => { s.extras.push({ name: "", points: 0, kind: "item", onBoss: true }); change(); } }, "+ Boss magic item"));
+
+  const typeName = (t) => army.itemTypes?.[t]?.name?.replace(/s$/, "") || (t === "standard" ? "Magic Standard" : "Item");
+  const rows = s.extras.map((x, i) => {
+    const it = extraItem(army, x);
+    const remove = h("button", { class: "btn small ghost", title: "Remove", onclick: () => { s.extras.splice(i, 1); change(); } }, "×");
+    const who = x.onBoss ? "Boss · " : "";
+    if (it) {
+      return h("div", { class: "extras-row item" },
+        h("b", {}, it.name), h("span", { class: "pts-sm" }, `${fmt(it.points)} pts`),
+        h("small", {}, `${who}${typeName(it.type)}${it.only ? ` · ${it.only}` : ""}${it.uses ? ` · ${it.uses === 1 ? "one use" : `${it.uses} uses`}` : ""} · WM p.${it.page}`),
+        remove);
+    }
+    return h("div", { class: "extras-row" },
+      h("input", { type: "text", value: x.name || "", placeholder: "Item name", oninput: (ev) => { x.name = ev.target.value; persist(); }, onchange: change }),
+      h("input", { type: "number", value: x.points ?? 0, min: 0, "aria-label": "points", onchange: (ev) => { x.points = Number(ev.target.value) || 0; change(); } }),
+      h("small", {}, `${who}custom ${x.kind === "standard" || x.type === "standard" ? "magic standard" : "item"}`),
+      remove);
+  });
+
+  // one picker per purpose; "custom" adds a free-text row for anything not in the catalogue
+  const picker = (label, opts, make) => {
+    const groups = pickerGroups(army, "magic", opts);
+    const sel = h("select", { "aria-label": label },
+      h("option", { value: "" }, label),
+      groups.map((g) => h("optgroup", { label: g.name },
+        g.items.map((it) => h("option", { value: it.id }, `${it.name} (${fmt(it.points)})${it.only ? ` – ${it.only}` : ""}`)))),
+      h("optgroup", { label: "Other" }, h("option", { value: "__custom" }, "Custom item (type name and points)…")));
+    sel.addEventListener("change", () => {
+      if (!sel.value) return;
+      s.extras.push(sel.value === "__custom" ? { custom: true, name: "", points: 0, ...make(true) } : { itemId: sel.value, ...make(false) });
+      change();
+    });
+    return sel;
+  };
+  const pickers = [];
+  if (isChar) {
+    const v = variantOf(e, s);
+    const allowed = v?.magicItems ?? e.magicItems ?? 0;
+    const used = s.extras.filter((x) => !x.onBoss).length;
+    pickers.push(picker(`+ Magic item (${used}/${allowed})`, ctx.canStandard ? {} : { noStandards: true }, (custom) => (custom ? { kind: "item" } : {})));
+  }
+  if (canStd) pickers.push(picker("+ Magic standard", { standardsOnly: true }, (custom) => (custom ? { kind: "standard", type: "standard" } : {})));
+  if (bossOk) pickers.push(picker("+ Boss magic item (max 1)", { noStandards: true }, (custom) => (custom ? { kind: "item", onBoss: true } : { onBoss: true })));
   return h("div", { class: "field" }, h("span", { class: "lbl" }, "Magic"),
-    h("div", {}, rows, h("div", { class: "extras-row" }, buttons,
-      h("small", { class: "note" }, `${allowed != null ? `up to ${allowed} · ` : ""}enter name and points by hand until the magic item cards are added`))));
+    h("div", { class: "extras" }, rows, h("div", { class: "extras-row" }, pickers)));
 }
 
 function renderProfiles(army, s) {

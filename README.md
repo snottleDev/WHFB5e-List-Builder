@@ -12,8 +12,9 @@ An army list builder for **Warhammer Fantasy Battle, 5th edition**, in the spiri
   as plain text, or as a `.json` file you can import again.
 - Lists are saved in your browser (localStorage).
 
-Armies so far: **Orcs & Goblins**. Magic items are entered by hand (name + points) until the
-*Warhammer Magic* cards are added.
+Armies so far: **Orcs & Goblins**. Magic items come from the *Warhammer Magic* (5th edition) item summary,
+filtered to what the army may use, with checks for item allowances, one Ward per model, Wizard Arcana,
+race-restricted items and duplicates. Anything missing can still be added as a custom item.
 
 ## Running it
 
@@ -33,8 +34,10 @@ js/calc.js               points, saves and validation (pure functions, no DOM)
 js/pdf.js                roster rows + A4 roster sheet layout
 js/minipdf.js            minimal PDF writer using the standard Times/Helvetica fonts
 js/fontmetrics.js        glyph widths for those fonts
+js/magic.js              magic item catalogues, pickers and checks
 data/armies/index.json   list of available armies
 data/armies/*.json       one file per army book
+data/magic/*.json        magic item catalogues (names, points, restrictions)
 docs/data-format.md      how an army file is structured
 tests/calc.test.mjs      `node tests/calc.test.mjs`
 ```
