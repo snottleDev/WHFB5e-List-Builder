@@ -1,0 +1,643 @@
+{
+  "id": "chaos-dwarfs",
+  "name": "Chaos Dwarfs",
+  "source": "Chaos Dwarf army list (4th edition, White Dwarf / Warhammer Armies), pp.52-64",
+  "keywordsSource": "Special rule keywords from the Chaos Dwarf bestiary (pp.47-51) and army list",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "units", "name": "Units", "min": 25},
+    {"id": "war-machines", "name": "War Machines", "max": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"chaos-dwarf": "Chaos Dwarf", "bull-centaur": "Bull Centaur", "hobgoblin": "Hobgoblin", "orc": "Orc", "black-orc": "Black Orc", "goblin": "Goblin"},
+  "championName": "Champion",
+  "bossCosts": {"chaos-dwarf": 48, "bull-centaur": 106, "hobgoblin": 27, "orc": 33, "black-orc": 42, "goblin": 15},
+  "bossProfiles": {
+    "chaos-dwarf": ["3", "5", "4", "4", "4", "1", "3", "2", "9"],
+    "bull-centaur": ["8", "5", "4", "5", "4", "2", "4", "3", "9"],
+    "hobgoblin": ["4", "4", "4", "4", "3", "1", "3", "2", "6"],
+    "orc": ["4", "4", "4", "4", "4", "1", "3", "2", "7"],
+    "black-orc": ["4", "5", "4", "5", "4", "1", "3", "2", "8"],
+    "goblin": ["4", "3", "4", "4", "3", "1", "3", "2", "5"]
+  },
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee"},
+    {"id": "flail", "name": "Flail", "cost": 1, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "bow", "name": "Bow (Hobgoblins only)", "cost": 2, "group": "missile", "races": ["hobgoblin"]},
+    {"id": "short-bow", "name": "Short bow (Hobgoblins only)", "cost": 1, "group": "missile", "races": ["hobgoblin"]},
+    {"id": "javelin", "name": "Javelin (Hobgoblins only)", "cost": 1, "group": "missile", "races": ["hobgoblin"]},
+    {"id": "sling", "name": "Sling (Hobgoblins only)", "cost": 1, "group": "missile", "races": ["hobgoblin"]},
+    {"id": "hand-gun", "name": "Hand gun", "cost": 3, "group": "missile"},
+    {"id": "pistol", "name": "Pistol", "cost": 2, "group": "missile"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+    {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy"},
+    {"id": "blunderbuss", "name": "Blunderbuss", "cost": 0, "troopOnly": true},
+    {"id": "poisoned-daggers", "name": "Second poisoned dagger", "cost": 1, "troopOnly": true}
+  ],
+  "mounts": [
+    {"id": "giant-wolf", "name": "Giant Wolf", "cost": 4, "races": ["hobgoblin"], "profile": ["9","4","0","3","3","1","3","1","3"]}
+  ],
+  "magic": {
+    "tags": ["chaos-dwarfs", "chaos"],
+    "excludeItems": ["staff-of-nurgle", "slaaneshs-sceptre-of-domination", "golden-eye-of-tzeentch", "banner-of-rage", "blasted-standard", "rapturous-standard"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": []
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one General (p.56)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.56)."},
+    {"type": "requireEntry", "entry": "warriors", "message": "The army must include at least one unit of Chaos Dwarf Warriors (p.58)."}
+  ],
+  "entries": [
+    {
+      "id": "general",
+      "name": "Chaos Dwarf General",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Hand weapon",
+      "equipmentList": true,
+      "page": 56,
+      "max": 1,
+      "tags": ["general"],
+      "monsters": true,
+      "variants": [
+        {
+          "id": "lord",
+          "race": "chaos-dwarf",
+          "name": "Lord",
+          "cost": 160,
+          "magicItems": 3,
+          "profile": ["3","7","6","4","5","3","5","4","10"],
+          "rulesText": "Pursue & flee 2D6-1\""
+        },
+        {
+          "id": "sorcerer-lord",
+          "race": "chaos-dwarf",
+          "name": "Sorcerer Lord",
+          "cost": 328,
+          "magicItems": 4,
+          "wizard": true,
+          "profile": ["3","4","3","4","5","4","5","3","10"],
+          "rulesText": "Level 4 wizard, Pursue & flee 2D6-1\""
+        }
+      ],
+      "notes": "The usual mount of a great Chaos Dwarf is a Lammasu or a Great Taurus."
+    },
+    {
+      "id": "battle-standard",
+      "name": "Battle Standard",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Hand weapon, battle standard",
+      "equipmentList": true,
+      "page": 56,
+      "max": 1,
+      "tags": ["bsb"],
+      "monsterRaces": ["chaos-dwarf"],
+      "variants": [
+        {
+          "id": "chaos-dwarf",
+          "race": "chaos-dwarf",
+          "name": "Chaos Dwarf Battle Standard",
+          "cost": 98,
+          "magicItems": 1,
+          "profile": ["3","5","4","4","4","1","3","2","9"],
+          "rulesText": "Pursue & flee 2D6-1\""
+        },
+        {
+          "id": "bull-centaur",
+          "race": "bull-centaur",
+          "name": "Bull Centaur Battle Standard",
+          "cost": 156,
+          "magicItems": 1,
+          "profile": ["8","5","4","5","4","2","4","3","9"]
+        }
+      ],
+      "monsters": true,
+      "notes": "Only a Chaos Dwarf Battle Standard Bearer may ride a monster."
+    },
+    {
+      "id": "bull-centaur-lord",
+      "name": "Bull Centaur Lord",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Hand weapon",
+      "equipmentList": true,
+      "page": 56,
+      "max": 1,
+      "race": "bull-centaur",
+      "cost": 368,
+      "magicItems": 3,
+      "profile": ["8","7","6","5","5","4","6","5","10"]
+    },
+    {
+      "id": "hero",
+      "name": "Hero",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Hand weapon",
+      "equipmentList": true,
+      "page": 57,
+      "magicItems": 2,
+      "monsterRaces": ["chaos-dwarf"],
+      "mounts": ["giant-wolf"],
+      "monsters": true,
+      "variants": [
+        {
+          "id": "chaos-dwarf",
+          "race": "chaos-dwarf",
+          "name": "Chaos Dwarf Hero",
+          "cost": 104,
+          "profile": ["3","6","5","4","5","2","4","3","10"],
+          "rulesText": "Pursue & flee 2D6-1\""
+        },
+        {"id": "bull-centaur", "race": "bull-centaur", "name": "Bull Centaur Hero", "cost": 232, "profile": ["8","6","5","5","5","3","5","4","10"]},
+        {
+          "id": "hobgoblin",
+          "race": "hobgoblin",
+          "name": "Hobgoblin Hero",
+          "cost": 59,
+          "profile": ["4","5","5","4","4","2","4","3","7"],
+          "rulesText": "Animosity (Hobgoblins)",
+          "requires": [
+            {"race": "hobgoblin", "message": "a Hobgoblin Hero requires at least one unit of Hobgoblins."}
+          ]
+        }
+      ],
+      "notes": "Only a Chaos Dwarf Hero may ride a monster; a Hobgoblin Hero may ride a Giant Wolf (+4)."
+    },
+    {
+      "id": "sorcerer",
+      "name": "Chaos Dwarf Sorcerer",
+      "kind": "character",
+      "category": "characters",
+      "equipmentText": "Hand weapon",
+      "equipmentList": true,
+      "page": 57,
+      "wizard": true,
+      "monsters": true,
+      "variantsLabel": "Level",
+      "variants": [
+        {
+          "id": "sorcerer",
+          "race": "chaos-dwarf",
+          "name": "Sorcerer",
+          "cost": 59,
+          "magicItems": 1,
+          "profile": ["3","4","3","3","5","1","3","1","9"],
+          "rulesText": "Level 1 wizard"
+        },
+        {
+          "id": "champion",
+          "race": "chaos-dwarf",
+          "name": "Sorcerer Champion",
+          "cost": 121,
+          "magicItems": 2,
+          "profile": ["3","4","3","4","5","2","3","1","9"],
+          "rulesText": "Level 2 wizard"
+        },
+        {
+          "id": "master",
+          "race": "chaos-dwarf",
+          "name": "Master Sorcerer",
+          "cost": 219,
+          "magicItems": 3,
+          "profile": ["3","4","3","4","5","3","4","2","9"],
+          "rulesText": "Level 3 wizard"
+        },
+        {
+          "id": "lord",
+          "race": "chaos-dwarf",
+          "name": "Sorcerer Lord",
+          "cost": 328,
+          "magicItems": 4,
+          "profile": ["3","4","3","4","5","4","5","3","10"],
+          "rulesText": "Level 4 wizard"
+        }
+      ],
+      "notes": "The favoured mounts of important Sorcerers are the Lammasu and the Great Taurus."
+    },
+    {
+      "id": "zhatan",
+      "name": "Zhatan the Black, Commander of the Tower of Zharr",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 63,
+      "race": "chaos-dwarf",
+      "tags": ["general"],
+      "cost": 172,
+      "magicItems": 4,
+      "profile": ["3","8","6","4","5","4","6","4","10"],
+      "equipmentText": "Heavy armour, warhammer",
+      "armour": ["heavy"],
+      "options": [
+        {"id": "lammasu", "name": "Lammasu", "cost": 200, "group": "mount", "mountProfile": {"name": "Lammasu", "profile": ["6","6","0","6","7","5","6","3","8"]}},
+        {
+          "id": "taurus",
+          "name": "Great Taurus",
+          "cost": 225,
+          "group": "mount",
+          "mountProfile": {"name": "Great Taurus", "profile": ["6","6","0","6","6","5","7","4","8"]}
+        }
+      ],
+      "groupLabels": {"mount": "On foot"},
+      "rulesText": "Hatred (all enemies), Pursue & flee 2D6-1\""
+    },
+    {
+      "id": "gorduz",
+      "name": "Gorduz Backstabber, Hobgoblin Chieftain",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 63,
+      "race": "hobgoblin",
+      "cost": 93,
+      "magicItems": 3,
+      "profile": ["4","6","6","4","4","3","5","4","8"],
+      "equipmentText": "Light armour, shield, axe",
+      "armour": ["light", "shield"],
+      "mounts": ["giant-wolf"],
+      "requires": [
+        {"race": "hobgoblin", "message": "Gorduz requires at least one unit of Hobgoblins."}
+      ],
+      "rulesText": "Fated... lucky... sneaky! (4+ save against his last wound), Animosity (Hobgoblins)"
+    },
+    {
+      "id": "astragoth",
+      "name": "Astragoth, High Priest of Hashut",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "page": 64,
+      "race": "chaos-dwarf",
+      "wizard": true,
+      "cost": 358,
+      "magicItems": 4,
+      "profile": ["6","6","3","5","5","4","5","3","10"],
+      "equipmentText": "Encased in his machine",
+      "save": "3+",
+      "rulesText": "Level 4 wizard, Charges only 6\", Death Blow",
+      "notes": "Astragoth may not ride any creature."
+    },
+    {
+      "id": "warriors",
+      "name": "Chaos Dwarf Warriors",
+      "kind": "unit",
+      "category": "units",
+      "page": 58,
+      "race": "chaos-dwarf",
+      "cost": 14,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Dwarf", "profile": ["3","4","3","3","4","1","2","1","9"]}
+      ],
+      "armour": ["heavy", "shield"],
+      "equipmentText": "Heavy armour, shield, hand weapon, double-handed axe",
+      "bossGear": ["heavy-armour", "shield", "double-handed-weapon"],
+      "magicStandard": "one",
+      "rulesText": "Pursue & flee 2D6-1\"",
+      "options": []
+    },
+    {
+      "id": "blunderbusses",
+      "name": "Chaos Dwarf Blunderbusses",
+      "kind": "unit",
+      "category": "units",
+      "page": 58,
+      "race": "chaos-dwarf",
+      "cost": 14,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Dwarf", "profile": ["3","4","3","3","4","1","2","1","9"]}
+      ],
+      "armour": ["heavy"],
+      "equipmentText": "Heavy armour, blunderbuss, hand weapon",
+      "bossGear": ["heavy-armour", "blunderbuss"],
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "rulesText": "Blunderbuss (hand gun rules for now), Pursue & flee 2D6-1\""
+    },
+    {
+      "id": "bull-centaurs",
+      "name": "Bull Centaurs",
+      "kind": "unit",
+      "category": "units",
+      "page": 58,
+      "race": "bull-centaur",
+      "cost": 41,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Bull Centaur", "profile": ["8","4","3","4","4","2","3","2","9"]}
+      ],
+      "armour": ["light", "shield"],
+      "equipmentText": "Light armour, shield, double-handed axe",
+      "bossGear": ["light-armour", "shield", "double-handed-weapon"],
+      "magicStandard": "one",
+      "options": []
+    },
+    {
+      "id": "hobgoblins",
+      "name": "Hobgoblin Warriors",
+      "kind": "unit",
+      "category": "units",
+      "page": 58,
+      "race": "hobgoblin",
+      "cost": 5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Hobgoblin", "profile": ["4","3","3","3","3","1","2","1","6"]}
+      ],
+      "armour": ["shield"],
+      "equipmentText": "Hand weapon, shield",
+      "bossGear": ["shield"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "gear": "light-armour", "armour": "light"}
+      ],
+      "rulesText": "Animosity (Hobgoblins), Panic only from other Hobgoblins"
+    },
+    {
+      "id": "sneaky-gits",
+      "name": "Hobgoblin Sneaky Gits",
+      "kind": "unit",
+      "category": "units",
+      "page": 59,
+      "race": "hobgoblin",
+      "cost": 6,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Sneaky Git", "profile": ["4","3","3","3","3","1","2","1","6"]}
+      ],
+      "equipmentText": "Two long curved poisoned daggers",
+      "bossOptions": [
+        {"id": "daggers", "name": "Two poisoned daggers", "cost": 1},
+        {"id": "shield", "name": "Hand weapon and shield", "cost": 1}
+      ],
+      "rulesText": "Animosity (Hobgoblins), Envelopment, Poisoned daggers (-1 save), Two attacks",
+      "notes": "The Champion pays +1 for either two daggers or a hand weapon and shield; tick one.",
+      "options": []
+    },
+    {
+      "id": "archers",
+      "name": "Hobgoblin Archers",
+      "kind": "unit",
+      "category": "units",
+      "page": 60,
+      "race": "hobgoblin",
+      "cost": 5.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Hobgoblin", "profile": ["4","3","3","3","3","1","2","1","6"]}
+      ],
+      "equipmentText": "Hand weapon, bow",
+      "bossGear": ["bow"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"}
+      ],
+      "rulesText": "Animosity (Hobgoblins)"
+    },
+    {
+      "id": "wolf-riders",
+      "name": "Hobgoblin Wolf Riders",
+      "kind": "unit",
+      "category": "units",
+      "page": 60,
+      "race": "hobgoblin",
+      "cost": 14,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Hobgoblin", "profile": ["4","3","3","3","3","1","2","1","6"]},
+        {"name": "Giant Wolf", "profile": ["9","4","0","3","3","1","3","1","3"]}
+      ],
+      "armour": ["shield"],
+      "cavalry": true,
+      "equipmentText": "Shield, hand weapon, Giant Wolf",
+      "bossGear": ["shield"],
+      "bossMount": "giant-wolf",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "short-bows", "name": "Short bows", "cost": 1, "gear": "short-bow"}
+      ],
+      "rulesText": "Animosity (Hobgoblins), Skirmish"
+    },
+    {
+      "id": "black-orcs",
+      "name": "Black Orcs",
+      "kind": "unit",
+      "category": "units",
+      "page": 60,
+      "max": 1,
+      "race": "black-orc",
+      "cost": 9,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Black Orc", "profile": ["4","4","3","4","4","1","2","1","8"]}
+      ],
+      "armour": ["light"],
+      "equipmentText": "Light armour, hand weapon",
+      "bossGear": ["light-armour"],
+      "options": [
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "additional-hand-weapon", "name": "Additional hand weapons", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "rulesText": "No animosity, Panic only from other Black Orcs"
+    },
+    {
+      "id": "orcs",
+      "name": "Orcs",
+      "kind": "unit",
+      "category": "units",
+      "page": 60,
+      "race": "orc",
+      "cost": 5.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Orc", "profile": ["4","3","3","3","4","1","2","1","7"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "additional-hand-weapon", "name": "Additional hand weapons", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"},
+        {"id": "bows", "name": "Bows", "cost": 2, "gear": "bow", "group": "weapon"}
+      ],
+      "rulesText": "Animosity (passed automatically with Hobgoblins in the army), No panic from fleeing Goblins"
+    },
+    {
+      "id": "goblins",
+      "name": "Goblins",
+      "kind": "unit",
+      "category": "units",
+      "page": 60,
+      "race": "goblin",
+      "cost": 2.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "gear": "light-armour", "armour": "light"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 1, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 1, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
+        {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"}
+      ],
+      "rulesText": "Fear Elves, Animosity (passed automatically with Hobgoblins in the army)"
+    },
+    {
+      "id": "bolt-thrower",
+      "name": "Hobgoblin Bolt Throwers",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 61,
+      "cost": 42,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Bolt Thrower", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Hobgoblin crew (2)", "profile": ["4","3","3","3","3","1","2","1","6"]}
+      ],
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "single": "Hobgoblin Bolt Thrower",
+      "equipmentText": "Crew: hand weapons",
+      "rulesText": "Bolt thrower (48\", S5 -1 per rank, D4 wounds)",
+      "options": []
+    },
+    {
+      "id": "death-rocket",
+      "name": "Death Rockets",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 61,
+      "cost": 75,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Launcher", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Chaos Dwarf crew (2)", "profile": ["3","4","3","3","4","1","2","1","9"]}
+      ],
+      "sizeLabel": "rockets",
+      "noCommand": true,
+      "single": "Death Rocket",
+      "equipmentText": "Crew: hand weapons, heavy armour",
+      "armour": ["heavy"],
+      "rulesText": "Death rocket (48\", S5, D3 wounds, -2 save)",
+      "options": []
+    },
+    {
+      "id": "earthshaker",
+      "name": "Earthshaker Cannons",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 61,
+      "cost": 140,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Cannon", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Chaos Dwarf crew (3)", "profile": ["3","4","3","3","4","1","2","1","9"]}
+      ],
+      "sizeLabel": "cannons",
+      "noCommand": true,
+      "single": "Earthshaker Cannon",
+      "equipmentText": "Crew: hand weapons, heavy armour",
+      "armour": ["heavy"],
+      "rulesText": "Earthshaker (12-48\", S7, D3 wounds, -4 save)",
+      "options": []
+    },
+    {"id": "chimera", "name": "Chimera", "kind": "monster", "category": "monsters", "page": 62, "cost": 250, "profile": ["6","4","0","7","6","6","4","6","8"]},
+    {"id": "cockatrice", "name": "Cockatrice", "kind": "monster", "category": "monsters", "page": 62, "cost": 150, "profile": ["4","3","0","4","4","2","4","3","6"]},
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 62,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {
+      "id": "great-taurus",
+      "name": "Great Taurus",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 62,
+      "cost": 225,
+      "profile": ["6","6","0","6","6","5","7","4","8"],
+      "rulesText": "Terror, Fly, Fiery skin (4+ save), Fiery breath"
+    },
+    {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 62, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
+    {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 62, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
+    {"id": "hydra", "name": "Hydra", "kind": "monster", "category": "monsters", "page": 62, "cost": 225, "profile": ["6","3","0","5","6","7","3","5","6"]},
+    {
+      "id": "gigantic-spider",
+      "name": "Gigantic Spider",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 62,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "lammasu",
+      "name": "Lammasu",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 62,
+      "cost": 200,
+      "profile": ["6","6","0","6","7","5","6","3","8"],
+      "rulesText": "Terror, Fly, Sorcerous exhalation"
+    },
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 62, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 62, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 62,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 62,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "rats", "name": "Rats", "profile": ["6","3","0","3","2","5","1","5","10"]},
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}
