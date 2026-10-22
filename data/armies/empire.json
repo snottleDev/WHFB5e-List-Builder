@@ -1,0 +1,989 @@
+{
+  "id": "empire",
+  "name": "The Empire",
+  "source": "Warhammer Armies: The Empire, army list pp.54-74 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the Empire army list and special rules section",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "regiments", "name": "Regiments", "min": 25},
+    {"id": "war-machines", "name": "War Machines", "max": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"empire": "Empire", "kislev": "Kislev", "dwarf": "Dwarf", "halfling": "Halfling", "ogre": "Ogre"},
+  "championName": "Champion",
+  "bossCosts": {"empire": 30, "kislev": 30, "dwarf": 30, "halfling": 30, "ogre": 30},
+  "bossProfiles": {
+    "empire": ["4", "4", "4", "4", "3", "1", "4", "2", "7"],
+    "kislev": ["4", "4", "4", "4", "3", "1", "4", "2", "7"],
+    "dwarf": ["4", "4", "4", "4", "3", "1", "4", "2", "7"],
+    "halfling": ["4", "4", "4", "4", "3", "1", "4", "2", "7"],
+    "ogre": ["4", "4", "4", "4", "3", "1", "4", "2", "7"]
+  },
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee"},
+    {"id": "flail", "name": "Flail", "cost": 1, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "lance", "name": "Lance (mounted only)", "cost": 2, "group": "melee", "mountedOnly": true},
+    {"id": "bow", "name": "Bow", "cost": 2, "group": "missile"},
+    {"id": "long-bow", "name": "Long bow", "cost": 3, "group": "missile"},
+    {"id": "crossbow", "name": "Crossbow", "cost": 3, "group": "missile"},
+    {"id": "hand-gun", "name": "Hand gun", "cost": 3, "group": "missile"},
+    {"id": "pistol", "name": "Pistol", "cost": 2, "group": "missile"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+    {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy"},
+    {"id": "barding", "name": "Barding for steed (mounted only)", "cost": 4, "armour": "barding", "mountedOnly": true},
+    {"id": "repeater-hand-gun", "name": "Repeater hand gun", "cost": 3, "troopOnly": true},
+    {"id": "repeater-pistol", "name": "Repeater pistol", "cost": 3, "troopOnly": true}
+  ],
+  "mounts": [
+    {"id": "warhorse", "name": "Warhorse", "cost": 3, "profile": ["8","3","0","3","3","1","3","1","5"]},
+    {"id": "armoured-warhorse", "name": "Armoured Warhorse", "cost": 7, "profile": ["8","3","0","3","3","1","3","1","5"], "saveBonus": 1, "specialOnly": true}
+  ],
+  "magic": {
+    "tags": ["empire"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": [
+      {
+        "id": "staff-of-command",
+        "name": "Staff of Command",
+        "type": "enchanted",
+        "points": 80,
+        "page": 70,
+        "only": "Grand Theogonist Volkmar only",
+        "entries": ["volkmar"]
+      },
+      {"id": "jade-griffon", "name": "Jade Griffon", "type": "enchanted", "points": 75, "page": 70, "only": "Grand Theogonist Volkmar only", "entries": ["volkmar"]},
+      {
+        "id": "horn-of-sigismund",
+        "name": "Horn of Sigismund",
+        "type": "enchanted",
+        "points": 35,
+        "page": 70,
+        "only": "Grand Theogonist Volkmar only",
+        "entries": ["volkmar"]
+      },
+      {"id": "staff-of-volans", "name": "Staff of Volans", "type": "arcana", "points": 75, "page": 71, "only": "Supreme Patriarch only", "entries": ["supreme-patriarch"]},
+      {
+        "id": "talisman-of-ulric",
+        "name": "Talisman of Ulric",
+        "type": "enchanted",
+        "points": 25,
+        "page": 72,
+        "only": "Boris Todbringer only",
+        "entries": ["boris-todbringer"]
+      },
+      {
+        "id": "dragon-bow",
+        "name": "Dragon Bow of Ostland",
+        "type": "weapon",
+        "points": 40,
+        "page": 73,
+        "only": "Valmir von Raukov only",
+        "entries": ["valmir-von-raukov"]
+      },
+      {"id": "fearfrost", "name": "Fearfrost", "type": "weapon", "points": 100, "page": 74, "only": "Tzarina Katarin only", "entries": ["tzarina-katarin"]}
+    ]
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one General (p.57)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.57)."},
+    {
+      "type": "itemLimit",
+      "item": "runefang",
+      "exceptEntries": ["boris-todbringer", "aldebrand-ludenhof", "valmir-von-raukov", "marius-leitdorf"],
+      "max": 1,
+      "message": "Apart from the Elector Counts, only one character may carry a Runefang (p.67)."
+    },
+    {
+      "type": "detachments",
+      "max": 2,
+      "message": "State troop regiments may have up to two detachments, each at most half the size of the regiment, with no standard, musician or champion (p.18)."
+    }
+  ],
+  "entries": [
+    {
+      "kind": "character",
+      "category": "characters",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "id": "general",
+      "name": "General of the Empire",
+      "page": 57,
+      "max": 1,
+      "tags": ["general"],
+      "cost": 100,
+      "magicItems": 3,
+      "profile": ["4","6","6","4","4","3","6","4","9"],
+      "equipmentText": "Sword"
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "id": "battle-standard",
+      "name": "Battle Standard Bearer",
+      "page": 57,
+      "max": 1,
+      "tags": ["bsb"],
+      "cost": 80,
+      "magicItems": 1,
+      "profile": ["4","4","4","4","3","1","4","2","7"],
+      "equipmentText": "Sword, Battle Standard",
+      "notes": "May carry a Magic Standard as his magic item."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "id": "hero",
+      "name": "Hero",
+      "page": 58,
+      "cost": 65,
+      "magicItems": 2,
+      "profile": ["4","5","5","4","4","2","5","3","8"],
+      "equipmentText": "Sword"
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "id": "wizard",
+      "name": "Battle Wizard",
+      "page": 58,
+      "wizard": true,
+      "equipmentText": "Sword",
+      "notes": "Wizards wearing armour cannot cast spells (barding on a horse is fine).",
+      "variants": [
+        {"id": "1", "name": "Wizard", "cost": 56, "magicItems": 1, "profile": ["4","3","3","3","4","1","4","1","7"]},
+        {"id": "2", "name": "Wizard Champion", "cost": 118, "magicItems": 2, "profile": ["4","3","3","4","4","2","4","1","7"]},
+        {"id": "3", "name": "Master Wizard", "cost": 190, "magicItems": 3, "profile": ["4","3","3","4","4","3","5","2","7"]},
+        {"id": "4", "name": "Wizard Lord", "cost": 287, "magicItems": 4, "profile": ["4","3","3","4","4","4","6","3","8"]}
+      ]
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "karl-franz",
+      "name": "Emperor Karl Franz",
+      "page": 67,
+      "tags": ["general"],
+      "cost": 110,
+      "magicItems": 3,
+      "profile": ["4","6","6","4","4","3","6","4","10"],
+      "equipmentText": "Heavy armour, sword",
+      "armour": ["heavy"],
+      "mounts": ["armoured-warhorse"],
+      "monsters": true,
+      "startingItems": ["the-hammer-of-sigmar", "the-silver-seal"],
+      "notes": "Replaces the General. Must carry the Hammer of Sigmar and the Silver Seal (added for you) and may take one more item. His favoured mount is the Griffon Deathclaw (Griffon, 150)."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "magnus-the-pious",
+      "name": "Magnus the Pious",
+      "page": 68,
+      "tags": ["general"],
+      "cost": 210,
+      "magicItems": 0,
+      "profile": ["4","6","6","4","4","3","6","4","10"],
+      "equipmentText": "Heavy armour, shield, sword",
+      "armour": ["heavy", "shield"],
+      "mounts": ["armoured-warhorse"],
+      "rulesText": "Immune to psychology, Unbreakable, Power of Sigmar",
+      "notes": "Replaces the General. May not carry magic items or ride a monster."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "ludwig-schwarzhelm",
+      "name": "Ludwig Schwarzhelm",
+      "page": 69,
+      "cost": 70,
+      "magicItems": 1,
+      "profile": ["4","5","4","4","4","3","5","3","9"],
+      "equipmentText": "Heavy armour, Sword of Justice",
+      "armour": ["heavy"],
+      "mounts": ["armoured-warhorse"],
+      "startingItems": ["sword-of-justice"],
+      "options": [
+        {"id": "bsb", "name": "Carries the Battle Standard", "cost": 50, "tags": ["bsb"]}
+      ],
+      "notes": "The Emperor's Champion. May carry only the Sword of Justice. Counts as the Battle Standard if you buy that option and have no other."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "volkmar",
+      "name": "Grand Theogonist Volkmar",
+      "page": 69,
+      "cost": 150,
+      "magicItems": 3,
+      "profile": ["4","5","3","4","4","3","5","3","10"],
+      "extraProfiles": [
+        {"name": "War Altar", "profile": ["-","-","-","7","7","3","1","-","-"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "No weapons or armour; rides the War Altar of Sigmar",
+      "startingItems": ["staff-of-command", "jade-griffon", "horn-of-sigismund"],
+      "rulesText": "Immune to psychology, Unbreakable (while War Altar intact), Spells from the War Altar",
+      "notes": "The War Altar is a chariot pulled by barded warhorses; its cost is included. He fights independently and may not join units."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "supreme-patriarch",
+      "name": "Supreme Patriarch Thyrus Gormann",
+      "page": 71,
+      "cost": 290,
+      "magicItems": 4,
+      "wizard": true,
+      "profile": ["4","4","3","4","4","4","6","3","9"],
+      "equipmentText": "Sword, no armour",
+      "mounts": ["armoured-warhorse"],
+      "monsters": true,
+      "startingItems": ["staff-of-volans"],
+      "rulesText": "Level 4 Wizard Lord",
+      "notes": "Must carry the Staff of Volans (added for you) and may take up to three more items."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "kurt-helborg",
+      "name": "Reiksmarshall Kurt Helborg",
+      "page": 71,
+      "cost": 110,
+      "magicItems": 3,
+      "roles": [
+        {"id": "hero", "name": "as a character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["4","7","6","4","4","3","6","4","9"],
+      "equipmentText": "Heavy armour, sword",
+      "armour": ["heavy"],
+      "mounts": ["armoured-warhorse"],
+      "monsters": true,
+      "startingItems": ["runefang"],
+      "notes": "His Runefang (added for you) is one of his three magic items."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "boris-todbringer",
+      "name": "Boris Todbringer, Elector Count of Middenland",
+      "page": 72,
+      "cost": 90,
+      "magicItems": 2,
+      "profile": ["4","5","5","4","4","3","4","3","9"],
+      "extraProfiles": [
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, armoured Warhorse",
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "startingItems": ["runefang", "talisman-of-ulric"],
+      "tags": ["elector"],
+      "notes": "Elector Count: rides an armoured Warhorse (included in his cost). May carry only the items listed."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "aldebrand-ludenhof",
+      "name": "Aldebrand Ludenhof, Elector Count of Hochland",
+      "page": 72,
+      "cost": 90,
+      "magicItems": 1,
+      "profile": ["4","5","5","4","4","3","4","3","9"],
+      "extraProfiles": [
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, armoured Warhorse",
+      "armour": ["heavy"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "startingItems": ["runefang"],
+      "tags": ["elector"],
+      "notes": "Elector Count: rides an armoured Warhorse (included in his cost). May carry only the items listed.",
+      "rulesText": "Hawk (+1 S3 attack)"
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "valmir-von-raukov",
+      "name": "Valmir von Raukov, Elector Count of Ostland",
+      "page": 73,
+      "cost": 90,
+      "magicItems": 2,
+      "profile": ["4","5","5","4","4","3","4","3","9"],
+      "extraProfiles": [
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, armoured Warhorse",
+      "armour": ["heavy"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "startingItems": ["runefang", "dragon-bow"],
+      "tags": ["elector"],
+      "notes": "Elector Count: rides an armoured Warhorse (included in his cost). May carry only the items listed."
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "marius-leitdorf",
+      "name": "Marius Leitdorf, Elector Count of Averland",
+      "page": 73,
+      "cost": 110,
+      "magicItems": 1,
+      "profile": ["4","5","5","4","4","3","4","3","9"],
+      "extraProfiles": [
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, armoured Warhorse, long dagger",
+      "armour": ["heavy"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "startingItems": ["runefang"],
+      "tags": ["elector"],
+      "notes": "Elector Count: rides an armoured Warhorse (included in his cost). May carry only the items listed.",
+      "rulesText": "Frenzy, Long dagger (+1 A)"
+    },
+    {
+      "kind": "character",
+      "category": "characters",
+      "max": 1,
+      "special": true,
+      "id": "tzarina-katarin",
+      "name": "Tzarina Katarin, the Ice Queen of Kislev",
+      "page": 74,
+      "cost": 200,
+      "magicItems": 3,
+      "wizard": true,
+      "profile": ["4","4","3","3","3","3","5","3","10"],
+      "extraProfiles": [
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "cavalry": true,
+      "equipmentText": "Fearfrost, Warhorse (included)",
+      "startingItems": ["fearfrost"],
+      "rulesText": "Level 3 Master Wizard, Ice Magic",
+      "requires": [
+        {"entries": ["winged-lancers", "horse-archers"], "message": "The Tzarina requires at least one unit of Kislev troops."}
+      ]
+    },
+    {
+      "id": "white-wolf",
+      "name": "Knights of the White Wolf",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 59,
+      "race": "empire",
+      "cost": 37,
+      "minSize": 5,
+      "profiles": [
+        {"name": "White Wolf Knight", "profile": ["4","4","3","4","3","1","4","1","7"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, double-handed hammer, barded Warhorse",
+      "max": 1,
+      "armour": ["heavy"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["heavy-armour", "double-handed-weapon", "barding"],
+      "bossMount": "warhorse",
+      "magicStandard": "any",
+      "rulesText": "Double-handed hammers"
+    },
+    {
+      "id": "knights-panther",
+      "name": "Knights Panther",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 59,
+      "race": "empire",
+      "cost": 39,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Panther Knight", "profile": ["4","4","3","4","3","1","4","1","7"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, sword, lance, barded Warhorse",
+      "max": 1,
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["heavy-armour", "shield", "lance", "barding"],
+      "bossMount": "warhorse",
+      "magicStandard": "any"
+    },
+    {
+      "id": "blazing-sun",
+      "name": "Knights of the Blazing Sun",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 60,
+      "race": "empire",
+      "cost": 39,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Blazing Sun Knight", "profile": ["4","4","3","4","3","1","4","1","7"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, sword, lance, barded Warhorse",
+      "max": 1,
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["heavy-armour", "shield", "lance", "barding"],
+      "bossMount": "warhorse",
+      "magicStandard": "any"
+    },
+    {
+      "id": "reiksguard-knights",
+      "name": "Reiksguard Knights",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 60,
+      "race": "empire",
+      "cost": 39,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Reiksguard Knight", "profile": ["4","4","3","4","3","1","4","1","7"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, sword, lance, barded Warhorse",
+      "max": 1,
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["heavy-armour", "shield", "lance", "barding"],
+      "bossMount": "warhorse",
+      "magicStandard": "any"
+    },
+    {
+      "id": "pistoliers",
+      "name": "Pistoliers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 61,
+      "race": "empire",
+      "cost": 22,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Pistolier", "profile": ["8","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Light armour, two pistols, sword, horse",
+      "armour": ["light"],
+      "cavalry": true,
+      "bossGear": ["light-armour", "pistol", "pistol"],
+      "bossMount": "warhorse",
+      "rulesText": "Brace of pistols"
+    },
+    {
+      "id": "outriders",
+      "name": "Outriders",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 61,
+      "race": "empire",
+      "cost": 28,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Outrider", "profile": ["8","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Light armour, sword, repeater hand gun or repeater pistol, barded horse",
+      "max": 1,
+      "armour": ["light"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["light-armour", "barding", "repeater-hand-gun"],
+      "bossMount": "warhorse",
+      "rulesText": "Repeater hand guns / repeater pistols",
+      "notes": "Each model may carry either a Repeater Hand Gun or a Repeater Pistol; the unit may mix them."
+    },
+    {
+      "id": "halberdiers",
+      "name": "Halberdiers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 61,
+      "race": "empire",
+      "cost": 7,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Halberdier", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Halberd, hand weapon",
+      "bossGear": ["halberd"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "notes": "A Halberdier may not use a shield while wielding his halberd, but the shield still helps against shooting.",
+      "stateTroops": true
+    },
+    {
+      "id": "reiksguard",
+      "name": "Reiksguard",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 61,
+      "race": "empire",
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Reiksguard", "profile": ["4","4","3","4","3","1","4","1","7"]}
+      ],
+      "equipmentText": "Heavy armour, shield, sword",
+      "max": 1,
+      "armour": ["heavy", "shield"],
+      "bossGear": ["heavy-armour", "shield"]
+    },
+    {
+      "id": "spearmen",
+      "name": "Spearmen",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 62,
+      "race": "empire",
+      "cost": 7,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Spearman", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Spear, hand weapon, shield",
+      "armour": ["shield"],
+      "bossGear": ["spear", "shield"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "notes": "The book lists the Spearmen's save as None although they carry shields; the app calculates 6+ (override if your group plays it as printed).",
+      "stateTroops": true
+    },
+    {
+      "id": "greatswords",
+      "name": "Greatswords",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 62,
+      "race": "empire",
+      "cost": 7,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Greatsword", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Double-handed sword, hand weapon",
+      "bossGear": ["double-handed-weapon"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "stateTroops": true
+    },
+    {
+      "id": "swordsmen",
+      "name": "Swordsmen",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 62,
+      "race": "empire",
+      "cost": 7,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Swordsman", "profile": ["4","4","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Sword, shield",
+      "armour": ["shield"],
+      "bossGear": ["shield"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "stateTroops": true
+    },
+    {
+      "id": "hand-gunners",
+      "name": "Hand Gunners",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 62,
+      "race": "empire",
+      "cost": 8,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Hand Gunner", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Hand gun, hand weapon",
+      "bossGear": ["hand-gun"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "stateTroops": true
+    },
+    {
+      "id": "archers",
+      "name": "Archers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 63,
+      "race": "empire",
+      "cost": 8,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Archer", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Long bow, hand weapon",
+      "bossGear": ["long-bow"],
+      "rulesText": "May skirmish",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "stateTroops": true
+    },
+    {
+      "id": "crossbowmen",
+      "name": "Crossbowmen",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 63,
+      "race": "empire",
+      "cost": 8,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Crossbowman", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Crossbow, hand weapon",
+      "bossGear": ["crossbow"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "stateTroops": true
+    },
+    {
+      "id": "winged-lancers",
+      "name": "Kislev Winged Lancers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 63,
+      "race": "kislev",
+      "cost": 25,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Winged Lancer", "profile": ["4","4","3","3","3","1","3","1","7"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Light armour, shield, sword, lance, Warhorse",
+      "armour": ["light", "shield"],
+      "cavalry": true,
+      "bossGear": ["light-armour", "shield", "lance"],
+      "bossMount": "warhorse",
+      "magicStandard": "any"
+    },
+    {
+      "id": "horse-archers",
+      "name": "Kislev Horse Archers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "race": "kislev",
+      "cost": 16,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Horse Archer", "profile": ["8","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Shield, bow, hand weapon, horse",
+      "armour": ["shield"],
+      "cavalry": true,
+      "bossGear": ["shield", "bow"],
+      "bossMount": "warhorse",
+      "rulesText": "Skirmish"
+    },
+    {
+      "id": "flagellants",
+      "name": "Flagellants",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "race": "empire",
+      "cost": 10,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Flagellant", "profile": ["4","3","3","4","4","1","3","2","10"]}
+      ],
+      "equipmentText": "Flail",
+      "max": 1,
+      "bossGear": ["flail"],
+      "rulesText": "Immune to psychology, Unbreakable"
+    },
+    {
+      "id": "dwarfs",
+      "name": "Dwarfs",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "race": "dwarf",
+      "cost": 10,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Dwarf", "profile": ["3","4","3","3","4","1","2","1","9"]}
+      ],
+      "equipmentText": "Hand weapon, light armour",
+      "armour": ["light"],
+      "bossGear": ["light-armour"],
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "crossbows", "name": "Crossbows", "cost": 3, "gear": "crossbow", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ]
+    },
+    {
+      "id": "halflings",
+      "name": "Halflings",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "race": "halfling",
+      "cost": 3.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Halfling", "profile": ["4","2","4","2","2","1","5","1","8"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "options": [
+        {"id": "bows", "name": "Bows", "cost": 1, "gear": "bow", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"}
+      ]
+    },
+    {
+      "id": "ogres",
+      "name": "Ogres",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 64,
+      "race": "ogre",
+      "cost": 40,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Ogre", "profile": ["6","3","2","4","5","3","3","2","7"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "options": [
+        {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ]
+    },
+    {
+      "id": "mortars",
+      "name": "Mortars",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 65,
+      "cost": 100,
+      "minSize": 1,
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Mortar", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Crew (3)", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "single": "Mortar",
+      "options": [],
+      "equipmentText": "Crew: hand weapons",
+      "rulesText": "Guess range 12-48\", S7, D3 wounds"
+    },
+    {
+      "id": "great-cannons",
+      "name": "Great Cannons",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 65,
+      "cost": 95,
+      "minSize": 1,
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Great Cannon", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Crew (3)", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "single": "Great Cannon",
+      "options": [],
+      "equipmentText": "Crew: hand weapons",
+      "rulesText": "Guess range 60\", S10, D6 wounds"
+    },
+    {
+      "id": "steam-tanks",
+      "name": "Steam Tanks",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 65,
+      "cost": 200,
+      "minSize": 1,
+      "sizeLabel": "tanks",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Steam Tank", "profile": ["-","3","3","7","10","5","-","-","10"]}
+      ],
+      "single": "Steam Tank",
+      "options": [],
+      "maxModels": 8,
+      "notes": "0-8 Steam Tanks in total. Special rules are in the Steam Tank supplement."
+    },
+    {
+      "id": "war-wagons",
+      "name": "War Wagons",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 65,
+      "cost": 150,
+      "minSize": 1,
+      "sizeLabel": "wagons",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Crewman", "profile": ["4","3","3","3","3","1","3","1","7"]},
+        {"name": "War Wagon", "profile": ["-","-","-","7","7","5","1","-","-"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "single": "War Wagon",
+      "options": [],
+      "save": "6+",
+      "rulesText": "Chariot, 6 crew with Engineer weapons",
+      "notes": "Includes six crewmen armed with experimental Engineer weapons; the crew and warhorses have a 6+ save."
+    },
+    {
+      "id": "helblasters",
+      "name": "Helblaster Volley Guns",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 65,
+      "cost": 100,
+      "minSize": 1,
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Helblaster", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Crew (3)", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "single": "Helblaster Volley Gun",
+      "options": [],
+      "equipmentText": "Crew: hand weapons",
+      "rulesText": "0-12\": artillery dice S5; 12-24\": half dice S4"
+    },
+    {
+      "id": "hot-pot",
+      "name": "Halfling Hot Pot",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 65,
+      "cost": 50,
+      "minSize": 1,
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Hot Pot", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Halfling crew (3)", "profile": ["4","2","4","2","2","1","5","1","8"]}
+      ],
+      "single": "Halfling Hot Pot",
+      "options": [],
+      "max": 1,
+      "equipmentText": "Crew: hand weapons",
+      "rulesText": "Guess range 36\", S5 direct hit / S3",
+      "requires": [
+        {"entry": "halflings", "message": "The Hot Pot requires at least one Halfling regiment."}
+      ]
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 66,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {"id": "chimera", "name": "Chimera", "kind": "monster", "category": "monsters", "page": 66, "cost": 250, "profile": ["6","4","0","7","6","6","4","6","8"]},
+    {"id": "cockatrice", "name": "Cockatrice", "kind": "monster", "category": "monsters", "page": 66, "cost": 150, "profile": ["4","3","0","4","4","2","4","3","6"]},
+    {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 66, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
+    {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 66, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
+    {"id": "hydra", "name": "Hydra", "kind": "monster", "category": "monsters", "page": 66, "cost": 225, "profile": ["6","3","0","5","6","7","3","5","6"]},
+    {
+      "id": "gigantic-spider",
+      "name": "Gigantic Spider",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 66,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 66, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 66, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
+    {"id": "pegasus", "name": "Pegasus", "kind": "monster", "category": "monsters", "page": 66, "cost": 50, "profile": ["8","3","0","4","4","3","4","2","5"]},
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 66,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 66,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "rats", "name": "Rats", "profile": ["6","3","0","3","2","5","1","5","10"]},
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}
