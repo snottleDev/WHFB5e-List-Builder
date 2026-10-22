@@ -1,5 +1,6 @@
 // Points calculation, save calculation and list validation.
 // Pure functions: no DOM access, so this module can be tested with Node.
+import { extraPoints, extraName, extraType, checkItems } from "./magic.js";
 
 export function findEntry(army, id) {
   return army.entries.find((e) => e.id === id);
@@ -136,10 +137,9 @@ export function selectionCost(army, sel) {
     }
   }
   for (const x of sel.extras || []) {
-    const pts = Number(x.points) || 0;
     // magic items belong with whoever carries them: a Boss's item counts as Characters
     const xcat = x.onBoss ? "characters" : cat;
-    add(xcat, pts, x.name || "Item");
+    add(xcat, extraPoints(army, x), extraName(army, x) || "Item");
   }
   return out;
 }
@@ -309,7 +309,7 @@ export function validate(army, list) {
         const a = s.models?.[e.ratio.model] || 0, b = s.models?.[e.ratio.per] || 0;
         if (a > b * e.ratio.max) warn(`${label}: ${e.ratio.message}`, s.uid);
       }
-      const ms = (s.extras || []).filter((x) => x.kind === "standard");
+      const ms = (s.extras || []).filter((x) => !x.onBoss && extraType(army, x) === "standard");
       if (ms.length) {
         if (!e.magicStandard) warn(`${label}: this unit may not carry a Magic Standard.`, s.uid);
         if (ms.length > 1) warn(`${label}: only one Magic Standard per unit.`, s.uid);
@@ -317,14 +317,11 @@ export function validate(army, list) {
         magicStdCount[e.id] = (magicStdCount[e.id] || 0) + 1;
       }
       const bossItems = (s.extras || []).filter((x) => x.onBoss);
+      if (bossItems.length && !canHaveBoss(army, e)) warn(`${label}: this unit has no Boss to carry a magic item.`, s.uid);
       if (bossItems.length > 1) warn(`${label}: a Boss may carry only one magic item.`, s.uid);
       if (bossItems.length && !s.boss?.enabled) warn(`${label}: has a Boss magic item but no Boss.`, s.uid);
     }
     if (e.kind === "character") {
-      const v = variantOf(e, s);
-      const allowed = v?.magicItems ?? e.magicItems ?? 0;
-      const n = (s.extras || []).length;
-      if (n > allowed) warn(`${label}: ${n} magic items, the maximum is ${allowed}.`, s.uid);
       const g = s.gear || [];
       if (g.includes("double-handed-weapon") && g.includes("halberd"))
         warn(`${label}: cannot wield both a double-handed weapon and a halberd.`, s.uid);
@@ -336,5 +333,23 @@ export function validate(army, list) {
     const e = findEntry(army, id);
     if (e.magicStandard === "one" && n > 1) warn(`${e.name}: only one Mob of this type may carry a Magic Standard (${n} do).`);
   }
+  if (army.itemById) issues.push(...checkItems(army, list, (s) => itemContext(army, s)));
   return issues;
+}
+
+// Who is carrying the items of a selection, for the magic item checks
+export function itemContext(army, s) {
+  const e = findEntry(army, s.entryId);
+  if (!e) return null;
+  const v = variantOf(e, s);
+  const tags = selectionTags(army, s);
+  return {
+    label: s.name || v?.name || e.name,
+    uid: s.uid,
+    kind: e.kind,
+    race: v?.race || e.race || null,
+    wizard: !!(v?.wizard ?? e.wizard),
+    canStandard: e.kind === "character" && tags.includes("bsb"),
+    allowance: { magicItems: v?.magicItems ?? e.magicItems ?? 0, ...(v?.allowances || e.allowances || {}) },
+  };
 }

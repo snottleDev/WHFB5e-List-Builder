@@ -1,6 +1,7 @@
 // Roster rows (shared by the PDF, the text export and the on-screen profile table)
 // and the A4 roster sheet PDF, laid out after the classic Warhammer roster sheet.
 import { MiniPdf } from "./minipdf.js";
+import { extraName } from "./magic.js";
 import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss } from "./calc.js";
 
 export function rosterRows(army, list) {
@@ -66,7 +67,10 @@ export function rosterRows(army, list) {
         if (o.extraProfile) profiles.push(o.extraProfile);
       }
     }
-    for (const x of s.extras || []) if (x.name) lines.push((x.onBoss ? "Boss: " : "") + x.name);
+    for (const x of s.extras || []) {
+      const n = extraName(army, x);
+      if (n) lines.push((x.onBoss ? "Boss: " : "") + n);
+    }
 
     return {
       uid: s.uid,

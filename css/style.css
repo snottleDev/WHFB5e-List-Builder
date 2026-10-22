@@ -121,6 +121,10 @@ label { cursor: pointer; }
 .extras-row { display: flex; gap: 6px; align-items: center; margin: 3px 0; flex-wrap: wrap; }
 .extras-row input[type=text] { width: 220px; }
 .extras-row input[type=number] { width: 70px; }
+.extras-row.item { gap: 4px 10px; padding: 3px 0; border-bottom: 1px dotted var(--line); }
+.extras-row.item small { color: var(--muted); flex-basis: 100%; order: 3; }
+.extras-row .pts-sm { font-family: var(--head); color: var(--muted); }
+.extras-row select { max-width: 100%; }
 
 @media (max-width: 600px) {
   .ed-title input.name { width: 100%; }
@@ -128,3 +132,5 @@ label { cursor: pointer; }
   .lists th:nth-child(2), .lists td:nth-child(2) { display: none; }
 }
 @media (max-width: 600px) { .sticky { position: static; } }
+.field > .extras { flex: 1 1 280px; min-width: 0; }
+.extras select { width: 100%; max-width: 460px; text-overflow: ellipsis; }
