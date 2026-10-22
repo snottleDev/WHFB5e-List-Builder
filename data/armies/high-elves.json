@@ -1,0 +1,734 @@
+{
+  "id": "high-elves",
+  "name": "High Elves",
+  "source": "Warhammer Armies: High Elves (5th edition), army list pp.69-94 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the High Elf special rules (pp.54-55) and army list",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "regiments", "name": "Regiments", "min": 25},
+    {"id": "war-machines", "name": "War Machines", "max": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"elf": "High Elf"},
+  "championName": "Champion",
+  "bossCosts": {"elf": 48},
+  "bossProfiles": {"elf": ["5", "5", "5", "4", "3", "1", "7", "2", "8"]},
+  "equipment": [
+    {"id": "lance", "name": "Lance (mounted only)", "cost": 2, "group": "melee", "mountedOnly": true},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed sword or axe", "cost": 2, "group": "melee"},
+    {"id": "bow", "name": "Bow", "cost": 2, "group": "missile"},
+    {"id": "long-bow", "name": "Longbow", "cost": 3, "group": "missile"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+    {"id": "heavy-armour", "name": "Heavy armour (Ithilmar)", "cost": 3, "armour": "heavy"},
+    {"id": "barding", "name": "Barding for Elven Steed (mounted only)", "cost": 4, "armour": "barding", "mountedOnly": true},
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "troopOnly": true}
+  ],
+  "mounts": [
+    {"id": "elven-steed", "name": "Elven Steed", "cost": 3, "profile": ["9","3","0","3","3","1","4","1","5"]}
+  ],
+  "characterChariots": ["tiranoc-chariots"],
+  "magic": {
+    "tags": ["high-elves"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": [
+      {
+        "id": "banner-of-avelorn",
+        "name": "Banner of Avelorn",
+        "type": "standard",
+        "points": 25,
+        "page": 86,
+        "only": "Handmaidens of the Everqueen only",
+        "entries": ["handmaidens"]
+      }
+    ]
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one General (p.73)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.73)."},
+    {
+      "type": "perUnits",
+      "entry": "shadow-warriors",
+      "units": true,
+      "max": 1,
+      "per": ["spearmen", "archers"],
+      "message": "No more units of Shadow Warriors than units of Spearmen and Archers combined (ignored against Dark Elves) (p.78)."
+    },
+    {
+      "type": "perUnits",
+      "entry": "bolt-throwers",
+      "max": 1,
+      "atLeast": 2,
+      "per": ["spearmen", "archers", "seaguard"],
+      "message": "Up to two Repeater Bolt Throwers, or one per unit of Spearmen, Archers and Lothern Seaguard if that is more (p.79)."
+    }
+  ],
+  "entries": [
+    {
+      "id": "general",
+      "name": "Elven Lord General",
+      "kind": "character",
+      "category": "characters",
+      "race": "elf",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["elven-steed"],
+      "monsters": true,
+      "chariots": true,
+      "page": 73,
+      "max": 1,
+      "tags": ["general"],
+      "cost": 160,
+      "magicItems": 3,
+      "profile": ["5","7","7","4","4","3","9","4","10"]
+    },
+    {
+      "id": "battle-standard",
+      "name": "Battle Standard Bearer",
+      "kind": "character",
+      "category": "characters",
+      "race": "elf",
+      "equipmentText": "Sword, Battle Standard",
+      "equipmentList": true,
+      "mounts": ["elven-steed"],
+      "monsters": true,
+      "chariots": true,
+      "page": 73,
+      "max": 1,
+      "tags": ["bsb"],
+      "cost": 98,
+      "magicItems": 1,
+      "profile": ["5","5","5","4","3","1","7","2","8"]
+    },
+    {
+      "id": "hero",
+      "name": "Hero",
+      "kind": "character",
+      "category": "characters",
+      "race": "elf",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["elven-steed"],
+      "monsters": true,
+      "chariots": true,
+      "page": 73,
+      "cost": 104,
+      "magicItems": 2,
+      "profile": ["5","6","6","4","4","2","8","3","9"]
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "kind": "character",
+      "category": "characters",
+      "race": "elf",
+      "equipmentText": "Sword (no armour or other weapons)",
+      "equipmentList": false,
+      "mounts": ["elven-steed"],
+      "monsters": true,
+      "chariots": true,
+      "page": 74,
+      "wizard": true,
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "mage", "name": "Mage", "cost": 59, "magicItems": 1, "profile": ["5","4","4","3","4","1","7","1","8"], "rulesText": "Level 1 wizard"},
+        {"id": "champion", "name": "Mage Champion", "cost": 121, "magicItems": 2, "profile": ["5","4","4","4","4","2","7","1","8"], "rulesText": "Level 2 wizard"},
+        {"id": "master", "name": "Master Mage", "cost": 219, "magicItems": 3, "profile": ["5","4","4","4","4","3","8","2","8"], "rulesText": "Level 3 wizard"},
+        {"id": "lord", "name": "Mage Lord", "cost": 328, "magicItems": 4, "profile": ["5","4","4","4","4","4","9","3","9"], "rulesText": "Level 4 wizard"}
+      ]
+    },
+    {
+      "id": "alith-anar",
+      "name": "Alith Anar, the Shadow King",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 81,
+      "cost": 285,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","7","7","4","4","3","9","4","10"],
+      "equipmentText": "Light armour, shield, sword, longbow",
+      "armour": ["light", "shield"],
+      "requires": [
+        {"entry": "shadow-warriors", "message": "Alith Anar requires at least one regiment of Shadow Warriors."}
+      ],
+      "rulesText": "Hates Dark Elves and Chaos, Skirmish, Special deployment, Stone of Midnight, Shadow Crown, Moonbow",
+      "notes": "Points include his magic items: Stone of Midnight, Shadow Crown, Moonbow. He may have no other magic items."
+    },
+    {
+      "id": "eltharion",
+      "name": "Eltharion the Grim, Warden of Tor Yvresse",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 83,
+      "cost": 467,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","7","7","4","4","3","9","4","10"],
+      "extraProfiles": [
+        {"name": "Stormwing (Griffon)", "profile": ["6","5","0","6","5","5","7","4","8"]}
+      ],
+      "equipmentText": "Heavy armour, lance, sword, longbow; rides Stormwing",
+      "armour": ["heavy"],
+      "rulesText": "Hates Goblins, Fangsword, Helm of Yvresse, Talisman of Hoeth (Level 2 Mage Champion)",
+      "notes": "Points include his magic items: Fangsword of Eltharion, Helm of Yvresse, Talisman of Hoeth."
+    },
+    {
+      "id": "alarielle",
+      "name": "Alarielle, Everqueen of Avelorn",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 84,
+      "cost": 475,
+      "wizard": true,
+      "profile": ["5","10","10","3","4","4","10","1","10"],
+      "equipmentText": "No weapons, no armour",
+      "save": "4+",
+      "rulesText": "Level 4 Mage Lord, Boon of Isha, Chaos Bane, Touch of the Everqueen, Shieldstone of Isha (4+)",
+      "notes": "Alarielle cannot be the General. Points include his magic items: Star of Avelorn, Shieldstone of Isha, Stave of Avelorn."
+    },
+    {
+      "id": "belannaer",
+      "name": "Belannaer, Loremaster of Hoeth",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 88,
+      "cost": 555,
+      "wizard": true,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","6","4","4","4","4","9","4","10"],
+      "equipmentText": "Sword, on foot",
+      "requires": [
+        {"entry": "sword-masters", "message": "Belannaer requires a regiment of Sword Masters."}
+      ],
+      "rulesText": "Level 4 Mage Lord, Glamour of Hoeth",
+      "notes": "Points include his magic items: Cloak of Stars, Blade of Bel-Korhadris, Book of the Phoenix, Staff of Cyeos."
+    },
+    {
+      "id": "korhil",
+      "name": "Korhil, Hunter Captain of the White Lions",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 90,
+      "cost": 198,
+      "profile": ["5","7","6","5","4","2","8","3","9"],
+      "equipmentText": "Heavy armour, Pelt of Charandis, Axe Chayal",
+      "save": "4+/3+",
+      "attachTo": {"entries": ["white-lions"], "label": "Champion of", "required": true, "maxUnits": 1, "requiredMessage": "Korhil must be the Champion of a regiment of White Lions"},
+      "rulesText": "Save 3+ vs shooting, Woodsmen, Woodsman's axe, Bodyguard",
+      "notes": "Korhil replaces the regiment's normal Champion. Points include his magic items: Axe Chayal, Pelt of Charandis."
+    },
+    {
+      "id": "caradryan",
+      "name": "Caradryan, Captain of the Phoenix Guard",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 91,
+      "cost": 73,
+      "profile": ["5","5","5","4","3","1","7","2","9"],
+      "equipmentText": "Heavy armour, sword, halberd, on foot",
+      "armour": ["heavy"],
+      "attachTo": {
+        "entries": ["phoenix-guard"],
+        "label": "Champion of",
+        "required": true,
+        "maxUnits": 1,
+        "requiredMessage": "Caradryan must be the Champion of a regiment of Phoenix Guard"
+      },
+      "rulesText": "Mark of Asuryan",
+      "notes": "Caradryan replaces the regiment's normal Champion and carries no magic items."
+    },
+    {
+      "id": "tyrion",
+      "name": "Tyrion, High Elf Prince",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 92,
+      "cost": 425,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","8","7","4","4","3","10","4","10"],
+      "extraProfiles": [
+        {"name": "Malhandir", "profile": ["12","4","0","4","3","1","5","2","7"]}
+      ],
+      "save": "1+",
+      "equipmentText": "Dragon Armour of Aenarion, Sunfang; rides Malhandir",
+      "rulesText": "Sunfang (D3 wounds), Dragon Armour (1+, then 4+), Heart of Avelorn (4+ vs magic), immune to fire",
+      "notes": "Points include his magic items: Sunfang, Dragon Armour of Aenarion, Heart of Avelorn."
+    },
+    {
+      "id": "teclis",
+      "name": "Teclis, High Elf Mage Lord",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 93,
+      "cost": 630,
+      "wizard": true,
+      "profile": ["5","4","4","4","4","4","9","3","10"],
+      "equipmentText": "Sword of Teclis, on foot",
+      "rulesText": "Level 5 wizard (War Crown of Saphery), Master of High Magic",
+      "notes": "Points include his magic items: Moon Staff of Lileath, War Crown of Saphery, Sword of Teclis, Scroll of Hoeth."
+    },
+    {
+      "id": "imrik",
+      "name": "Imrik, Lord of Dragons",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "elf",
+      "magicItems": 0,
+      "page": 94,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["5","8","7","4","4","3","10","4","10"],
+      "equipmentText": "Armour of Caledor, sword, Star Lance; rides a Dragon",
+      "save": "2+",
+      "variantsLabel": "Dragon",
+      "variants": [
+        {
+          "id": "dragon",
+          "name": "Imrik on Dragon",
+          "cost": 725,
+          "extraProfiles": [
+            {"name": "Dragon", "profile": ["6","6","0","6","6","7","8","7","7"]}
+          ],
+          "profile": ["5","8","7","4","4","3","10","4","10"]
+        },
+        {
+          "id": "great",
+          "name": "Imrik on Great Dragon",
+          "cost": 875,
+          "extraProfiles": [
+            {"name": "Great Dragon", "profile": ["6","7","0","7","7","8","7","8","8"]}
+          ],
+          "profile": ["5","8","7","4","4","3","10","4","10"]
+        },
+        {
+          "id": "emperor",
+          "name": "Imrik on Emperor Dragon",
+          "cost": 1025,
+          "extraProfiles": [
+            {"name": "Emperor Dragon", "profile": ["6","8","0","8","8","9","6","9","9"]}
+          ],
+          "profile": ["5","8","7","4","4","3","10","4","10"]
+        }
+      ],
+      "rulesText": "Star Lance (+3 S charging, no armour save), Dragonhorn, immune to dragon breath",
+      "notes": "275 points plus the Dragon. Points include his magic items: Star Lance, Armour of Caledor, Dragonhorn."
+    },
+    {
+      "id": "dragon-princes",
+      "name": "Dragon Princes of Caledor",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 75,
+      "max": 1,
+      "race": "elf",
+      "cost": 43,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Dragon Prince", "profile": ["5","5","4","3","3","1","7","1","8"]},
+        {"name": "Elven Steed", "profile": ["9","3","0","3","3","1","4","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, lance, barded Elven Steed",
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["heavy-armour", "shield", "lance", "barding"],
+      "bossMount": "elven-steed",
+      "magicStandard": "any",
+      "freeStandard": true,
+      "magicStandardFactor": 0.5,
+      "requireStandard": "the Dragon Princes must include a standard bearer (Banner of Caledor, p.75).",
+      "rulesText": "Banner of Caledor",
+      "notes": "The standard bearer costs the same as a Dragon Prince, and a magic standard costs half its card value.",
+      "options": []
+    },
+    {
+      "id": "silver-helms",
+      "name": "Silver Helms",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 75,
+      "race": "elf",
+      "cost": 31,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Silver Helm", "profile": ["5","5","4","3","3","1","7","1","8"]},
+        {"name": "Elven Steed", "profile": ["9","3","0","3","3","1","4","1","5"]}
+      ],
+      "equipmentText": "Light armour, lance, Elven Steed",
+      "armour": ["light"],
+      "cavalry": true,
+      "bossGear": ["light-armour", "lance"],
+      "bossMount": "elven-steed",
+      "magicStandard": "any",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 2, "gear": "shield", "armour": "shield"},
+        {
+          "id": "heavy-armour",
+          "name": "Heavy armour instead of light",
+          "cost": 2,
+          "gear": "heavy-armour",
+          "replacesGear": "light-armour",
+          "armour": "heavy",
+          "replacesArmour": "light"
+        },
+        {"id": "barding", "name": "Barded steeds", "cost": 8, "gear": "barding", "saveBonus": 1}
+      ]
+    },
+    {
+      "id": "ellyrian-reavers",
+      "name": "Ellyrian Reavers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 76,
+      "race": "elf",
+      "cost": 25,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Reaver", "profile": ["5","4","4","3","3","1","6","1","8"]},
+        {"name": "Elven Steed", "profile": ["9","3","0","3","3","1","4","1","5"]}
+      ],
+      "equipmentText": "Light armour, sword, Elven Steed",
+      "armour": ["light"],
+      "cavalry": true,
+      "bossGear": ["light-armour"],
+      "bossMount": "elven-steed",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 2, "gear": "shield", "armour": "shield"},
+        {"id": "bows", "name": "Bows", "cost": 4, "gear": "bow"},
+        {"id": "spears", "name": "Spears", "cost": 2, "gear": "spear"}
+      ],
+      "rulesText": "Skirmish, Pre-game march move, Expert riders, Fire & flee"
+    },
+    {
+      "id": "white-lions",
+      "name": "White Lions of Chrace",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 76,
+      "max": 1,
+      "race": "elf",
+      "cost": 16,
+      "minSize": 5,
+      "profiles": [
+        {"name": "White Lion", "profile": ["5","5","4","4","3","1","6","1","8"]}
+      ],
+      "equipmentText": "Heavy armour, lion pelt, double-handed axe",
+      "armour": ["heavy"],
+      "bossGear": ["heavy-armour", "double-handed-weapon"],
+      "save": "5+/4+",
+      "freeStandard": true,
+      "freeMusician": true,
+      "magicStandard": "any",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "save": "5+/3+"}
+      ],
+      "rulesText": "Save 4+ vs shooting (3+ with shields), Bodyguard, Woodsmen, Lion pelt, Woodsman's axe (Rampant, Leaping, Claw)",
+      "notes": "Standard bearer and musician cost the same as a White Lion. Shields only help against shooting."
+    },
+    {
+      "id": "phoenix-guard",
+      "name": "Phoenix Guard",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 76,
+      "max": 1,
+      "race": "elf",
+      "cost": 14,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Phoenix Guard", "profile": ["5","5","4","3","3","1","7","1","8"]}
+      ],
+      "equipmentText": "Light armour, halberd",
+      "armour": ["light"],
+      "bossGear": ["light-armour", "halberd"],
+      "magicStandard": "any",
+      "options": [
+        {
+          "id": "heavy-armour",
+          "name": "Heavy armour instead of light",
+          "cost": 1,
+          "gear": "heavy-armour",
+          "replacesGear": "light-armour",
+          "armour": "heavy",
+          "replacesArmour": "light"
+        }
+      ]
+    },
+    {
+      "id": "sword-masters",
+      "name": "Sword Masters of Hoeth",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 77,
+      "max": 1,
+      "race": "elf",
+      "cost": 16,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Sword Master", "profile": ["5","5","4","3","3","1","7","1","8"]}
+      ],
+      "equipmentText": "Heavy armour, double-handed sword",
+      "armour": ["heavy"],
+      "bossGear": ["heavy-armour", "double-handed-weapon"],
+      "magicStandard": "any",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "save": "5+/4+"}
+      ],
+      "rulesText": "Shields: 4+ vs shooting, Sword masters (no strike-last penalty), Deflect shot (-1 to hit)",
+      "notes": "Shields only help against shooting."
+    },
+    {
+      "id": "seaguard",
+      "name": "Lothern Seaguard",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 77,
+      "race": "elf",
+      "cost": 14,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Seaguard", "profile": ["5","4","4","3","3","1","6","1","8"]}
+      ],
+      "equipmentText": "Light armour, shield, spear, bow",
+      "armour": ["light", "shield"],
+      "bossGear": ["light-armour", "shield", "spear", "bow"],
+      "magicStandard": "one",
+      "options": [
+        {
+          "id": "heavy-armour",
+          "name": "Heavy armour instead of light",
+          "cost": 1,
+          "gear": "heavy-armour",
+          "replacesGear": "light-armour",
+          "armour": "heavy",
+          "replacesArmour": "light"
+        },
+        {"id": "longbows", "name": "Longbows instead of bows", "cost": 1, "gear": "long-bow", "replacesGear": "bow"}
+      ],
+      "rulesText": "Citizen levy (spears and bows)"
+    },
+    {
+      "id": "spearmen",
+      "name": "Elven Spearmen",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 77,
+      "race": "elf",
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Spearman", "profile": ["5","4","4","3","3","1","6","1","8"]}
+      ],
+      "equipmentText": "Light armour, shield, spear",
+      "armour": ["light", "shield"],
+      "bossGear": ["light-armour", "shield", "spear"],
+      "magicStandard": "one",
+      "options": [
+        {
+          "id": "heavy-armour",
+          "name": "Heavy armour instead of light",
+          "cost": 1,
+          "gear": "heavy-armour",
+          "replacesGear": "light-armour",
+          "armour": "heavy",
+          "replacesArmour": "light"
+        }
+      ],
+      "rulesText": "Citizen levy (fight in an extra rank)"
+    },
+    {
+      "id": "shadow-warriors",
+      "name": "Shadow Warriors",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 78,
+      "race": "elf",
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Shadow Warrior", "profile": ["5","4","4","3","3","1","6","1","8"]}
+      ],
+      "equipmentText": "Bow, sword, shield",
+      "armour": ["shield"],
+      "bossGear": ["bow", "shield"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "longbows", "name": "Longbows instead of bows", "cost": 1, "gear": "long-bow", "replacesGear": "bow"}
+      ],
+      "rulesText": "Skirmish, Special deployment, Hate Dark Elves, Citizen levy (bows)"
+    },
+    {
+      "id": "archers",
+      "name": "Elven Archers",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 78,
+      "race": "elf",
+      "cost": 10,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Archer", "profile": ["5","4","4","3","3","1","6","1","8"]}
+      ],
+      "equipmentText": "Bow, sword",
+      "bossGear": ["bow"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "longbows", "name": "Longbows instead of bows", "cost": 1, "gear": "long-bow", "replacesGear": "bow"}
+      ],
+      "rulesText": "Citizen levy (shoot in two ranks)"
+    },
+    {
+      "id": "handmaidens",
+      "name": "Handmaidens of the Everqueen",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 86,
+      "max": 1,
+      "race": "elf",
+      "cost": 16,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Handmaiden", "profile": ["5","5","5","3","3","1","6","1","8"]}
+      ],
+      "equipmentText": "Light armour, spear, longbow",
+      "armour": ["light"],
+      "bossGear": ["light-armour", "spear", "long-bow"],
+      "magicStandard": "any",
+      "requires": [
+        {"entry": "alarielle", "message": "Handmaidens may only be included with Alarielle."}
+      ],
+      "requireStandard": "the Handmaidens must include a standard bearer carrying the Banner of Avelorn (p.86).",
+      "options": [
+        {"id": "horn", "name": "Horn of Isha (musician)", "cost": 25, "per": "unit"}
+      ],
+      "rulesText": "Immune to psychology with the Everqueen, Hatred if she dies, Citizen levy",
+      "notes": "Must include a musician with the Horn of Isha and a standard with the Banner of Avelorn (add it as the magic standard)."
+    },
+    {
+      "id": "bolt-throwers",
+      "name": "Repeater Bolt Throwers",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 79,
+      "race": "elf",
+      "cost": 100,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Machine", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Crew (2)", "profile": ["5","4","4","3","3","1","6","1","8"]}
+      ],
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "single": "Repeater Bolt Thrower",
+      "equipmentText": "Crew: light armour, hand weapons",
+      "save": "6+",
+      "rulesText": "Single shot (S5, D4 wounds) or multiple shot",
+      "options": []
+    },
+    {
+      "id": "tiranoc-chariots",
+      "name": "Tiranoc Chariots",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 79,
+      "race": "elf",
+      "cost": 84,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Charioteer", "profile": ["5","5","4","3","3","1","7","1","8"]},
+        {"name": "Elven Steed", "profile": ["9","3","0","3","3","1","4","1","5"]},
+        {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]}
+      ],
+      "sizeLabel": "chariots",
+      "noCommand": true,
+      "crew": 2,
+      "magicStandard": "one",
+      "single": "Tiranoc Chariot",
+      "equipmentText": "Crew: light armour, swords, bows",
+      "armour": ["light"],
+      "options": [
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"},
+        {"id": "shields", "name": "Crew shields", "cost": 1, "per": "crew", "armour": "shield"},
+        {"id": "heavy-armour", "name": "Crew heavy armour instead of light", "cost": 1, "per": "crew", "armour": "heavy", "replacesArmour": "light"},
+        {"id": "spears", "name": "Crew spears", "cost": 1, "per": "crew"},
+        {"id": "longbows", "name": "Crew longbows instead of bows", "cost": 1, "per": "crew"},
+        {"id": "extra-steeds", "name": "Two extra Elven Steeds", "cost": 6, "per": "chariot"},
+        {"id": "barding", "name": "Barded steeds", "cost": 4, "per": "chariot", "count": true, "max": 4}
+      ],
+      "notes": "Barding costs 4 per steed (2 or 4 steeds per chariot). A character riding a chariot replaces one crewman and pays the chariot's cost.",
+      "rulesText": "Chariot"
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 80,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {"id": "great-eagle", "name": "Great Eagle", "kind": "monster", "category": "monsters", "page": 80, "cost": 75, "profile": ["2","7","0","5","4","3","5","2","8"]},
+    {"id": "chimera", "name": "Chimera", "kind": "monster", "category": "monsters", "page": 80, "cost": 250, "profile": ["6","4","0","7","6","6","4","6","8"]},
+    {"id": "cockatrice", "name": "Cockatrice", "kind": "monster", "category": "monsters", "page": 80, "cost": 150, "profile": ["4","3","0","4","4","2","4","3","6"]},
+    {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 80, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
+    {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 80, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 80, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "pegasus", "name": "Pegasus", "kind": "monster", "category": "monsters", "page": 80, "cost": 50, "profile": ["8","3","0","4","4","3","4","2","5"]},
+    {"id": "unicorn", "name": "Unicorn", "kind": "monster", "category": "monsters", "page": 80, "cost": 90, "profile": ["9","5","0","4","4","3","4","2","9"]}
+  ]
+}
