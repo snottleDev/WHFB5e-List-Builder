@@ -34,6 +34,13 @@
     "forest-goblin": ["4", "3", "4", "4", "3", "1", "3", "2", "5"],
     "night-goblin": ["4", "3", "4", "4", "3", "1", "3", "2", "5"]
   },
+  "magic": {
+    "tags": ["orcs-goblins"],
+    "pools": [{"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}],
+    "items": [
+      {"id": "evil-sun-banner", "name": "The Evil Sun Banner", "type": "standard", "points": 10, "page": 100, "only": "Night Goblins only", "races": ["night-goblin"]}
+    ]
+  },
   "characterChariots": ["orc-boar-chariot", "goblin-wolf-chariot"],
   "rules": [
     {"type": "exactlyTag", "tag": "warlord", "count": 1, "message": "The army must include exactly one Warlord (p.85)."},
@@ -131,6 +138,7 @@
       "id": "shaman",
       "name": "Shaman",
       "kind": "character",
+      "wizard": true,
       "category": "characters",
       "page": 87,
       "requiresOwnRace": true,
@@ -227,7 +235,8 @@
       "options": [
         {"id": "wyvern", "name": "Wyvern", "cost": 180, "mountProfile": {"name": "Wyvern", "profile": ["6","5","0","5","6","4","4","3","5"]}}
       ],
-      "notes": "If he has any magic items, the Crown of Sorcery must be one of them (magic item cards: revision 2)."
+      "startingItems": ["crown-of-sorcery"],
+      "notes": "If Azhag has any magic items, the Crown of Sorcery must be one of them; it is added for you."
     },
     {
       "id": "gorfang",
@@ -290,10 +299,10 @@
             {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]},
             {"name": "Giant Wolf", "profile": ["9","4","0","3","3","1","3","1","3"]}
           ]
-        },
-        {"id": "axe-of-grom", "name": "Axe of Grom", "cost": 50}
+        }
       ],
-      "notes": "Niblit replaces the normal Battle Standard Bearer and may carry one magic item."
+      "startingItems": ["elf-biter-axe-of-grom"],
+      "notes": "Niblit replaces the normal Battle Standard Bearer and may carry one magic item. The Axe of Grom (Elf-Biter, 50 pts) is added as one of Grom's three magic items."
     },
     {
       "id": "gorbad",
@@ -318,9 +327,8 @@
       "armour": ["light"],
       "cavalry": true,
       "saveBonus": 1,
-      "options": [
-        {"id": "morgor", "name": "Morgor the Mangler", "cost": 125}
-      ]
+      "startingItems": ["morgor-the-mangler"],
+      "notes": "Morgor the Mangler (125 pts) is added as one of his three magic items; remove it if you field him without it."
     },
     {
       "id": "morglum",
@@ -386,8 +394,8 @@
       "equipmentText": "Light armour",
       "armour": ["light"],
       "chariots": true,
+      "startingItems": ["skarsniks-prodder"],
       "options": [
-        {"id": "prodder", "name": "Skarsnik's Prodder", "cost": 75},
         {"id": "gobbla", "name": "Gobbla", "cost": 50, "extraProfile": {"name": "Gobbla", "profile": ["-","6","0","6","4","3","6","4","2"]}}
       ]
     },
