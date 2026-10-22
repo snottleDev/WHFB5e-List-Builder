@@ -1,7 +1,7 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
 import { attachMagic, extraItem, pickerGroups } from "./magic.js";
-import { itemContext, defaultNotes, parentOf } from "./calc.js";
+import { itemContext, defaultNotes, parentOf, attachedParent } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
 const app = document.getElementById("app");
@@ -192,6 +192,11 @@ function titleOf(army, s) {
     const p = parentOf(current.list, s);
     if (p) return `${unitSize(e, s)} ${v?.name || e.name} – detachment of ${p.name || findEntry(army, p.entryId).name}`;
   }
+  if (s.attachedTo && current) {
+    const p = attachedParent(current.list, s);
+    const base = e.kind === "character" ? (v?.name || e.name) : `${unitSize(e, s)} ${v?.name || e.name}`;
+    if (p) return `${base} – ${(e.attachTo.label || "with").toLowerCase()} ${p.name || findEntry(army, p.entryId).name}`;
+  }
   if (e.kind === "unit" && !e.noCommand) return `${unitSize(e, s)} ${v?.name || e.name}`;
   if (e.kind === "unit" || e.kind === "monster") return `${s.size} × ${v?.name || e.name}`;
   return v?.name || e.name;
@@ -265,6 +270,20 @@ function renderCard(army, list, s) {
       h("small", { class: "note" }, "max half the size of its regiment; no standard, musician or champion")));
   }
 
+  // units or characters that go with a regiment (Skaven war teams, Assassins, Undead Champions)
+  if (e.attachTo) {
+    const a = e.attachTo;
+    const parents = list.selections.filter((x) => x !== s && a.entries.includes(x.entryId));
+    body.append(field(a.label || "With",
+      h("select", { onchange: (ev) => {
+          s.attachedTo = ev.target.value || undefined;
+          if (s.attachedTo && e.kind === "unit") { s.standard = false; s.musician = false; if (s.boss) s.boss.enabled = false; }
+          change(); } },
+        h("option", { value: "" }, a.required ? "— choose a regiment —" : (a.alone || "On its own")),
+        parents.map((p) => h("option", { value: p.uid, selected: p.uid === s.attachedTo ? true : null }, p.name || titleOf(army, p)))),
+      a.hint ? h("small", { class: "note" }, a.hint) : null));
+  }
+
   // options
   const opts = e.options || [];
   if (opts.length) {
@@ -291,14 +310,14 @@ function renderCard(army, list, s) {
       const name = `g-${s.uid}-${p[0].group}`;
       return h("span", { class: "opt" }, h("select", { name, onchange: (ev) => {
           for (const o of p) s.options[o.id] = o.id === ev.target.value; change(); } },
-        h("option", { value: "" }, "Standard weapons"),
+        h("option", { value: "" }, e.groupLabels?.[p[0].group] || (p[0].group === "weapon" ? "Standard weapons" : "None")),
         p.map((o) => h("option", { value: o.id, selected: s.options[o.id] ? true : null }, `${o.name} (+${fmt(o.cost)})`))));
     });
     body.append(field("Options", rendered));
   }
 
   // command (detachments have none)
-  if (e.kind === "unit" && !e.noCommand && !s.parent) {
+  if (e.kind === "unit" && !e.noCommand && !s.parent && !s.attachedTo) {
     const cmd = [
       h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.standard, onchange: (ev) => { s.standard = ev.target.checked; change(); } }), "Standard"),
       h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.musician, onchange: (ev) => { s.musician = ev.target.checked; change(); } }), "Musician"),
@@ -358,6 +377,7 @@ function renderCard(army, list, s) {
 
 function perLabel(o, e) {
   if (e.kind === "character") return "";
+  if (o.perModel) return ` per ${(e.models.find((m) => m.id === o.perModel)?.name || o.perModel).replace(/s$/, "").toLowerCase()}`;
   const per = o.per || "model";
   if (per === "model" && e.sizeLabel) return " each";
   return { model: "/model", unit: " each", chariot: "/chariot", crew: "/crewman" }[per] || "";

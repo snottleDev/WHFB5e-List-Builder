@@ -173,4 +173,120 @@ t("Empire: special-character items and mounted-only gear", () => {
   assert.match(m, /Lance can only be used by a mounted model/);
   assert.match(m, /Tzarina requires at least one unit of Kislev/);
 });
+// ---------- Skaven ----------
+const sk = attachMagic(load("../data/armies/skaven.json"), [load("../data/magic/warhammer-magic.json")]);
+const smsg = (list) => validate(sk, list).map((i) => i.msg).join("\n");
+t("Skaven: clanrats 5+, stormvermin 6+ / 5+ with shields, warpfire 5+", () => {
+  assert.equal(computeSave(sk, { entryId: "clanrats", size: 20 }), "5+");
+  assert.equal(computeSave(sk, { entryId: "stormvermin", size: 20 }), "6+");
+  assert.equal(computeSave(sk, { entryId: "stormvermin", size: 20, options: { shields: true } }), "5+");
+  assert.equal(computeSave(sk, { entryId: "warpfire-throwers", size: 1 }), "5+");
+});
+t("Skaven: 20 clanrats, spears, std, mus, champion = 19*6.5+13 regiments, 27+2+1+1 characters", () => {
+  const c = selectionCost(sk, { entryId: "clanrats", size: 20, options: { spears: true }, standard: true, musician: true, boss: { enabled: true } });
+  assert.equal(c.byCategory.regiments, 19 * 6.5 + 6.5 + 6.5);
+  assert.equal(c.byCategory.characters, 27 + 2 + 1 + 1);
+});
+t("Skaven: rat ogre pack 2 masters + 6 ogres + AHW = 20+258+2; champion replaces a packmaster", () => {
+  assert.equal(selectionCost(sk, { entryId: "rat-ogre-pack", models: { packmaster: 2, ogre: 6 }, options: { "additional-hand-weapon": true } }).total, 280);
+  const c = selectionCost(sk, { entryId: "rat-ogre-pack", models: { packmaster: 2, ogre: 6 }, boss: { enabled: true } });
+  assert.equal(c.byCategory.regiments, 10 + 258);
+  assert.equal(c.byCategory.characters, 27 + 2);
+  assert.match(smsg({ points: 2000, selections: [{ uid: "a", entryId: "rat-ogre-pack", models: { packmaster: 1, ogre: 7 } }] }), /1 to 6 Rat Ogres/);
+});
+t("Skaven: attached teams, assassins, censer bearers", () => {
+  const list = { points: 3000, selections: [
+    { uid: "w", entryId: "warlord" },
+    { uid: "c", entryId: "clanrats", size: 20 },
+    { uid: "g", entryId: "globadiers", size: 3, attachedTo: "c" },
+    { uid: "f1", entryId: "warpfire-throwers", size: 1, attachedTo: "c" },
+    { uid: "f2", entryId: "warpfire-throwers", size: 1, attachedTo: "c" },
+    { uid: "a", entryId: "assassins", size: 1, attachedTo: "c" },
+    { uid: "m", entryId: "plague-monks", size: 20 },
+    { uid: "b", entryId: "censer-bearers", size: 11, attachedTo: "m" },
+    { uid: "b2", entryId: "censer-bearers", size: 5 } ] };
+  const m = smsg(list);
+  assert.match(m, /Clanrat Warriors: 3 Clan Skryre Poison Wind Globadiers with it, the maximum is 2/);
+  assert.match(m, /2 Clan Skryre Warpfire Thrower Teams with it, the maximum is 1/);
+  assert.match(m, /at most half the size of Clan Pestilens Plague Monks \(10\)/);
+  assert.match(m, /must accompany a regiment of Plague Monks/);
+  assert.doesNotMatch(m, /Globadiers: 3 models, the minimum/);
+  assert.doesNotMatch(m, /Assassins/);
+});
+t("Skaven: Ikit war machine minimum, swarm half price, bell per seer, war team units", () => {
+  const list = { points: 2000, selections: [
+    { uid: "i", entryId: "ikit-claw", extras: [{ itemId: "storm-daemon" }] },
+    { uid: "c", entryId: "clanrats", size: 30 },
+    { uid: "s", entryId: "rat-swarms", models: { half: 2, full: 1 } },
+    { uid: "b", entryId: "screaming-bell", size: 1 },
+    { uid: "j1", entryId: "jezzails", size: 2 }, { uid: "j2", entryId: "jezzails", size: 2 } ] };
+  const m = smsg(list);
+  assert.match(m, /Ikit Claw as General you must spend at least 25%/);
+  assert.match(m, /Half-price Rat Swarms.*You have 2, the maximum is 1/);
+  assert.match(m, /One Screaming Bell for each Grey Seer/);
+  assert.match(m, /Jezzail Teams: 4 in 2 units, at most 1 unit/);
+  assert.doesNotMatch(m, /Storm-Daemon/);
+  assert.equal(selectionCost(sk, list.selections[2]).total, 200);
+});
+t("Skaven: clan-only items", () => {
+  const list = { points: 3000, selections: [
+    { uid: "w", entryId: "warlord", extras: [{ itemId: "rod-of-corruption" }] },
+    { uid: "p", entryId: "plague-priest", extras: [{ itemId: "liber-bubonicus" }] },
+    { uid: "m", entryId: "plague-monks", size: 20 },
+    { uid: "q", entryId: "queek", role: "general", extras: [{ itemId: "dwarf-gouger" }, { itemId: "warpstone-armour" }] },
+    { uid: "c", entryId: "clanrats", size: 20 } ] };
+  const m = smsg(list);
+  assert.match(m, /Skaven Warlord: Rod of Corruption may only be used by Plague Monks/);
+  assert.doesNotMatch(m, /Liber Bubonicus/);
+  assert.match(m, /exactly one General.*\(currently 2\)/);
+  assert.equal(computeSave(sk, list.selections[3]), "5+");
+});
+// ---------- Undead ----------
+const ud = attachMagic(load("../data/armies/undead.json"), [load("../data/magic/warhammer-magic.json")]);
+const umsg = (list) => validate(ud, list).map((i) => i.msg).join("\n");
+t("Undead: horsemen 6+ / 4+ with LA+shield, skeletons LA+shield 5+, HA alone 5+, wights on steeds 5+, HA steeds 4+", () => {
+  assert.equal(computeSave(ud, { entryId: "skeleton-horsemen", size: 5 }), "6+");
+  assert.equal(computeSave(ud, { entryId: "skeleton-horsemen", size: 5, options: { "light-armour": true, shields: true } }), "4+");
+  assert.equal(computeSave(ud, { entryId: "skeleton-warriors", size: 20, options: { "light-armour": true, shields: true } }), "5+");
+  assert.equal(computeSave(ud, { entryId: "skeleton-warriors", size: 20, options: { "heavy-armour": true } }), "5+");
+  assert.equal(computeSave(ud, { entryId: "wights", size: 5, options: { steeds: true } }), "5+");
+  assert.equal(computeSave(ud, { entryId: "wights", size: 5, options: { steeds: true, "heavy-armour": true } }), "4+");
+});
+t("Undead: 20 skeletons LA+shield+spears, std, mus = 20*12 + 24; chariots 2 with LA+scythes", () => {
+  assert.equal(selectionCost(ud, { entryId: "skeleton-warriors", size: 20, options: { "light-armour": true, shields: true, spears: true }, standard: true, musician: true }).total, 264);
+  assert.equal(selectionCost(ud, { entryId: "undead-chariots", size: 2, options: { "light-armour": true, scythes: true } }).total, 2 * 56 + 2 * 2 * 2 + 2 * 20);
+});
+t("Undead: necromancer lord in scythed chariot with lance + LA = 410+60+2+2, chariot is not cavalry, lance warns", () => {
+  const sel = { uid: "g", entryId: "general", variant: "necromancer-lord", mount: "mount:undead-chariot-scythed", gear: ["lance", "light-armour"] };
+  assert.equal(selectionCost(ud, sel).total, 474);
+  assert.equal(computeSave(ud, sel), "6+");
+  assert.match(umsg({ points: 3000, selections: [sel] }), /Lance can only be used by a mounted model/);
+});
+t("Undead: champions lead a regiment, one each", () => {
+  const list = { points: 2000, selections: [
+    { uid: "g", entryId: "general" },
+    { uid: "s", entryId: "skeleton-warriors", size: 20 },
+    { uid: "c1", entryId: "champion", variant: "wight", attachedTo: "s" },
+    { uid: "c2", entryId: "champion", variant: "wraith", attachedTo: "s" },
+    { uid: "c3", entryId: "champion" } ] };
+  const m = umsg(list);
+  assert.match(m, /Skeleton Warriors: 2 units of Undead Champion with it, the maximum is 1/);
+  assert.match(m, /must lead a regiment of Skeletons/);
+  assert.equal(selectionCost(ud, list.selections[3]).byCategory.characters, 75);
+});
+t("Undead: race-restricted items, Krell and Settra exceptions, Isabella needs Vlad, wraith units", () => {
+  const list = { points: 5000, selections: [
+    { uid: "g", entryId: "general", variant: "vampire-lord", extras: [{ itemId: "book-of-nagash" }, { itemId: "the-carstein-ring" }] },
+    { uid: "k", entryId: "krell", extras: [{ itemId: "the-tomb-blade-of-arkhan" }] },
+    { uid: "st", entryId: "settra", extras: [{ itemId: "staff-of-osiris" }, { itemId: "tomb-kings-crown" }] },
+    { uid: "i", entryId: "isabella" },
+    { uid: "w1", entryId: "wraiths", size: 2 }, { uid: "w2", entryId: "wraiths", size: 2 } ] };
+  const m = umsg(list);
+  assert.match(m, /Vampire Lord: Book of Nagash may only be used by Necromancers/);
+  assert.doesNotMatch(m, /Carstein Ring/);
+  assert.doesNotMatch(m, /Krell/);
+  assert.doesNotMatch(m, /Settra/);
+  assert.match(m, /Isabella may only be included if the army also includes Vlad/);
+  assert.match(m, /Wraiths: 4 in 2 units, at most 1 unit/);
+});
 console.log(`${n} tests passed`);

@@ -1,4 +1,6 @@
 [
   {"id": "orcs-goblins", "name": "Orcs & Goblins", "file": "orcs-goblins.json"},
-  {"id": "empire", "name": "The Empire", "file": "empire.json"}
+  {"id": "empire", "name": "The Empire", "file": "empire.json"},
+  {"id": "skaven", "name": "Skaven", "file": "skaven.json"},
+  {"id": "undead", "name": "The Undead", "file": "undead.json"}
 ]

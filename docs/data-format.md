@@ -9,9 +9,9 @@ Each army is one JSON file in `data/armies/`. Profiles are always 9 strings in t
 |---|---|
 | `id`, `name`, `source` | identification; `source` is shown under the list |
 | `categories` | `[{id, name, min?, max?}]`, percentages of the points limit. The category with a `min` is treated as the core troops ("Mobs" for O&G, "Regiments" elsewhere) |
-| `races` | `{raceId: "Display name"}` used for "requires a Mob of …" checks |
+| `races` | `{raceId: "Display name"}` used for "requires a Mob of …" checks and race-restricted magic items; `racePlurals` overrides the plural used in warnings (e.g. "Skeleton Horsemen") |
 | `equipment` | items characters may buy: `{id, name, cost, group?, armour?, mountedOnly?, troopOnly?}`; `armour` is `shield`, `light`, `heavy` or `barding` (barding adds +1 only when mounted); `troopOnly` items are only used to price champions |
-| `mounts` | mounts for characters: `{id, name, cost, races?, profile, saveBonus?, specialOnly?}`; no `races` = anyone; `specialOnly` = only entries that list it in `mounts` |
+| `mounts` | mounts for characters: `{id, name, cost, races?, profile or profiles[], saveBonus?, specialOnly?, noCavalry?}`; no `races` = anyone; `specialOnly` = only entries that list it in `mounts`; `noCavalry` for chariots (no cavalry save bonus, not "mounted" for lances) |
 | `characterChariots` | entry ids of chariots a character may ride (cost added to the character) |
 | `bossCosts`, `bossProfiles` | unit champion base cost/profile by race (O&G "Bosses", Empire "Champions"); omit if the army has none |
 | `championName` | what unit champions are called (default "Boss") |
@@ -30,16 +30,27 @@ Common keys: `id`, `name`, `kind` (`character` / `unit` / `monster`), `category`
 `cost`/`profile`/`magicItems`; `requiresOwnRace` (needs a core unit of the variant's race);
 `equipmentList` (may buy from `equipment`); `mountChart`, `mounts[]`, `monsters`, `chariots`;
 `roles` (e.g. Gorfang as Big Boss or Warlord, each with its own `tags`); `options` with optional
-`tags`, `extraProfile(s)`, `mountProfile`; `armour[]`, `cavalry`, `saveBonus` for the save.
+`tags`, `extraProfile(s)`, `mountProfile`; `armour[]`, `cavalry`, `saveBonus` for the save;
+`itemRaces` (extra races for magic item restrictions, e.g. Krell may use Necromancer items);
+`allowedItems` (item ids that skip the item checks, e.g. Settra's Staff of Osiris although he is no wizard).
 
 **Units:** `cost` (per model) or `models: [{id, name, cost, counts}]` for mixed units;
 `variants` (e.g. troll type or rock lobber size, may carry their own `cost` and `single` name);
 `minSize`, `sizeLabel`, `noCommand`, `race`, `profiles[]`, `armour[]`, `cavalry`, `saveBonus`,
 `save` (fixed override), `magicStandard` (`any` / `one`), `bossGear`, `bossMount`, `bossOptions`,
 `crew` (chariots), `ratio` (e.g. one hunter team per three squigs), `maxModels` (e.g. 0-8 Steam Tanks across all units),
-`stateTroops` (may form or receive Empire detachments).
+`stateTroops` (may form or receive Empire detachments); `bossReplaces` (for `models` units: the model type a champion
+replaces, e.g. a Packmaster); `groupLabels` (text for the empty choice of an option group, e.g. "No armour");
+`ratio.min` (e.g. each Packmaster controls 1 to 6 beasts).
 
-Unit `options`: `{id, name, cost, per?, group?, count?, max?, gear?, armour?, addsCrew?, replacesGear?}`
+**Going with a regiment** (units or characters): `attachTo: {entries, label, alone?, required?, requiredMessage?,
+maxModels?, maxUnits?, maxFraction?, hint?}`. The selection stores `attachedTo` (the regiment's uid). Used for Skaven
+Globadiers, warpfire teams and Assassins, Plague Censer Bearers (`maxFraction: 0.5`) and Undead Champions
+(`required`, `maxUnits: 1`). Attached units skip the minimum size and have no command models.
+
+Unit `options`: `{id, name, cost, per?, perModel?, group?, count?, max?, gear?, armour?, replacesArmour?, cavalry?, addsCrew?, replacesGear?}`
+- `perModel`: cost per model of one type in a `models` unit (e.g. extra hand weapons for Packmasters only)
+- `cavalry`: the option mounts the unit (e.g. Wights on Skeleton Steeds); `replacesArmour` drops the listed armour
 - `per`: `model` (default), `unit`, `chariot` or `crew`
 - options sharing a `group` are mutually exclusive (shown as one drop-down)
 - `count` makes it a number input (e.g. hidden Fanatics, extra crewmen)
@@ -83,10 +94,15 @@ items (e.g. Gorbad's Morgor the Mangler) that the player can still remove.
 ```json
 { "type": "exactlyTag", "tag": "warlord", "count": 1, "message": "…" }
 { "type": "maxTag", "tag": "bsb", "count": 1, "message": "…" }
-{ "type": "perUnits", "entry": "squig-hoppers", "max": 5, "per": ["night-goblins", "netters"], "message": "…" }
+{ "type": "perUnits", "entry": "squig-hoppers", "max": 5, "per": ["night-goblins", "netters"], "model"?: "half", "message": "…" }
+{ "type": "unitsBySize", "entries": ["warpfire-throwers", "jezzails"], "per": 5, "message": "…" }
+{ "type": "minCategoryIf", "entry": "ikit-claw", "category": "war-machines", "min": 25, "message": "…" }
 { "type": "itemLimit", "item": "runefang", "exceptEntries": ["boris-todbringer", …], "max": 1, "message": "…" }
 { "type": "detachments", "max": 2, "message": "…" }
 ```
+
+`perUnits` counts characters as one each and, with `model`, only that model type (half-price Rat Swarm bases).
+`unitsBySize`: up to `per` models may form one unit, `2 × per` up to two units, and so on (models attached to a regiment are not counted).
 
 Detachments: a `stateTroops` unit can point to a parent regiment (`parent` on the selection). The check flags
 more than `max` detachments per regiment, a detachment bigger than half its regiment, and command models in a detachment.
