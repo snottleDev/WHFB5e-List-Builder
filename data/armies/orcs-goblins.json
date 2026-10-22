@@ -1,0 +1,1034 @@
+{
+  "id": "orcs-goblins",
+  "name": "Orcs & Goblins",
+  "source": "Warhammer Armies: Orcs & Goblins (1996), army list pp.82-101",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "mobs", "name": "Mobs", "min": 25},
+    {"id": "war-machines", "name": "War Machines", "max": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"black-orc": "Black Orc", "orc": "Orc", "savage-orc": "Savage Orc", "goblin": "Goblin", "forest-goblin": "Forest Goblin", "night-goblin": "Night Goblin"},
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "bow", "name": "Bow", "cost": 2, "group": "missile"},
+    {"id": "short-bow", "name": "Short bow", "cost": 1, "group": "missile"},
+    {"id": "crossbow", "name": "Crossbow", "cost": 3, "group": "missile"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"}
+  ],
+  "mounts": [
+    {"id": "war-boar", "name": "War Boar", "cost": 8, "races": ["black-orc", "orc", "savage-orc"], "profile": ["7","4","0","3","4","1","3","1","3"], "saveBonus": 1},
+    {"id": "giant-wolf", "name": "Giant Wolf", "cost": 4, "races": ["goblin"], "profile": ["9","4","0","3","3","1","3","1","3"]},
+    {"id": "giant-spider", "name": "Giant Spider", "cost": 4, "races": ["forest-goblin"], "profile": ["7","3","0","4","3","1","1","1","5"]}
+  ],
+  "bossCosts": {"black-orc": 42, "orc": 33, "savage-orc": 45, "goblin": 15, "forest-goblin": 15, "night-goblin": 15},
+  "bossProfiles": {
+    "black-orc": ["4", "5", "4", "5", "4", "1", "3", "2", "8"],
+    "orc": ["4", "4", "4", "4", "4", "1", "3", "2", "7"],
+    "savage-orc": ["4", "4", "4", "4", "4", "1", "3", "2", "7"],
+    "goblin": ["4", "3", "4", "4", "3", "1", "3", "2", "5"],
+    "forest-goblin": ["4", "3", "4", "4", "3", "1", "3", "2", "5"],
+    "night-goblin": ["4", "3", "4", "4", "3", "1", "3", "2", "5"]
+  },
+  "characterChariots": ["orc-boar-chariot", "goblin-wolf-chariot"],
+  "rules": [
+    {"type": "exactlyTag", "tag": "warlord", "count": 1, "message": "The army must include exactly one Warlord (p.85)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.85)."},
+    {
+      "type": "perUnits",
+      "entry": "squig-hoppers",
+      "max": 5,
+      "per": ["night-goblins", "netters", "squig-hunters"],
+      "message": "Up to five Squig Hoppers per Night Goblin Mob, including Squig Hunter and Netter Mobs (p.92)."
+    }
+  ],
+  "entries": [
+    {
+      "id": "warlord",
+      "name": "Warlord",
+      "kind": "character",
+      "category": "characters",
+      "page": 85,
+      "tags": ["warlord"],
+      "requiresOwnRace": true,
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "chariots": true,
+      "variants": [
+        {"id": "black-orc", "race": "black-orc", "name": "Black Orc Warlord", "cost": 140, "magicItems": 3, "profile": ["4","7","6","5","5","3","5","4","10"]},
+        {"id": "orc", "race": "orc", "name": "Orc Warlord", "cost": 110, "magicItems": 3, "profile": ["4","6","6","4","5","3","5","4","9"]},
+        {"id": "savage-orc", "race": "savage-orc", "name": "Savage Orc Warlord", "cost": 150, "magicItems": 3, "profile": ["4","6","6","4","5","3","5","4","9"]},
+        {"id": "goblin", "race": "goblin", "name": "Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"]},
+        {"id": "forest-goblin", "race": "forest-goblin", "name": "Forest Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"]},
+        {"id": "night-goblin", "race": "night-goblin", "name": "Night Goblin Warlord", "cost": 50, "magicItems": 3, "profile": ["4","5","6","4","4","3","5","4","7"]}
+      ]
+    },
+    {
+      "id": "battle-standard",
+      "name": "Battle Standard Bearer",
+      "kind": "character",
+      "category": "characters",
+      "page": 85,
+      "max": 1,
+      "tags": ["bsb"],
+      "requiresOwnRace": true,
+      "equipmentText": "Sword, Battle Standard",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "chariots": true,
+      "variants": [
+        {"id": "black-orc", "race": "black-orc", "name": "Black Orc Battle Standard", "cost": 92, "magicItems": 1, "profile": ["4","5","4","5","4","1","3","2","8"]},
+        {"id": "orc", "race": "orc", "name": "Orc Battle Standard", "cost": 83, "magicItems": 1, "profile": ["4","4","4","4","4","1","3","2","7"]},
+        {"id": "savage-orc", "race": "savage-orc", "name": "Savage Orc Battle Standard", "cost": 95, "magicItems": 1, "profile": ["4","4","4","4","4","1","3","2","7"]},
+        {"id": "goblin", "race": "goblin", "name": "Goblin Battle Standard", "cost": 65, "magicItems": 1, "profile": ["4","3","4","4","3","1","3","2","5"]},
+        {
+          "id": "forest-goblin",
+          "race": "forest-goblin",
+          "name": "Forest Goblin Battle Standard",
+          "cost": 65,
+          "magicItems": 1,
+          "profile": ["4","3","4","4","3","1","3","2","5"]
+        },
+        {
+          "id": "night-goblin",
+          "race": "night-goblin",
+          "name": "Night Goblin Battle Standard",
+          "cost": 65,
+          "magicItems": 1,
+          "profile": ["4","3","4","4","3","1","3","2","5"]
+        }
+      ]
+    },
+    {
+      "id": "big-boss",
+      "name": "Big Boss",
+      "kind": "character",
+      "category": "characters",
+      "page": 86,
+      "requiresOwnRace": true,
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "chariots": true,
+      "variants": [
+        {"id": "black-orc", "race": "black-orc", "name": "Black Orc Big Boss", "cost": 91, "magicItems": 2, "profile": ["4","6","5","5","5","2","4","3","9"]},
+        {"id": "orc", "race": "orc", "name": "Orc Big Boss", "cost": 72, "magicItems": 2, "profile": ["4","5","5","4","5","2","4","3","8"]},
+        {"id": "savage-orc", "race": "savage-orc", "name": "Savage Orc Big Boss", "cost": 98, "magicItems": 2, "profile": ["4","5","5","4","5","2","4","3","8"]},
+        {"id": "goblin", "race": "goblin", "name": "Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"]},
+        {"id": "forest-goblin", "race": "forest-goblin", "name": "Forest Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"]},
+        {"id": "night-goblin", "race": "night-goblin", "name": "Night Goblin Big Boss", "cost": 33, "magicItems": 2, "profile": ["4","4","5","4","4","2","4","3","6"]}
+      ]
+    },
+    {
+      "id": "shaman",
+      "name": "Shaman",
+      "kind": "character",
+      "category": "characters",
+      "page": 87,
+      "requiresOwnRace": true,
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mountChart": true,
+      "monsters": true,
+      "chariots": true,
+      "notes": "No Black Orc Shamans. The book prints no separate Savage Orc or Forest/Night Goblin shaman profiles; the Orc and Goblin shaman profiles are used.",
+      "variants": [
+        {"id": "orc-1", "race": "orc", "name": "Orc Shaman", "cost": 57, "magicItems": 1, "profile": ["4","3","3","3","5","1","3","1","7"]},
+        {"id": "orc-2", "race": "orc", "name": "Orc Shaman Champion", "cost": 118, "magicItems": 2, "profile": ["4","3","3","4","5","2","3","1","7"]},
+        {"id": "orc-3", "race": "orc", "name": "Orc Master Shaman", "cost": 211, "magicItems": 3, "profile": ["4","3","3","4","5","3","4","2","7"]},
+        {"id": "orc-4", "race": "orc", "name": "Orc Shaman Lord", "cost": 287, "magicItems": 4, "profile": ["4","3","3","4","5","4","5","3","8"]},
+        {"id": "savage-orc-1", "race": "savage-orc", "name": "Savage Orc Shaman", "cost": 59, "magicItems": 1, "profile": ["4","3","3","3","5","1","3","1","7"]},
+        {"id": "savage-orc-2", "race": "savage-orc", "name": "Savage Orc Shaman Champion", "cost": 122, "magicItems": 2, "profile": ["4","3","3","4","5","2","3","1","7"]},
+        {"id": "savage-orc-3", "race": "savage-orc", "name": "Savage Orc Master Shaman", "cost": 219, "magicItems": 3, "profile": ["4","3","3","4","5","3","4","2","7"]},
+        {"id": "savage-orc-4", "race": "savage-orc", "name": "Savage Orc Shaman Lord", "cost": 303, "magicItems": 4, "profile": ["4","3","3","4","5","4","5","3","8"]},
+        {"id": "goblin-1", "race": "goblin", "name": "Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"]},
+        {"id": "goblin-2", "race": "goblin", "name": "Goblin Shaman Champion", "cost": 83, "magicItems": 2, "profile": ["4","2","3","4","4","2","3","1","5"]},
+        {"id": "goblin-3", "race": "goblin", "name": "Goblin Master Shaman", "cost": 159, "magicItems": 3, "profile": ["4","2","3","4","4","3","4","2","5"]},
+        {"id": "goblin-4", "race": "goblin", "name": "Goblin Shaman Lord", "cost": 253, "magicItems": 4, "profile": ["4","2","3","4","4","4","5","3","6"]},
+        {"id": "night-goblin-1", "race": "night-goblin", "name": "Night Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"]},
+        {
+          "id": "night-goblin-2",
+          "race": "night-goblin",
+          "name": "Night Goblin Shaman Champion",
+          "cost": 83,
+          "magicItems": 2,
+          "profile": ["4","2","3","4","4","2","3","1","5"]
+        },
+        {
+          "id": "night-goblin-3",
+          "race": "night-goblin",
+          "name": "Night Goblin Master Shaman",
+          "cost": 159,
+          "magicItems": 3,
+          "profile": ["4","2","3","4","4","3","4","2","5"]
+        },
+        {
+          "id": "night-goblin-4",
+          "race": "night-goblin",
+          "name": "Night Goblin Shaman Lord",
+          "cost": 253,
+          "magicItems": 4,
+          "profile": ["4","2","3","4","4","4","5","3","6"]
+        },
+        {"id": "forest-goblin-1", "race": "forest-goblin", "name": "Forest Goblin Shaman", "cost": 28, "magicItems": 1, "profile": ["4","2","3","3","4","1","3","1","5"]},
+        {
+          "id": "forest-goblin-2",
+          "race": "forest-goblin",
+          "name": "Forest Goblin Shaman Champion",
+          "cost": 83,
+          "magicItems": 2,
+          "profile": ["4","2","3","4","4","2","3","1","5"]
+        },
+        {
+          "id": "forest-goblin-3",
+          "race": "forest-goblin",
+          "name": "Forest Goblin Master Shaman",
+          "cost": 159,
+          "magicItems": 3,
+          "profile": ["4","2","3","4","4","3","4","2","5"]
+        },
+        {
+          "id": "forest-goblin-4",
+          "race": "forest-goblin",
+          "name": "Forest Goblin Shaman Lord",
+          "cost": 253,
+          "magicItems": 4,
+          "profile": ["4","2","3","4","4","4","5","3","6"]
+        }
+      ]
+    },
+    {
+      "id": "azhag",
+      "name": "Azhag the Slaughterer",
+      "kind": "character",
+      "category": "characters",
+      "page": 96,
+      "max": 1,
+      "special": true,
+      "tags": ["warlord"],
+      "requires": [
+        {"race": "orc", "message": "Azhag requires at least one unit of Orcs."}
+      ],
+      "cost": 130,
+      "race": "orc",
+      "magicItems": 3,
+      "profile": ["4","6","6","4","5","3","5","4","10"],
+      "equipmentText": "Light armour, shield",
+      "armour": ["light", "shield"],
+      "rulesText": "Crown of Sorcery, no Animosity within 12\"",
+      "options": [
+        {"id": "wyvern", "name": "Wyvern", "cost": 180, "mountProfile": {"name": "Wyvern", "profile": ["6","5","0","5","6","4","4","3","5"]}}
+      ],
+      "notes": "If he has any magic items, the Crown of Sorcery must be one of them (magic item cards: revision 2)."
+    },
+    {
+      "id": "gorfang",
+      "name": "Gorfang Rotgut",
+      "kind": "character",
+      "category": "characters",
+      "page": 96,
+      "max": 1,
+      "special": true,
+      "roles": [
+        {"id": "big-boss", "name": "as Orc Big Boss", "tags": []},
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]}
+      ],
+      "requires": [
+        {"race": "orc", "message": "Gorfang requires at least one unit of Orcs."}
+      ],
+      "cost": 90,
+      "race": "orc",
+      "magicItems": 2,
+      "profile": ["4","5","5","5","5","3","4","3","8"],
+      "equipmentText": "Light armour, shield, sword",
+      "armour": ["light", "shield"],
+      "rulesText": "Hates Dwarfs",
+      "mounts": ["war-boar"],
+      "monsters": true,
+      "chariots": true
+    },
+    {
+      "id": "grom",
+      "name": "Grom the Paunch of Misty Mountain",
+      "kind": "character",
+      "category": "characters",
+      "page": 97,
+      "max": 1,
+      "special": true,
+      "tags": ["warlord"],
+      "requires": [
+        {"race": "goblin", "message": "Grom requires at least one unit of Goblins."}
+      ],
+      "cost": 80,
+      "race": "goblin",
+      "magicItems": 3,
+      "profile": ["4","5","6","4","4","3","5","4","7"],
+      "equipmentText": "Light armour, Axe of Grom",
+      "armour": ["light"],
+      "rulesText": "Regenerate",
+      "options": [
+        {
+          "id": "niblit",
+          "name": "Niblit with Battle Standard",
+          "cost": 65,
+          "tags": ["bsb"],
+          "extraProfile": {"name": "Niblit", "profile": ["4","3","4","4","3","1","3","2","5"]}
+        },
+        {
+          "id": "chariot",
+          "name": "Chariot (three giant wolves)",
+          "cost": 62,
+          "extraProfiles": [
+            {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]},
+            {"name": "Giant Wolf", "profile": ["9","4","0","3","3","1","3","1","3"]}
+          ]
+        },
+        {"id": "axe-of-grom", "name": "Axe of Grom", "cost": 50}
+      ],
+      "notes": "Niblit replaces the normal Battle Standard Bearer and may carry one magic item."
+    },
+    {
+      "id": "gorbad",
+      "name": "Gorbad Ironclaw",
+      "kind": "character",
+      "category": "characters",
+      "page": 97,
+      "max": 1,
+      "special": true,
+      "tags": ["warlord"],
+      "requires": [
+        {"race": "orc", "message": "Gorbad requires at least one unit of Orcs."}
+      ],
+      "cost": 120,
+      "race": "orc",
+      "magicItems": 3,
+      "profile": ["4","6","6","4","5","3","5","4","10"],
+      "extraProfiles": [
+        {"name": "War Boar", "profile": ["7","4","0","3","4","1","3","1","3"]}
+      ],
+      "equipmentText": "Light armour, rides a huge war boar",
+      "armour": ["light"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "options": [
+        {"id": "morgor", "name": "Morgor the Mangler", "cost": 125}
+      ]
+    },
+    {
+      "id": "morglum",
+      "name": "Morglum Necksnapper",
+      "kind": "character",
+      "category": "characters",
+      "page": 98,
+      "max": 1,
+      "special": true,
+      "tags": ["warlord"],
+      "requires": [
+        {"race": "black-orc", "message": "Morglum requires at least one unit of Black Orcs."}
+      ],
+      "cost": 150,
+      "race": "black-orc",
+      "magicItems": 3,
+      "profile": ["4","7","6","5","5","3","5","4","10"],
+      "equipmentText": "Light armour, an axe in each hand",
+      "armour": ["light"],
+      "rulesText": "Immune to psychology",
+      "mounts": ["war-boar"],
+      "monsters": true,
+      "chariots": true
+    },
+    {
+      "id": "oglok",
+      "name": "Oglok the 'Orrible",
+      "kind": "character",
+      "category": "characters",
+      "page": 98,
+      "max": 1,
+      "special": true,
+      "roles": [
+        {"id": "big-boss", "name": "as Orc Big Boss", "tags": []},
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]}
+      ],
+      "requires": [
+        {"race": "orc", "message": "Oglok requires at least one unit of Orcs."}
+      ],
+      "cost": 90,
+      "race": "orc",
+      "magicItems": 2,
+      "profile": ["4","6","5","4","5","2","4","4","9"],
+      "equipmentText": "Light armour, shield",
+      "armour": ["light", "shield"],
+      "mounts": ["war-boar"],
+      "monsters": true,
+      "chariots": true
+    },
+    {
+      "id": "skarsnik",
+      "name": "Skarsnik, Warlord of the Eight Peaks",
+      "kind": "character",
+      "category": "characters",
+      "page": 99,
+      "max": 1,
+      "special": true,
+      "tags": ["warlord"],
+      "cost": 80,
+      "race": "night-goblin",
+      "magicItems": 3,
+      "profile": ["4","5","6","4","4","3","6","4","9"],
+      "equipmentText": "Light armour",
+      "armour": ["light"],
+      "chariots": true,
+      "options": [
+        {"id": "prodder", "name": "Skarsnik's Prodder", "cost": 75},
+        {"id": "gobbla", "name": "Gobbla", "cost": 50, "extraProfile": {"name": "Gobbla", "profile": ["-","6","0","6","4","3","6","4","2"]}}
+      ]
+    },
+    {
+      "id": "savage-orc-boar-boyz",
+      "name": "Savage Orc Boar Boyz",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 88,
+      "race": "savage-orc",
+      "cost": 25,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Savage Orc", "profile": ["4","3","3","3","4","1","2","1","7"]},
+        {"name": "War Boar", "profile": ["7","4","0","3","4","1","3","1","3"]}
+      ],
+      "equipmentText": "Shield, hand weapon, war boar",
+      "armour": ["light", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["shield"],
+      "bossMount": "war-boar",
+      "rulesText": "Frenzy",
+      "magicStandard": "one",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 2, "gear": "spear"},
+        {"id": "bows", "name": "Bows", "cost": 4, "gear": "bow"}
+      ],
+      "notes": "Protective tattoos give a save equivalent to light armour."
+    },
+    {
+      "id": "orc-boar-boyz",
+      "name": "Orc Boar Boyz",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 88,
+      "race": "orc",
+      "cost": 27,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Orc", "profile": ["4","4","3","3","4","1","2","1","7"]},
+        {"name": "War Boar", "profile": ["7","4","0","3","4","1","3","1","3"]}
+      ],
+      "equipmentText": "Light armour, shield, hand weapon, war boar",
+      "armour": ["light", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["light-armour", "shield"],
+      "bossMount": "war-boar",
+      "magicStandard": "any",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 2, "gear": "spear"}
+      ]
+    },
+    {
+      "id": "wolf-riders",
+      "name": "Goblin Wolf Riders",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 88,
+      "race": "goblin",
+      "cost": 9,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]},
+        {"name": "Giant Wolf", "profile": ["9","4","0","3","3","1","3","1","3"]}
+      ],
+      "equipmentText": "Hand weapon, giant wolf",
+      "cavalry": true,
+      "bossMount": "giant-wolf",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear"},
+        {"id": "short-bows", "name": "Short bows", "cost": 1, "gear": "short-bow"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ]
+    },
+    {
+      "id": "spider-riders",
+      "name": "Forest Goblin Spider Riders",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 89,
+      "race": "forest-goblin",
+      "cost": 9,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Forest Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]},
+        {"name": "Giant Spider", "profile": ["7","3","0","4","3","1","1","1","5"]}
+      ],
+      "equipmentText": "Hand weapon, giant spider",
+      "cavalry": true,
+      "bossMount": "giant-spider",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear"},
+        {"id": "short-bows", "name": "Short bows", "cost": 1, "gear": "short-bow"}
+      ]
+    },
+    {
+      "id": "big-uns",
+      "name": "Orc Big'uns",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 89,
+      "max": 1,
+      "race": "orc",
+      "cost": 6.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Big'un", "profile": ["4","4","3","4","4","1","3","1","7"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "magicStandard": "any",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "bows", "name": "Bows", "cost": 2, "gear": "bow", "group": "weapon"}
+      ]
+    },
+    {
+      "id": "orc-boyz",
+      "name": "Orc Boyz",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 89,
+      "race": "orc",
+      "cost": 5.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Orc", "profile": ["4","3","3","3","4","1","2","1","7"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "magicStandard": "one",
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"}
+      ]
+    },
+    {
+      "id": "arrer-boyz",
+      "name": "Orc Arrer Boyz",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 89,
+      "race": "orc",
+      "cost": 7.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Orc", "profile": ["4","3","3","3","4","1","2","1","7"]}
+      ],
+      "equipmentText": "Hand weapon, bow",
+      "bossGear": ["bow"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "crossbows", "name": "Crossbows instead of bows", "cost": 1, "gear": "crossbow", "replacesGear": "bow"}
+      ]
+    },
+    {
+      "id": "black-orcs",
+      "name": "Black Orcs",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 90,
+      "max": 1,
+      "race": "black-orc",
+      "cost": 9,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Black Orc", "profile": ["4","4","3","4","4","1","2","1","8"]}
+      ],
+      "equipmentText": "Light armour, hand weapon",
+      "armour": ["light"],
+      "bossGear": ["light-armour"],
+      "magicStandard": "any",
+      "options": [
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ]
+    },
+    {
+      "id": "savage-orcs",
+      "name": "Savage Orcs",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 90,
+      "race": "savage-orc",
+      "cost": 7.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Savage Orc", "profile": ["4","3","3","3","4","1","2","1","7"]}
+      ],
+      "equipmentText": "Crude hand weapon",
+      "armour": ["light"],
+      "rulesText": "Skirmish, Frenzy",
+      "magicStandard": "one",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "gear": "additional-hand-weapon", "group": "weapon"},
+        {"id": "bows", "name": "Bows", "cost": 2, "gear": "bow", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"}
+      ],
+      "notes": "Protective tattoos give a 6+ save (treated as light armour for save calculation)."
+    },
+    {
+      "id": "goblins",
+      "name": "Goblins",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 90,
+      "race": "goblin",
+      "cost": 2.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "magicStandard": "one",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 1, "gear": "light-armour", "armour": "light"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 1, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 1, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
+        {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"}
+      ]
+    },
+    {
+      "id": "forest-goblins",
+      "name": "Forest Goblins",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 90,
+      "race": "forest-goblin",
+      "cost": 2.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Forest Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "magicStandard": "one",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 1, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
+        {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"}
+      ]
+    },
+    {
+      "id": "night-goblins",
+      "name": "Night Goblins",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 91,
+      "race": "night-goblin",
+      "cost": 2.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Night Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "magicStandard": "one",
+      "options": [
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 1, "gear": "double-handed-weapon", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 1, "gear": "halberd", "group": "weapon"},
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear", "group": "weapon"},
+        {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"},
+        {
+          "id": "fanatics",
+          "name": "Hidden Fanatics",
+          "cost": 30,
+          "per": "unit",
+          "max": 3,
+          "count": true,
+          "extraProfile": {"name": "Fanatic", "profile": ["2D6","sp","sp","5","3","1","-","D6","-"]}
+        }
+      ]
+    },
+    {
+      "id": "squig-hunters",
+      "name": "Night Goblin Squig Hunters",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 91,
+      "max": 1,
+      "race": "night-goblin",
+      "requires": [
+        {"entry": "night-goblins", "message": "Squig Hunters require at least one Mob of ordinary Night Goblins."}
+      ],
+      "models": [
+        {"id": "team", "name": "Hunter teams", "cost": 8, "counts": 2, "min": 1},
+        {"id": "squig", "name": "Cave Squigs", "cost": 20, "counts": 1, "min": 0}
+      ],
+      "minSize": 5,
+      "ratio": {"model": "squig", "per": "team", "max": 3, "message": "A Squig Hunter Mob needs at least one Hunter team for every three Cave Squigs (p.91)."},
+      "profiles": [
+        {"name": "Night Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]},
+        {"name": "Cave Squig", "profile": ["2D6","4","0","5","3","1","5","2","2"]}
+      ],
+      "equipmentText": "Long-handled squig prodders",
+      "bossGearText": "Sword or other hand weapon instead of a prodder",
+      "trooperCost": 4,
+      "options": [],
+      "notes": "A Hunter team counts as two models. Standard/musician cost assumed as double a single hunter (4 pts), i.e. 8 - please check."
+    },
+    {
+      "id": "netters",
+      "name": "Night Goblin Netters",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 91,
+      "max": 1,
+      "race": "night-goblin",
+      "requires": [
+        {"entry": "night-goblins", "message": "Netters require at least one Mob of ordinary Night Goblins."}
+      ],
+      "cost": 3.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Night Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]}
+      ],
+      "equipmentText": "Nets or clubs (any mix)",
+      "bossOptions": [
+        {"id": "club", "name": "Club", "cost": 1}
+      ],
+      "options": []
+    },
+    {
+      "id": "squig-hoppers",
+      "name": "Night Goblin Squig Hoppers",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 92,
+      "cost": 25,
+      "minSize": 1,
+      "noCommand": true,
+      "profiles": [
+        {"name": "Night Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]},
+        {"name": "Bouncing Squig", "profile": ["2D6","4","0","5","3","1","5","2","2"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "save": "6+",
+      "options": [],
+      "notes": "Each Squig Hopper is an individual model; add them as one entry and set the number.",
+      "single": "Squig Hopper"
+    },
+    {
+      "id": "giants",
+      "name": "Giants",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 92,
+      "cost": 200,
+      "minSize": 1,
+      "noCommand": true,
+      "profiles": [
+        {"name": "Giant", "profile": ["6","3","3","7","6","6","3","sp","6"]}
+      ],
+      "equipmentText": "Big club",
+      "options": [],
+      "notes": "Minimum unit size is not stated for Giants; set to 1.",
+      "single": "Giant"
+    },
+    {
+      "id": "ogres",
+      "name": "Ogres",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 92,
+      "cost": 40,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Ogre", "profile": ["6","3","2","4","5","3","3","2","7"]}
+      ],
+      "equipmentText": "Hand weapon",
+      "options": [
+        {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "weapon"},
+        {"id": "double-handed", "name": "Double-handed weapons", "cost": 2, "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "group": "weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"}
+      ],
+      "notes": "No smaller minimum is given for Ogres, so the normal five-model minimum applies (p.88).",
+      "single": "Ogre"
+    },
+    {
+      "id": "trolls",
+      "name": "Trolls",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 92,
+      "cost": 65,
+      "minSize": 1,
+      "noCommand": true,
+      "profiles": [
+        {"name": "Troll", "profile": ["6","3","1","5","4","3","1","3","4"]}
+      ],
+      "equipmentText": "None required (often a big club)",
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "troll", "name": "Trolls", "single": "Troll"},
+        {"id": "stone", "name": "Stone Trolls", "single": "Stone Troll"},
+        {"id": "river", "name": "River Trolls", "single": "River Troll"}
+      ],
+      "options": [],
+      "notes": "Up to 5 Trolls form one unit; 6-10 one or two units; 11-15 up to three; +1 unit per extra 5. Units must be of one Troll type."
+    },
+    {
+      "id": "snotlings",
+      "name": "Snotlings",
+      "kind": "unit",
+      "category": "mobs",
+      "page": 92,
+      "cost": 15,
+      "minSize": 1,
+      "sizeLabel": "bases",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Snotling", "profile": ["4","2","2","1","1","3","3","3","4"]}
+      ],
+      "options": [],
+      "notes": "Up to 5 bases form one unit; 6-10 one or two units; 11-15 up to three; +1 unit per extra 5 bases.",
+      "single": "Snotling base"
+    },
+    {
+      "id": "rock-lobber",
+      "name": "Rock Lobbers",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 93,
+      "requires": [
+        {"race": "orc", "message": "Rock Lobbers require at least one Mob of Orcs (including Big'uns)."}
+      ],
+      "minSize": 1,
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "variantsLabel": "Size",
+      "variants": [
+        {"id": "small", "name": "Small Rock Lobber", "cost": 66.5},
+        {"id": "big", "name": "Big Rock Lobber", "cost": 96.5}
+      ],
+      "profiles": [
+        {"name": "Rock Lobber", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Crew (3)", "profile": ["4","3","3","3","4","1","2","1","7"]}
+      ],
+      "equipmentText": "Crew: hand weapons",
+      "options": [
+        {"id": "crew-light-armour", "name": "Crew light armour (3 crew)", "cost": 6, "armour": "light"}
+      ]
+    },
+    {
+      "id": "bolt-thrower",
+      "name": "Bolt Throwers",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 93,
+      "requires": [
+        {"race": "orc", "message": "Bolt Throwers require at least one Mob of Orcs (including Big'uns)."}
+      ],
+      "cost": 46.5,
+      "minSize": 1,
+      "sizeLabel": "machines",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Bolt Thrower", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Crew (3)", "profile": ["4","3","3","3","4","1","2","1","7"]}
+      ],
+      "equipmentText": "Crew: hand weapons",
+      "options": [
+        {"id": "crew-light-armour", "name": "Crew light armour (3 crew)", "cost": 6, "armour": "light"}
+      ],
+      "single": "Bolt Thrower"
+    },
+    {
+      "id": "pump-wagon",
+      "name": "Snotling Pump Wagons",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 93,
+      "requires": [
+        {"race": "goblin", "message": "Pump Wagons require at least one Goblin Mob."}
+      ],
+      "cost": 40,
+      "minSize": 1,
+      "sizeLabel": "wagons",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Pump Wagon", "profile": ["2D6","-","-","7","7","3","1","-","-"]},
+        {"name": "Crew", "profile": ["-","2","2","1","1","3","3","3","4"]}
+      ],
+      "options": [],
+      "single": "Snotling Pump Wagon"
+    },
+    {
+      "id": "doom-diver",
+      "name": "Doom Diver Catapults",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 94,
+      "requires": [
+        {"race": "goblin", "message": "Doom Divers require an ordinary Goblin Mob (not Night or Forest Goblins)."}
+      ],
+      "cost": 100,
+      "minSize": 1,
+      "sizeLabel": "catapults",
+      "noCommand": true,
+      "profiles": [
+        {"name": "Catapult", "profile": ["-","-","-","-","7","3","-","-","-"]},
+        {"name": "Doom Diver", "profile": ["4","2","3","3","3","1","2","1","5"]}
+      ],
+      "options": [],
+      "single": "Doom Diver Catapult"
+    },
+    {
+      "id": "orc-boar-chariot",
+      "name": "Orc Boar Chariots",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 94,
+      "requires": [
+        {"race": "orc", "message": "Boar Chariots require at least one Mob of Orcs (including Big'uns)."}
+      ],
+      "cost": 81,
+      "minSize": 1,
+      "sizeLabel": "chariots",
+      "noCommand": true,
+      "crew": 2,
+      "magicStandard": "one",
+      "profiles": [
+        {"name": "Orc", "profile": ["4","3","3","3","4","1","2","1","7"]},
+        {"name": "War Boar", "profile": ["7","4","0","3","4","1","3","1","3"]},
+        {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]}
+      ],
+      "equipmentText": "Crew: swords, light armour",
+      "armour": ["light"],
+      "options": [
+        {"id": "extra-crew", "name": "Additional crewmen", "cost": 7.5, "per": "chariot", "max": 2, "count": true, "addsCrew": true},
+        {"id": "shields", "name": "Crew shields", "cost": 1, "per": "crew", "armour": "shield"},
+        {"id": "short-bows", "name": "Crew short bows", "cost": 1, "per": "crew"},
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"}
+      ],
+      "single": "Orc Boar Chariot"
+    },
+    {
+      "id": "goblin-wolf-chariot",
+      "name": "Goblin Wolf Chariots",
+      "kind": "unit",
+      "category": "war-machines",
+      "page": 94,
+      "requires": [
+        {"race": "goblin", "message": "Wolf Chariots require at least one Goblin Mob."}
+      ],
+      "cost": 65,
+      "minSize": 1,
+      "sizeLabel": "chariots",
+      "noCommand": true,
+      "crew": 2,
+      "magicStandard": "one",
+      "profiles": [
+        {"name": "Goblin", "profile": ["4","2","3","3","3","1","2","1","5"]},
+        {"name": "Giant Wolf", "profile": ["9","4","0","3","3","1","3","1","3"]},
+        {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]}
+      ],
+      "equipmentText": "Crew: swords, light armour",
+      "armour": ["light"],
+      "options": [
+        {"id": "extra-crew", "name": "Additional crewmen", "cost": 3.5, "per": "chariot", "max": 2, "count": true, "addsCrew": true},
+        {"id": "extra-wolf", "name": "Additional giant wolf", "cost": 4, "per": "chariot"},
+        {"id": "shields", "name": "Crew shields", "cost": 0.5, "per": "crew", "armour": "shield"},
+        {"id": "short-bows", "name": "Crew short bows", "cost": 0.5, "per": "crew"},
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"}
+      ],
+      "single": "Goblin Wolf Chariot"
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 95,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {"id": "chimera", "name": "Chimera", "kind": "monster", "category": "monsters", "page": 95, "cost": 250, "profile": ["6","4","0","7","6","6","4","6","8"]},
+    {"id": "cockatrice", "name": "Cockatrice", "kind": "monster", "category": "monsters", "page": 95, "cost": 150, "profile": ["4","3","0","4","4","2","4","3","6"]},
+    {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 95, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
+    {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 95, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
+    {"id": "hydra", "name": "Hydra", "kind": "monster", "category": "monsters", "page": 95, "cost": 225, "profile": ["6","3","0","5","6","7","3","5","6"]},
+    {
+      "id": "gigantic-spider",
+      "name": "Gigantic Spider",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 95,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 95, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 95, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 95,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 95,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "rats", "name": "Rats", "profile": ["6","3","0","3","2","5","1","5","10"]},
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}
