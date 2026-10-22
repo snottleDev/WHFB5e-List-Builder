@@ -1,0 +1,636 @@
+{
+  "id": "lizardmen",
+  "name": "Lizardmen",
+  "source": "Warhammer Armies: Lizardmen (5th edition), army list pp.69-88 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the Lizardman army list",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 50},
+    {"id": "regiments", "name": "Regiments", "min": 25},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"saurus": "Saurus", "skink": "Skink", "slann": "Slann"},
+  "championName": "Champion",
+  "bossCosts": {"saurus": 32, "skink": 20},
+  "bossProfiles": {"saurus": ["4", "4", "0", "5", "4", "1", "2", "3", "8"], "skink": ["6", "3", "4", "4", "2", "1", "5", "2", "6"]},
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee"},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee"},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee"},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee"},
+    {"id": "short-bow", "name": "Short bow (Skinks only)", "cost": 1, "group": "missile", "races": ["skink"]},
+    {"id": "javelins", "name": "Javelins (Skinks only)", "cost": 1, "group": "missile", "races": ["skink"]},
+    {"id": "poison", "name": "Poisoned arrows or javelins (Skinks only)", "cost": 1, "races": ["skink"]},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"}
+  ],
+  "mounts": [
+    {"id": "cold-one", "name": "Cold One", "cost": 10, "races": ["skink"], "profile": ["8","3","0","4","4","1","1","2","3"], "saveBonus": 1},
+    {"id": "terradon", "name": "Terradon (with 2nd Skink rider)", "cost": 35, "races": ["skink"], "profile": ["2","3","0","4","4","1","2","1","3"]},
+    {
+      "id": "stegadon",
+      "name": "Stegadon howdah (as crew)",
+      "cost": 225,
+      "races": ["skink"],
+      "noCavalry": true,
+      "profiles": [
+        {"name": "Stegadon", "profile": ["6","2","0","7","6","6","2","5","6"]},
+        {"name": "Skink crew (4)", "profile": ["6","2","3","3","2","1","4","1","6"]}
+      ]
+    }
+  ],
+  "magic": {
+    "tags": ["lizardmen"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": []
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one Slann Mage-Priest as General (p.73)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.73)."},
+    {
+      "type": "perUnits",
+      "entry": "temple-guard",
+      "units": true,
+      "max": 1,
+      "per": ["slann-general", "slann", "lord-kroak", "mazdamundi"],
+      "message": "One unit of Temple Guard for each Slann Mage-Priest (p.75)."
+    },
+    {
+      "type": "perUnits",
+      "entry": "terradons",
+      "units": true,
+      "max": 1,
+      "atLeast": 1,
+      "per": ["slann-general", "slann", "lord-kroak", "mazdamundi"],
+      "message": "Up to one unit of Terradons for each Slann Mage-Priest, and always at least one (p.77)."
+    },
+    {
+      "type": "perUnits",
+      "entry": "stegadons",
+      "max": 1,
+      "per": ["temple-guard", "saurus", "skinks", "cold-one-riders"],
+      "message": "As many Stegadons as there are units of Temple Guard, Saurus, Skinks and Cold One Riders (p.77)."
+    },
+    {"type": "perUnits", "entry": "salamanders", "max": 1, "per": ["saurus", "skinks"], "message": "As many Salamanders as there are units of Saurus and Skinks (p.78)."},
+    {
+      "type": "perUnits",
+      "entry": "lizard-swarms",
+      "model": "half",
+      "max": 1,
+      "per": ["temple-guard", "saurus", "skinks", "cold-one-riders"],
+      "message": "Half-price Lizard Swarms: at most one per unit of Temple Guard, Saurus, Skinks or Cold One Riders; any more cost 100 points each (p.78)."
+    },
+    {
+      "type": "perUnits",
+      "entry": "serpent-swarms",
+      "model": "half",
+      "max": 1,
+      "per": ["temple-guard", "saurus", "skinks", "cold-one-riders"],
+      "message": "Half-price Serpent Swarms: at most one per unit of Temple Guard, Saurus, Skinks or Cold One Riders; any more cost 100 points each (p.78)."
+    },
+    {"type": "unitsBySize", "entries": ["kroxigor"], "per": 5, "message": "Up to five Kroxigor form one unit, 6-10 up to two units, and so on (p.77)."}
+  ],
+  "entries": [
+    {
+      "id": "slann-general",
+      "name": "Slann General",
+      "kind": "character",
+      "category": "characters",
+      "race": "slann",
+      "wizard": true,
+      "equipmentText": "Ceremonial mace (hand weapon)",
+      "save": "4+",
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "priest", "name": "Mage-Priest & Palanquin", "cost": 115, "magicItems": 2, "profile": ["4","3","2","4","4","3","2","3","8"], "rulesText": "Level 1 wizard"},
+        {
+          "id": "champion",
+          "name": "Mage-Priest Champion & Palanquin",
+          "cost": 240,
+          "magicItems": 3,
+          "profile": ["4","4","3","6","4","4","3","4","8"],
+          "rulesText": "Level 2 wizard"
+        },
+        {
+          "id": "master",
+          "name": "Master Mage-Priest & Palanquin",
+          "cost": 425,
+          "magicItems": 4,
+          "profile": ["4","5","4","6","5","6","5","6","9"],
+          "rulesText": "Level 3 wizard"
+        },
+        {
+          "id": "lord",
+          "name": "Mage-Priest Lord & Palanquin",
+          "cost": 550,
+          "magicItems": 5,
+          "profile": ["4","6","5","6","5","8","6","8","10"],
+          "rulesText": "Level 4 wizard"
+        }
+      ],
+      "rulesText": "Cold blooded, Telepathy, Shield of the Old Ones (4+ special), Palanquin and bodyguard",
+      "page": 73,
+      "max": 1,
+      "tags": ["general"],
+      "options": [
+        {"id": "battle-standard", "name": "Battle Standard on the palanquin", "cost": 50, "tags": ["bsb"]}
+      ],
+      "notes": "The General must be the highest level Mage-Priest in the army. A Battle Standard on the palanquin may be a magic standard; it does not count as one of his magic items."
+    },
+    {
+      "id": "slann",
+      "name": "Slann Mage-Priest",
+      "kind": "character",
+      "category": "characters",
+      "race": "slann",
+      "wizard": true,
+      "equipmentText": "Ceremonial mace (hand weapon)",
+      "save": "4+",
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "priest", "name": "Mage-Priest & Palanquin", "cost": 115, "magicItems": 2, "profile": ["4","3","2","4","4","3","2","3","8"], "rulesText": "Level 1 wizard"},
+        {
+          "id": "champion",
+          "name": "Mage-Priest Champion & Palanquin",
+          "cost": 240,
+          "magicItems": 3,
+          "profile": ["4","4","3","6","4","4","3","4","8"],
+          "rulesText": "Level 2 wizard"
+        },
+        {
+          "id": "master",
+          "name": "Master Mage-Priest & Palanquin",
+          "cost": 425,
+          "magicItems": 4,
+          "profile": ["4","5","4","6","5","6","5","6","9"],
+          "rulesText": "Level 3 wizard"
+        },
+        {
+          "id": "lord",
+          "name": "Mage-Priest Lord & Palanquin",
+          "cost": 550,
+          "magicItems": 5,
+          "profile": ["4","6","5","6","5","8","6","8","10"],
+          "rulesText": "Level 4 wizard"
+        }
+      ],
+      "rulesText": "Cold blooded, Telepathy, Shield of the Old Ones (4+ special), Palanquin and bodyguard",
+      "page": 73,
+      "notes": "Additional Mage-Priests must be of the same or a lower level than the General."
+    },
+    {
+      "id": "hero",
+      "name": "Hero",
+      "kind": "character",
+      "category": "characters",
+      "page": 74,
+      "equipmentText": "Hand weapon",
+      "equipmentList": true,
+      "mounts": ["cold-one", "terradon", "stegadon"],
+      "magicItems": 2,
+      "variants": [
+        {
+          "id": "saurus",
+          "race": "saurus",
+          "name": "Saurus Hero",
+          "cost": 82,
+          "profile": ["4","5","0","5","5","2","3","4","9"],
+          "naturalSave": 5,
+          "rulesText": "Cold blooded, Bite attack"
+        },
+        {
+          "id": "skink",
+          "race": "skink",
+          "name": "Skink Hero",
+          "cost": 52,
+          "profile": ["6","4","5","4","3","2","6","3","7"],
+          "naturalSave": 6,
+          "rulesText": "Cold blooded, Aquatic"
+        }
+      ]
+    },
+    {
+      "id": "skink-shaman",
+      "name": "Skink Shaman",
+      "kind": "character",
+      "category": "characters",
+      "page": 74,
+      "race": "skink",
+      "wizard": true,
+      "cost": 56,
+      "magicItems": 2,
+      "profile": ["6","2","3","3","3","1","5","1","6"],
+      "naturalSave": 6,
+      "equipmentText": "Hand weapon",
+      "equipmentList": true,
+      "mounts": ["cold-one", "terradon", "stegadon"],
+      "rulesText": "Level 1 wizard (Battle Magic), Cold blooded"
+    },
+    {
+      "id": "lord-kroak",
+      "name": "Venerable Lord Kroak",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 79,
+      "race": "slann",
+      "cost": 620,
+      "wizard": true,
+      "profile": ["4","6","5","6","5","8","6","8","10"],
+      "save": "3+",
+      "equipmentText": "Ceremonial Mace of Malachite",
+      "requires": [
+        {"entry": "slann-general", "message": "Lord Kroak cannot lead the army; a living Slann Mage-Priest must be General."}
+      ],
+      "rulesText": "Cold blooded, Telepathy, Mighty Shield of the Old Ones (3+ special), 4 spells for other Mage-Priests",
+      "notes": "Points include his magic items: Standard of the Sacred Serpent, Gold Death Mask, Ceremonial Mace of Malachite, Amulet of Itza, Glyph of Potec."
+    },
+    {
+      "id": "lotl-botl",
+      "name": "Lotl-Botl",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 82,
+      "race": "saurus",
+      "cost": 100,
+      "profile": ["4","5","0","5","5","2","3","4","9"],
+      "save": "3+",
+      "equipmentText": "Hand weapon, light armour, shield",
+      "rulesText": "Cold blooded, Causes fear, Cold-blooded determination (+1 combat result)"
+    },
+    {
+      "id": "kroq",
+      "name": "Kroq",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 82,
+      "race": "saurus",
+      "cost": 113,
+      "profile": ["4","5","0","5","5","2","3","4","9"],
+      "save": "4+",
+      "equipmentText": "Hand weapon, shield",
+      "rulesText": "Cold blooded, Massive jaws (D3 wounds, no save), Bony plates (re-roll a save)"
+    },
+    {
+      "id": "oxayotl",
+      "name": "Oxayotl",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 83,
+      "race": "skink",
+      "cost": 102,
+      "profile": ["6","4","5","4","4","3","7","3","7"],
+      "save": "5+",
+      "equipmentText": "Hand weapon, blowpipe and poisoned darts",
+      "rulesText": "Cold blooded, Chameleon skin (-2 to hit), Amazing stealth, Poison dart blowpipe"
+    },
+    {
+      "id": "inxi-huinzi",
+      "name": "Inxi-Huinzi",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 84,
+      "race": "skink",
+      "cost": 85,
+      "profile": ["6","4","5","4","3","2","6","3","7"],
+      "extraProfiles": [
+        {"name": "Horned One", "profile": ["8","4","0","4","4","1","1","3","3"]}
+      ],
+      "save": "2+",
+      "equipmentText": "Hand weapon, spear, poisoned darts, light armour, shield; rides a Horned One",
+      "rulesText": "Cold blooded, Hail of darts, Horned One (fear, no stupidity)"
+    },
+    {
+      "id": "itzi-bitzi",
+      "name": "Itzi-Bitzi",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 85,
+      "race": "skink",
+      "cost": 105,
+      "profile": ["6","4","5","4","3","2","6","3","7"],
+      "save": "4+",
+      "equipmentText": "Piranha Blade, light armour, shield",
+      "rulesText": "Cold blooded, Aquatic, Incantation of Xetlipocutzl, Piranha Blade (D3 wounds)",
+      "notes": "Points include his magic items: Piranha Blade."
+    },
+    {
+      "id": "tenehuini",
+      "name": "Tenehuini, Prophet of Sotek",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 86,
+      "race": "skink",
+      "wizard": true,
+      "cost": 120,
+      "profile": ["6","2","3","3","3","1","5","1","6"],
+      "save": "4+",
+      "equipmentText": "Dagger of Sotek, Totem of Sotek",
+      "rulesText": "Level 1 wizard, Cold blooded, Aquatic, Shield of Sotek (4+ special)",
+      "notes": "Points include his magic items: Dagger of Sotek, Totem of Sotek."
+    },
+    {
+      "id": "mazdamundi",
+      "name": "Lord Mazdamundi",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "magicItems": 0,
+      "page": 87,
+      "race": "slann",
+      "wizard": true,
+      "cost": 900,
+      "tags": ["general"],
+      "profile": ["6","6","5","7","6","8","6","8","10"],
+      "save": "4+",
+      "equipmentText": "Cobra Mace of Mazdamundi; rides a Stegadon",
+      "options": [
+        {"id": "sunburst", "name": "Sunburst Standard of Hexoatl (battle standard)", "cost": 0, "tags": ["bsb"]}
+      ],
+      "rulesText": "Cold blooded, Telepathy, Shield of the Old Ones (4+ special), Stegadon: impact hits, fear, bony shield; 4 geomantic spells",
+      "notes": "Mazdamundi replaces the General. As General his Sunburst Standard is the army's battle standard."
+    },
+    {
+      "id": "temple-guard",
+      "name": "Saurus Temple Guard",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 75,
+      "race": "saurus",
+      "cost": 18,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Temple Guard", "profile": ["4","4","0","4","4","1","2","2","8"]}
+      ],
+      "naturalSave": 5,
+      "equipmentText": "Halberd",
+      "bossGear": ["halberd"],
+      "magicStandard": "any",
+      "groupLabels": {"armour": "No extra armour"},
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light", "group": "armour"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield", "group": "armour"}
+      ],
+      "rulesText": "Cold blooded, Bite attack"
+    },
+    {
+      "id": "saurus",
+      "name": "Saurus Warriors",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 75,
+      "race": "saurus",
+      "cost": 15,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Saurus", "profile": ["4","3","0","4","4","1","1","2","8"]}
+      ],
+      "naturalSave": 5,
+      "armour": ["shield"],
+      "equipmentText": "Hand weapon, shield",
+      "bossGear": ["shield"],
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear"}
+      ],
+      "rulesText": "Cold blooded, Bite attack"
+    },
+    {
+      "id": "skinks",
+      "name": "Skink Warriors",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 76,
+      "race": "skink",
+      "cost": 4.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Skink", "profile": ["6","2","3","3","2","1","4","1","6"]}
+      ],
+      "naturalSave": 6,
+      "equipmentText": "Hand weapon",
+      "groupLabels": {"weapon": "Hand weapons only"},
+      "options": [
+        {"id": "short-bows", "name": "Short bows", "cost": 0.5, "gear": "short-bow", "group": "weapon"},
+        {"id": "javelins", "name": "Javelins and shields", "cost": 1, "gear": "javelins", "armour": "shield", "group": "weapon"},
+        {"id": "poison", "name": "Poisoned arrows or javelin tips", "cost": 0.5, "gear": "poison"}
+      ],
+      "rulesText": "Cold blooded, Skirmish, Aquatic",
+      "notes": "Kroxigor may join the unit: add them as Kroxigor and choose this unit. A Champion of a poisoned unit must also buy poison (+1)."
+    },
+    {
+      "id": "cold-one-riders",
+      "name": "Cold One Riders",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 76,
+      "race": "skink",
+      "cost": 25,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Great Crested Skink", "profile": ["6","2","3","4","2","1","4","1","6"]},
+        {"name": "Cold One", "profile": ["8","3","0","4","4","1","1","2","3"]}
+      ],
+      "naturalSave": 6,
+      "armour": ["shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "equipmentText": "Hand weapon, spear, shield, Cold One",
+      "bossGear": ["spear", "shield"],
+      "bossMount": "cold-one",
+      "rulesText": "Cold blooded, Cold Ones: fear, stupidity",
+      "options": []
+    },
+    {
+      "id": "kroxigor",
+      "name": "Kroxigor",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 77,
+      "cost": 45,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Kroxigor", "profile": ["6","3","0","5","4","3","1","3","9"]}
+      ],
+      "noCommand": true,
+      "single": "Kroxigor",
+      "save": "4+",
+      "equipmentText": "Double-handed weapon",
+      "attachTo": {"entries": ["skinks"], "label": "Joining", "alone": "Own unit", "perParentModels": 8, "hint": "up to one Kroxigor for every eight Skinks in the unit"},
+      "rulesText": "Cold blooded, Aquatic, Causes fear",
+      "options": []
+    },
+    {
+      "id": "terradons",
+      "name": "Terradons",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 77,
+      "race": "skink",
+      "cost": 40,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Skink rider (2)", "profile": ["6","2","3","3","2","1","4","1","6"]},
+        {"name": "Terradon", "profile": ["2","3","0","4","4","1","2","1","3"]}
+      ],
+      "naturalSave": 6,
+      "cavalry": true,
+      "equipmentText": "Riders: hand weapons, short bows",
+      "bossGear": ["short-bow"],
+      "bossMount": "terradon",
+      "groupLabels": {"weapon": "Bows only"},
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "javelins", "name": "Javelins", "cost": 1, "gear": "javelins", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "poison", "name": "Poisoned arrows or javelins", "cost": 1, "gear": "poison"}
+      ],
+      "rulesText": "Cold blooded, Fly, Skirmish, Drop rocks",
+      "notes": "Points are per Terradon with its two riders; poison is +½ per Skink, so +1 per Terradon."
+    },
+    {
+      "id": "stegadons",
+      "name": "Stegadon & 4 Skinks",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 77,
+      "cost": 225,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Stegadon", "profile": ["6","2","0","7","6","6","2","5","6"]},
+        {"name": "Skink crew", "profile": ["6","2","3","3","2","1","4","1","6"]}
+      ],
+      "noCommand": true,
+      "sizeLabel": "Stegadons",
+      "single": "Stegadon",
+      "save": "4+/6+",
+      "magicStandard": "any",
+      "equipmentText": "Crew: hand weapons, spears, short bows, poisoned javelins and arrows, shields",
+      "options": [
+        {"id": "extra-crew", "name": "Additional Skink crewmen", "cost": 6, "per": "chariot", "count": true},
+        {"id": "giant-bow", "name": "Giant bow (36\")", "cost": 20, "per": "chariot"}
+      ],
+      "rulesText": "Crew save 6+, Cold blooded, Impact hits (D6 S5), Causes fear"
+    },
+    {
+      "id": "salamanders",
+      "name": "Salamander & Skink Runners",
+      "kind": "unit",
+      "category": "regiments",
+      "page": 78,
+      "cost": 90,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Salamander", "profile": ["6","3","3","4","4","3","2","3","6"]},
+        {"name": "Skink Runner (4)", "profile": ["6","2","3","3","2","1","4","1","6"]}
+      ],
+      "noCommand": true,
+      "sizeLabel": "Salamanders",
+      "single": "Salamander",
+      "save": "6+",
+      "equipmentText": "Runners: hand weapons, spears",
+      "rulesText": "Cold blooded, Aquatic, Spits venom",
+      "options": []
+    },
+    {
+      "id": "lizard-swarms",
+      "name": "Lizard Swarms",
+      "kind": "unit",
+      "category": "monsters",
+      "page": 78,
+      "max": 1,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]}
+      ],
+      "models": [
+        {"id": "half", "name": "Half-price bases", "cost": 50, "min": 0},
+        {"id": "full", "name": "Full-price bases", "cost": 100, "min": 0}
+      ],
+      "sizeLabel": "bases",
+      "noCommand": true,
+      "single": "Lizard Swarm base",
+      "rulesText": "Immune to psychology, Unbreakable",
+      "notMount": true,
+      "notes": "All Lizard Swarms form a single unit.",
+      "options": []
+    },
+    {
+      "id": "serpent-swarms",
+      "name": "Serpent Swarms",
+      "kind": "unit",
+      "category": "monsters",
+      "page": 78,
+      "max": 1,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]}
+      ],
+      "models": [
+        {"id": "half", "name": "Half-price bases", "cost": 50, "min": 0},
+        {"id": "full", "name": "Full-price bases", "cost": 100, "min": 0}
+      ],
+      "sizeLabel": "bases",
+      "noCommand": true,
+      "single": "Serpent Swarm base",
+      "rulesText": "Immune to psychology, Unbreakable",
+      "notMount": true,
+      "notes": "All Serpent Swarms form a single unit.",
+      "options": []
+    },
+    {
+      "id": "gigantic-spider",
+      "name": "Gigantic Spider",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 78,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 78,
+      "cost": 50,
+      "profile": ["5","3","0","5","4","4","1","2","7"]
+    },
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 78,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}

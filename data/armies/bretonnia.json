@@ -1,0 +1,756 @@
+{
+  "id": "bretonnia",
+  "name": "Bretonnia",
+  "source": "Warhammer Armies: Bretonnia (5th edition), army list pp.57-80 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the Bretonnian special rules (pp.48-55) and army list",
+  "categories": [
+    {"id": "characters", "name": "Characters", "max": 75},
+    {"id": "knights", "name": "Knights", "min": 25},
+    {"id": "commoners", "name": "Commoners", "max": 50},
+    {"id": "monsters", "name": "Monsters", "max": 25}
+  ],
+  "races": {"grail": "Grail Knight", "questing": "Questing Knight", "knight": "Knight", "commoner": "Commoner"},
+  "championName": "Champion",
+  "bossCosts": {"grail": 50, "questing": 40, "knight": 35, "commoner": 30},
+  "bossProfiles": {
+    "grail": ["4", "5", "4", "4", "3", "1", "4", "2", "9"],
+    "questing": ["4", "4", "4", "4", "3", "1", "4", "2", "8"],
+    "knight": ["4", "4", "4", "4", "3", "1", "4", "2", "7"],
+    "commoner": ["4", "4", "4", "4", "3", "1", "4", "2", "7"]
+  },
+  "equipment": [
+    {"id": "lance", "name": "Lance (mounted Knight only)", "cost": 2, "group": "melee", "mountedOnly": true},
+    {"id": "double-handed-weapon", "name": "Double-handed sword or axe", "cost": 2, "group": "melee"},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield"},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light"},
+    {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy"},
+    {"id": "barding", "name": "Barding for Warhorse (mounted only)", "cost": 4, "armour": "barding", "mountedOnly": true},
+    {"id": "spear", "name": "Spear (commoners)", "cost": 1, "troopOnly": true},
+    {"id": "halberd", "name": "Halberd (commoners)", "cost": 2, "troopOnly": true},
+    {"id": "long-bow", "name": "Longbow (commoners)", "cost": 3, "troopOnly": true},
+    {"id": "bow", "name": "Bow (commoners)", "cost": 2, "troopOnly": true}
+  ],
+  "mounts": [
+    {"id": "warhorse", "name": "Bretonnian Warhorse", "cost": 3, "profile": ["8","3","0","3","3","1","3","1","5"]}
+  ],
+  "magic": {
+    "tags": ["bretonnia"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"}
+    ],
+    "items": []
+  },
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must include exactly one General (p.60)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard is allowed (p.60)."},
+    {
+      "type": "perUnits",
+      "entry": "mounted-squires",
+      "units": true,
+      "max": 1,
+      "per": ["grail-knights", "questing-knights", "knights-of-the-realm", "knights-errant"],
+      "message": "As many regiments of Mounted Squires as there are regiments of Knights (p.64)."
+    },
+    {
+      "type": "perUnits",
+      "entry": "squires",
+      "units": true,
+      "max": 1,
+      "per": ["grail-knights", "questing-knights", "knights-of-the-realm", "knights-errant"],
+      "message": "As many regiments of Squires as there are regiments of Knights (p.64)."
+    }
+  ],
+  "entries": [
+    {
+      "id": "general",
+      "name": "General of Bretonnia",
+      "kind": "character",
+      "category": "characters",
+      "race": "knight",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["warhorse"],
+      "monsters": true,
+      "requiredGroups": [
+        {"group": "virtue", "message": "a Bretonnian Knight character must have the Knight's, Questing or Grail Virtue (p.60)."}
+      ],
+      "groupLabels": {"virtue": "— first virtue —", "virtue2": "No second virtue"},
+      "page": 60,
+      "max": 1,
+      "tags": ["general"],
+      "cost": 100,
+      "magicItems": 3,
+      "profile": ["4","6","6","4","4","3","6","4","9"],
+      "options": [
+        {"id": "v1-knights", "name": "Knight's Virtue", "cost": 5, "group": "virtue"},
+        {"id": "v1-questing", "name": "Questing Virtue", "cost": 10, "group": "virtue"},
+        {"id": "v1-grail", "name": "Grail Virtue", "cost": 15, "group": "virtue"},
+        {"id": "v2-knights", "name": "Knight's Virtue", "cost": 5, "group": "virtue2"},
+        {"id": "v2-questing", "name": "Questing Virtue", "cost": 10, "group": "virtue2"},
+        {"id": "v2-grail", "name": "Grail Virtue", "cost": 15, "group": "virtue2"},
+        {"id": "v2-joust", "name": "Virtue of the Joust", "cost": 15, "group": "virtue2"},
+        {"id": "v2-purity", "name": "Virtue of Purity", "cost": 15, "group": "virtue2"},
+        {"id": "v2-temper", "name": "Virtue of Knightly Temper", "cost": 25, "group": "virtue2"},
+        {"id": "v2-impetuous", "name": "Virtue of the Impetuous Knight", "cost": 25, "group": "virtue2"},
+        {"id": "v2-valour", "name": "Virtue of Valour", "cost": 25, "group": "virtue2"},
+        {"id": "v2-discipline", "name": "Virtue of Discipline", "cost": 10, "group": "virtue2"},
+        {"id": "v2-devotion", "name": "Virtue of Devotion", "cost": 50, "group": "virtue2"},
+        {"id": "v2-disdain", "name": "Virtue of Noble Disdain", "cost": 15, "group": "virtue2"},
+        {"id": "v2-ardour", "name": "Virtue of Knightly Ardour", "cost": 30, "group": "virtue2"}
+      ]
+    },
+    {
+      "id": "battle-standard",
+      "name": "Battle Standard of Bretonnia",
+      "kind": "character",
+      "category": "characters",
+      "race": "knight",
+      "equipmentText": "Sword, Battle Standard",
+      "equipmentList": true,
+      "mounts": ["warhorse"],
+      "monsters": true,
+      "requiredGroups": [
+        {"group": "virtue", "message": "a Bretonnian Knight character must have the Knight's, Questing or Grail Virtue (p.60)."}
+      ],
+      "groupLabels": {"virtue": "— first virtue —", "virtue2": "No second virtue"},
+      "page": 60,
+      "max": 1,
+      "tags": ["bsb"],
+      "cost": 80,
+      "magicItems": 1,
+      "profile": ["4","4","4","4","3","1","4","2","7"],
+      "options": [
+        {"id": "v1-knights", "name": "Knight's Virtue", "cost": 5, "group": "virtue"},
+        {"id": "v1-questing", "name": "Questing Virtue", "cost": 10, "group": "virtue"},
+        {"id": "v1-grail", "name": "Grail Virtue", "cost": 15, "group": "virtue"},
+        {"id": "v2-knights", "name": "Knight's Virtue", "cost": 5, "group": "virtue2"},
+        {"id": "v2-questing", "name": "Questing Virtue", "cost": 10, "group": "virtue2"},
+        {"id": "v2-grail", "name": "Grail Virtue", "cost": 15, "group": "virtue2"},
+        {"id": "v2-joust", "name": "Virtue of the Joust", "cost": 15, "group": "virtue2"},
+        {"id": "v2-purity", "name": "Virtue of Purity", "cost": 15, "group": "virtue2"},
+        {"id": "v2-temper", "name": "Virtue of Knightly Temper", "cost": 25, "group": "virtue2"},
+        {"id": "v2-impetuous", "name": "Virtue of the Impetuous Knight", "cost": 25, "group": "virtue2"},
+        {"id": "v2-valour", "name": "Virtue of Valour", "cost": 25, "group": "virtue2"},
+        {"id": "v2-discipline", "name": "Virtue of Discipline", "cost": 10, "group": "virtue2"},
+        {"id": "v2-devotion", "name": "Virtue of Devotion", "cost": 50, "group": "virtue2"},
+        {"id": "v2-disdain", "name": "Virtue of Noble Disdain", "cost": 15, "group": "virtue2"},
+        {"id": "v2-ardour", "name": "Virtue of Knightly Ardour", "cost": 30, "group": "virtue2"}
+      ]
+    },
+    {
+      "id": "hero",
+      "name": "Hero",
+      "kind": "character",
+      "category": "characters",
+      "race": "knight",
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["warhorse"],
+      "monsters": true,
+      "requiredGroups": [
+        {"group": "virtue", "message": "a Bretonnian Knight character must have the Knight's, Questing or Grail Virtue (p.60)."}
+      ],
+      "groupLabels": {"virtue": "— first virtue —", "virtue2": "No second virtue"},
+      "page": 61,
+      "cost": 65,
+      "magicItems": 2,
+      "profile": ["4","5","5","4","4","2","5","3","8"],
+      "options": [
+        {"id": "v1-knights", "name": "Knight's Virtue", "cost": 5, "group": "virtue"},
+        {"id": "v1-questing", "name": "Questing Virtue", "cost": 10, "group": "virtue"},
+        {"id": "v1-grail", "name": "Grail Virtue", "cost": 15, "group": "virtue"},
+        {"id": "v2-knights", "name": "Knight's Virtue", "cost": 5, "group": "virtue2"},
+        {"id": "v2-questing", "name": "Questing Virtue", "cost": 10, "group": "virtue2"},
+        {"id": "v2-grail", "name": "Grail Virtue", "cost": 15, "group": "virtue2"},
+        {"id": "v2-joust", "name": "Virtue of the Joust", "cost": 15, "group": "virtue2"},
+        {"id": "v2-purity", "name": "Virtue of Purity", "cost": 15, "group": "virtue2"},
+        {"id": "v2-temper", "name": "Virtue of Knightly Temper", "cost": 25, "group": "virtue2"},
+        {"id": "v2-impetuous", "name": "Virtue of the Impetuous Knight", "cost": 25, "group": "virtue2"},
+        {"id": "v2-valour", "name": "Virtue of Valour", "cost": 25, "group": "virtue2"},
+        {"id": "v2-discipline", "name": "Virtue of Discipline", "cost": 10, "group": "virtue2"},
+        {"id": "v2-devotion", "name": "Virtue of Devotion", "cost": 50, "group": "virtue2"},
+        {"id": "v2-disdain", "name": "Virtue of Noble Disdain", "cost": 15, "group": "virtue2"},
+        {"id": "v2-ardour", "name": "Virtue of Knightly Ardour", "cost": 30, "group": "virtue2"}
+      ]
+    },
+    {
+      "id": "wizard",
+      "name": "Wizard",
+      "kind": "character",
+      "category": "characters",
+      "page": 61,
+      "race": "knight",
+      "wizard": true,
+      "equipmentText": "Sword",
+      "equipmentList": true,
+      "mounts": ["warhorse"],
+      "monsters": true,
+      "variantsLabel": "Level",
+      "notes": "Wizards wear no armour if they want to cast spells; knightly weapons do not make a Wizard a Knight.",
+      "variants": [
+        {"id": "wizard", "name": "Wizard", "cost": 56, "magicItems": 1, "profile": ["4","3","3","3","4","1","4","1","7"], "rulesText": "Level 1 wizard"},
+        {"id": "champion", "name": "Wizard Champion", "cost": 118, "magicItems": 2, "profile": ["4","3","3","4","4","2","4","1","7"], "rulesText": "Level 2 wizard"},
+        {"id": "master", "name": "Master Wizard", "cost": 190, "magicItems": 3, "profile": ["4","3","3","4","4","3","5","2","7"], "rulesText": "Level 3 wizard"},
+        {"id": "lord", "name": "Wizard Lord", "cost": 287, "magicItems": 4, "profile": ["4","3","3","4","4","4","6","3","8"], "rulesText": "Level 4 wizard"}
+      ]
+    },
+    {
+      "id": "louen",
+      "name": "Louen Leoncoeur, the Lionhearted",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 67,
+      "cost": 505,
+      "tags": ["general"],
+      "profile": ["4","6","6","4","4","3","6","4","10"],
+      "extraProfiles": [
+        {"name": "Hippogriff", "profile": ["8","5","0","6","5","5","6","3","8"]}
+      ],
+      "save": "3+",
+      "equipmentText": "Sword, Lion Lance, Armour of Brilliance; rides a Hippogriff",
+      "rulesText": "Grail Virtue, Virtue of the Lionheart (+D3 S)",
+      "notes": "Louen replaces the General. Points include his magic items: Crown of Bretonnia, Armour of Brilliance, Lion Lance, Tabard of Kings."
+    },
+    {
+      "id": "repanse",
+      "name": "Repanse de Lyonesse",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 68,
+      "cost": 310,
+      "tags": ["general", "bsb"],
+      "profile": ["4","6","6","4","4","3","6","4","9"],
+      "extraProfiles": [
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Sword of Lyonesse, heavy armour, shield; barded Warhorse",
+      "rulesText": "Knight's Virtue, Virtue of Devotion, Halo of Maidenly Wrath (fear), Fleur de Lys battle standard",
+      "notes": "Repanse replaces both the General and the Battle Standard Bearer. Points include his magic items: Sword of Lyonesse, Fleur de Lys Banner."
+    },
+    {
+      "id": "tancred",
+      "name": "Tancred, Duc de Quenelles",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 70,
+      "cost": 265,
+      "roles": [
+        {"id": "independent", "name": "as independent character", "tags": []},
+        {"id": "general", "name": "as General", "tags": ["general"]}
+      ],
+      "profile": ["4","6","6","4","4","3","6","4","10"],
+      "options": [
+        {
+          "id": "warhorse",
+          "name": "Barded Bretonnian Warhorse",
+          "cost": 3,
+          "extraProfile": {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+        }
+      ],
+      "monsters": true,
+      "equipmentText": "Blade of Couronne, lance, heavy armour, Grail Shield",
+      "rulesText": "Grail Virtue, Virtue of Purity, Immune to psychology",
+      "notes": "Points include his magic items: Blade of Couronne, Grail Shield, Blessed Draught."
+    },
+    {
+      "id": "armand",
+      "name": "Armand d'Aquitaine",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 73,
+      "cost": 235,
+      "tags": ["bsb"],
+      "profile": ["4","5","4","4","3","1","4","2","9"],
+      "extraProfiles": [
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Sword, heavy armour, shield; barded Warhorse",
+      "rulesText": "Grail Virtue, Virtue of Knightly Ardour, Banner of the Lady of the Lake",
+      "notes": "Armand replaces the Battle Standard Bearer. Points include his magic items: Banner of the Lady of the Lake."
+    },
+    {
+      "id": "perilous-lance",
+      "name": "The Knight of the Perilous Lance",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 71,
+      "cost": 121,
+      "profile": ["4","5","5","4","4","2","5","3","8"],
+      "extraProfiles": [
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Lance, heavy armour, shield; barded Warhorse",
+      "rulesText": "Knight's Virtue, Virtue of the Joust, Perilous Lance, Parrying Shield"
+    },
+    {
+      "id": "tristan",
+      "name": "Tristan le Troubadour avec Jules le Jongleur",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 72,
+      "cost": 205,
+      "profile": ["4","5","5","4","4","2","5","3","8"],
+      "extraProfiles": [
+        {"name": "Jules", "profile": ["4","3","3","3","3","1","4","1","7"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Sword, lance, heavy armour, shield; barded Warhorse",
+      "rulesText": "Questing Virtue, Virtue of Noble Disdain, Songs of Noble Valour, Jules' cutting wit"
+    },
+    {
+      "id": "jasperre",
+      "name": "Jasperre le Beau, Dragonslayer",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 74,
+      "cost": 234,
+      "profile": ["4","5","5","4","4","2","5","3","8"],
+      "extraProfiles": [
+        {"name": "Pegasus", "profile": ["8","3","0","4","4","3","4","2","5"]}
+      ],
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "equipmentText": "Sword, Virtuous Lance, heavy armour, shield; rides a Pegasus",
+      "rulesText": "Questing Virtue, Virtue of Valour",
+      "notes": "Points include his magic items: Virtuous Lance, Helm of the Dragon Slayer, Claw of Malgrimace."
+    },
+    {
+      "id": "bohemond",
+      "name": "Bohemond 'Beastslayer', Duke of Bastonne",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 75,
+      "cost": 200,
+      "profile": ["4","5","5","4","4","3","5","3","9"],
+      "extraProfiles": [
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Beast Mace of Bastonne, heavy armour, Bohemond's Shield; barded Warhorse",
+      "rulesText": "Grail Virtue, Virtue of the Impetuous Knight",
+      "notes": "Points include his magic items: Beast Mace of Bastonne, Bohemond's Shield."
+    },
+    {
+      "id": "green-knight",
+      "name": "The Green Knight",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 76,
+      "cost": 170,
+      "profile": ["4","6","3","5","5","1","6","1","10"],
+      "extraProfiles": [
+        {"name": "Green Knight's Warhorse", "profile": ["8","4","0","4","4","1","4","1","5"]}
+      ],
+      "save": "2+",
+      "equipmentText": "Dolorous Blade, heavy armour, shield; barded warhorse",
+      "rulesText": "Causes fear, Hermit Knight (never joins a unit), Regeneration, Immune to psychology, Natural dispel 2+",
+      "notes": "Points include his magic items: Dolorous Blade."
+    },
+    {
+      "id": "morgiana",
+      "name": "Morgiana le Fay, Fay Enchantress",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 78,
+      "cost": 429,
+      "wizard": true,
+      "profile": ["4","3","3","3","3","3","6","1","9"],
+      "extraProfiles": [
+        {"name": "Unicorn", "profile": ["9","5","0","4","4","3","4","2","9"]}
+      ],
+      "equipmentText": "Sword; rides a Unicorn",
+      "save": "4+",
+      "rulesText": "Favours of the Fay, Defenders of the Fay, Unicorn: horn attack, natural dispel, daemon aura",
+      "notes": "Points include his magic items: Chalice of Potions, Morgiana's Mirror, Toad Power Familiar, Girdle of Gold."
+    },
+    {
+      "id": "odo",
+      "name": "Baron Odo d'Outremer avec Suliman le Saracen",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 69,
+      "cost": 110,
+      "profile": ["4","4","4","4","3","1","4","2","8"],
+      "extraProfiles": [
+        {"name": "Suliman", "profile": ["4","4","4","4","3","1","4","2","7"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]},
+        {"name": "Suliman's Horse", "profile": ["8","0","0","3","3","1","3","0","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Morning Star of Fracasse, heavy armour, shield; barded Warhorse",
+      "attachTo": {
+        "entries": ["knights-of-the-realm", "knights-errant"],
+        "label": "Champion of",
+        "required": true,
+        "maxUnits": 1,
+        "requiredMessage": "Odo must be the Champion of a unit"
+      },
+      "rulesText": "Questing Virtue, Suliman's war cry",
+      "notes": "Champion of Knights of the Realm or Knights Errant. Points include his magic items: Morning Star of Fracasse."
+    },
+    {
+      "id": "roland",
+      "name": "Roland le Marechal",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 69,
+      "cost": 78,
+      "profile": ["4","4","4","4","3","1","4","2","7"],
+      "extraProfiles": [
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Sword, lance, heavy armour, shield; barded Warhorse",
+      "attachTo": {
+        "entries": ["knights-of-the-realm", "knights-errant"],
+        "label": "Champion of",
+        "required": true,
+        "maxUnits": 1,
+        "requiredMessage": "Roland must be the Champion of a unit"
+      },
+      "rulesText": "Knight's Virtue, Roland's Warhorn",
+      "notes": "Points include his magic items: Roland's Warhorn."
+    },
+    {
+      "id": "reynard",
+      "name": "Reynard le Chasseur avec Groffe et Griffe",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "knight",
+      "magicItems": 0,
+      "page": 73,
+      "cost": 90,
+      "profile": ["4","4","4","4","3","1","4","3","7"],
+      "extraProfiles": [
+        {"name": "Groffe & Griffe", "profile": ["8","4","0","4","3","1","4","1","6"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["heavy", "shield", "barding"],
+      "cavalry": true,
+      "equipmentText": "Sword, boar spear, heavy armour, shield; barded Warhorse",
+      "attachTo": {
+        "entries": ["knights-of-the-realm", "knights-errant", "mounted-squires"],
+        "label": "Champion of",
+        "required": true,
+        "maxUnits": 1,
+        "requiredMessage": "Reynard must be the Champion of a unit"
+      },
+      "rulesText": "Knight's Virtue, Boar spear, Wolfhounds, Hawk"
+    },
+    {
+      "id": "bertrand",
+      "name": "Bertrand the Brigand",
+      "kind": "character",
+      "category": "characters",
+      "special": true,
+      "max": 1,
+      "race": "commoner",
+      "magicItems": 0,
+      "page": 71,
+      "cost": 83,
+      "profile": ["4","4","5","4","3","1","4","2","8"],
+      "extraProfiles": [
+        {"name": "Hugo le Petit", "profile": ["4","3","4","5","4","1","3","1","7"]},
+        {"name": "Gui le Gros", "profile": ["4","3","4","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Sword, longbow",
+      "attachTo": {"entries": ["bowmen"], "label": "Champion of", "required": true, "maxUnits": 1, "requiredMessage": "Bertrand must be the Champion of a unit"},
+      "rulesText": "Bertrand's marksmanship, Hugo le Petit (S5 arrows), Gui le Gros' wine flagon",
+      "notes": "His regiment becomes the Bowmen of Bergerac: tick 'Bowmen of Bergerac' on the Bowmen (+1 per Bowman). Points include his magic items: Black Arrow."
+    },
+    {
+      "id": "grail-knights",
+      "name": "Grail Knights",
+      "kind": "unit",
+      "category": "knights",
+      "page": 62,
+      "max": 1,
+      "race": "grail",
+      "cost": 45,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Grail Knight", "profile": ["4","5","3","4","3","1","4","1","9"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, lance, sword, barded Warhorse",
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["lance", "heavy-armour", "shield", "barding"],
+      "bossMount": "warhorse",
+      "freeStandard": true,
+      "freeMusician": true,
+      "rulesText": "Grail Virtue (immune to psychology), Lance formation",
+      "magicStandard": "any",
+      "options": []
+    },
+    {
+      "id": "questing-knights",
+      "name": "Questing Knights",
+      "kind": "unit",
+      "category": "knights",
+      "page": 62,
+      "max": 1,
+      "race": "questing",
+      "cost": 41,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Questing Knight", "profile": ["4","4","3","4","3","1","4","1","8"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, lance, sword, barded Warhorse",
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["lance", "heavy-armour", "shield", "barding"],
+      "bossMount": "warhorse",
+      "freeStandard": true,
+      "freeMusician": true,
+      "rulesText": "Questing Virtue (immune to panic), Lance formation",
+      "magicStandard": "any",
+      "options": []
+    },
+    {
+      "id": "knights-of-the-realm",
+      "name": "Knights of the Realm",
+      "kind": "unit",
+      "category": "knights",
+      "page": 63,
+      "race": "knight",
+      "cost": 39,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Knight of the Realm", "profile": ["4","4","3","4","3","1","3","1","7"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, lance, sword, barded Warhorse",
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["lance", "heavy-armour", "shield", "barding"],
+      "bossMount": "warhorse",
+      "freeStandard": true,
+      "freeMusician": true,
+      "rulesText": "Knight's Virtue, Lance formation",
+      "magicStandard": "any",
+      "options": []
+    },
+    {
+      "id": "knights-errant",
+      "name": "Knights Errant",
+      "kind": "unit",
+      "category": "knights",
+      "page": 63,
+      "race": "knight",
+      "cost": 32,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Knight Errant", "profile": ["4","3","3","3","3","1","3","1","7"]},
+        {"name": "Bretonnian Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "equipmentText": "Heavy armour, shield, lance, sword, barded Warhorse",
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "bossGear": ["lance", "heavy-armour", "shield", "barding"],
+      "bossMount": "warhorse",
+      "freeStandard": true,
+      "freeMusician": true,
+      "rulesText": "Knight's Virtue, Lance formation",
+      "magicStandard": "one",
+      "options": []
+    },
+    {
+      "id": "mounted-squires",
+      "name": "Mounted Squires",
+      "kind": "unit",
+      "category": "commoners",
+      "page": 64,
+      "race": "commoner",
+      "cost": 10,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Mounted Squire", "profile": ["4","3","3","3","3","1","3","1","7"]},
+        {"name": "Horse", "profile": ["8","0","0","3","3","1","3","0","5"]}
+      ],
+      "cavalry": true,
+      "bossMount": "warhorse",
+      "equipmentText": "Sword, horse",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 2, "gear": "spear"},
+        {"id": "bows", "name": "Bows", "cost": 4, "gear": "bow"},
+        {"id": "shields", "name": "Shields", "cost": 2, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 4, "gear": "light-armour", "armour": "light"}
+      ],
+      "rulesText": "Skirmish"
+    },
+    {
+      "id": "squires",
+      "name": "Squires",
+      "kind": "unit",
+      "category": "commoners",
+      "page": 64,
+      "race": "commoner",
+      "cost": 5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Squire", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Sword",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "longbows", "name": "Longbows", "cost": 3, "gear": "long-bow", "group": "weapon"}
+      ],
+      "rulesText": "Skirmish"
+    },
+    {
+      "id": "men-at-arms",
+      "name": "Men-at-arms",
+      "kind": "unit",
+      "category": "commoners",
+      "page": 64,
+      "race": "commoner",
+      "cost": 5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Man-at-arms", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Sword or other hand weapon",
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 1, "gear": "spear", "group": "weapon"},
+        {"id": "halberds", "name": "Halberds", "cost": 2, "gear": "halberd", "group": "weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ]
+    },
+    {
+      "id": "bowmen",
+      "name": "Bowmen",
+      "kind": "unit",
+      "category": "commoners",
+      "page": 65,
+      "race": "commoner",
+      "cost": 8,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Bowman", "profile": ["4","3","3","3","3","1","3","1","7"]}
+      ],
+      "equipmentText": "Sword, longbow",
+      "bossGear": ["long-bow"],
+      "options": [
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"},
+        {"id": "bergerac", "name": "Bowmen of Bergerac (with Bertrand)", "cost": 1}
+      ],
+      "rulesText": "Arrowhead formation"
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 65,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {"id": "griffon", "name": "Griffon", "kind": "monster", "category": "monsters", "page": 65, "cost": 150, "profile": ["6","5","0","6","5","5","7","4","8"]},
+    {"id": "hippogriff", "name": "Hippogriff", "kind": "monster", "category": "monsters", "page": 65, "cost": 145, "profile": ["8","5","0","6","5","5","6","3","8"]},
+    {"id": "manticore", "name": "Manticore", "kind": "monster", "category": "monsters", "page": 65, "cost": 200, "profile": ["6","6","0","7","7","5","4","4","8"]},
+    {"id": "pegasus", "name": "Pegasus", "kind": "monster", "category": "monsters", "page": 65, "cost": 50, "profile": ["8","3","0","4","4","3","4","2","5"]},
+    {
+      "id": "unicorn",
+      "name": "Unicorn",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 65,
+      "cost": 90,
+      "profile": ["9","5","0","4","4","3","4","2","9"],
+      "notMount": true,
+      "notes": "Ridden by the Fay Enchantress only."
+    },
+    {"id": "wyvern", "name": "Wyvern", "kind": "monster", "category": "monsters", "page": 65, "cost": 180, "profile": ["6","5","0","5","6","4","4","3","5"]},
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "monsters",
+      "page": 65,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "variants": [
+        {"id": "rats", "name": "Rats", "profile": ["6","3","0","3","2","5","1","5","10"]},
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ]
+    }
+  ]
+}
