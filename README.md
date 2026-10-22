@@ -14,7 +14,9 @@ An army list builder for **Warhammer Fantasy Battle, 5th edition**, in the spiri
 
 Armies so far: **Orcs & Goblins**, **The Empire** (detachments, Champions, Elector Counts, the Runefang limit),
 **Skaven** (war teams and Assassins with their regiments, Clan Moulder packs, half-price Rat Swarms, Ikit Claw's
-war machine minimum) and **The Undead** (Undead Champions leading regiments, character chariots, Carrion and Wraith units). Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
+war machine minimum), **The Undead** (Undead Champions leading regiments, character chariots, Carrion and Wraith units),
+**High Elves**, **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
+virtues, free Knight command models, Commoners allowance) and **Chaos Dwarfs**. Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
 filtered to what the army may use, with checks for item allowances, one Ward per model, Wizard Arcana,
 race-restricted items and duplicates. Anything missing can still be added as a custom item.
 

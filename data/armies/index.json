@@ -2,5 +2,9 @@
   {"id": "orcs-goblins", "name": "Orcs & Goblins", "file": "orcs-goblins.json"},
   {"id": "empire", "name": "The Empire", "file": "empire.json"},
   {"id": "skaven", "name": "Skaven", "file": "skaven.json"},
-  {"id": "undead", "name": "The Undead", "file": "undead.json"}
+  {"id": "undead", "name": "The Undead", "file": "undead.json"},
+  {"id": "high-elves", "name": "High Elves", "file": "high-elves.json"},
+  {"id": "lizardmen", "name": "Lizardmen", "file": "lizardmen.json"},
+  {"id": "bretonnia", "name": "Bretonnia", "file": "bretonnia.json"},
+  {"id": "chaos-dwarfs", "name": "Chaos Dwarfs", "file": "chaos-dwarfs.json"}
 ]
