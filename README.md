@@ -12,7 +12,8 @@ An army list builder for **Warhammer Fantasy Battle, 5th edition**, in the spiri
   as plain text, or as a `.json` file you can import again.
 - Lists are saved in your browser (localStorage).
 
-Armies so far: **Orcs & Goblins**. Magic items come from the *Warhammer Magic* (5th edition) item summary,
+Armies so far: **Orcs & Goblins** and **The Empire** (including detachments, Champions, Elector Counts and
+the Runefang limit). Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
 filtered to what the army may use, with checks for item allowances, one Ward per model, Wizard Arcana,
 race-restricted items and duplicates. Anything missing can still be added as a custom item.
 

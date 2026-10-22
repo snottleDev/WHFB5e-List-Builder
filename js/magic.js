@@ -52,14 +52,14 @@ export function extraType(army, x) {
 }
 
 // Items for a picker, grouped by type, in the order the catalogue lists the types.
-export function pickerGroups(army, poolId, { standardsOnly = false, noStandards = false } = {}) {
+export function pickerGroups(army, poolId, { standardsOnly = false, noStandards = false, entryId = null } = {}) {
   const pool = army.magicPools.find((p) => p.id === poolId);
   if (!pool) return [];
   const groups = [];
   for (const [type, def] of Object.entries(army.itemTypes)) {
     if (standardsOnly && type !== "standard") continue;
     if (noStandards && type === "standard") continue;
-    const items = pool.items.filter((i) => i.type === type);
+    const items = pool.items.filter((i) => i.type === type && (!i.entries || i.entries.includes(entryId)));
     if (items.length) groups.push({ type, name: def.name, items });
   }
   return groups;
@@ -85,7 +85,7 @@ export function checkItems(army, list, ctxFor) {
     }
     const groups = [
       { who: ctx.label, items: extras.filter((x) => !x.onBoss), race: ctx.race, wizard: ctx.wizard, canStandard: ctx.canStandard, kind: ctx.kind },
-      { who: `${ctx.label} Boss`, items: extras.filter((x) => x.onBoss), race: ctx.race, wizard: false, canStandard: false, kind: "boss" },
+      { who: `${ctx.label} ${army.championName || "Boss"}`, items: extras.filter((x) => x.onBoss), race: ctx.race, wizard: false, canStandard: false, kind: "boss" },
     ];
     for (const g of groups) {
       const wards = g.items.filter((x) => extraType(army, x) === "ward");
@@ -102,6 +102,7 @@ export function checkItems(army, list, ctxFor) {
         if (!it.usable) warn(`${g.who}: ${it.name} is not available to this army (${it.only || "restricted"}).`, s.uid);
         if (army.itemTypes[it.type]?.wizardOnly && !g.wizard) warn(`${g.who}: ${it.name} is Wizard Arcana and can only be used by wizards.`, s.uid);
         if (it.notWizard && g.wizard) warn(`${g.who}: ${it.name} cannot be used by a wizard.`, s.uid);
+        if (it.entries && (g.kind === "boss" || !it.entries.includes(ctx.entryId))) warn(`${g.who}: ${it.name} is ${it.only || "a special character's item"}.`, s.uid);
         if (it.races && !(g.race && it.races.includes(g.race))) {
           const who = it.races.map((r) => `${army.races?.[r] || r}s`).join(" or ");
           warn(`${g.who}: ${it.name} may only be used by ${who} (${it.only}).`, s.uid);

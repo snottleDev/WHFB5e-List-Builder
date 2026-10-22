@@ -1,3 +1,4 @@
 [
-  { "id": "orcs-goblins", "name": "Orcs & Goblins", "file": "orcs-goblins.json" }
+  {"id": "orcs-goblins", "name": "Orcs & Goblins", "file": "orcs-goblins.json"},
+  {"id": "empire", "name": "The Empire", "file": "empire.json"}
 ]

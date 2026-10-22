@@ -98,4 +98,79 @@ t("shaman may take arcana; BSB may take a standard", () => {
 t("legacy hand-typed items still price", () => {
   assert.equal(selectionCost(army, { entryId: "warlord", variant: "goblin", extras: [{ name: "Old item", points: 12 }] }).total, 62);
 });
+// ---------- bestiary keywords ----------
+import { defaultNotes } from "../js/calc.js";
+t("O&G keywords: Goblins, Night Goblin warlord, Stone Trolls", () => {
+  assert.equal(defaultNotes(army, { entryId: "goblins" }), "Animosity, Fear Elves");
+  assert.equal(defaultNotes(army, { entryId: "warlord", variant: "night-goblin" }), "Fear Elves, Hate Dwarfs");
+  assert.match(defaultNotes(army, { entryId: "trolls", variant: "stone" }), /Fear, Stupidity, Regenerate.*Magic resistance/);
+});
+
+// ---------- Empire ----------
+const emp = attachMagic(load("../data/armies/empire.json"), [load("../data/magic/warhammer-magic.json")]);
+const emsg = (list) => validate(emp, list).map((i) => i.msg).join("\n");
+t("Empire: Knights Panther 2+, White Wolf 3+, Pistoliers 5+, Outriders 4+", () => {
+  assert.equal(computeSave(emp, { entryId: "knights-panther", size: 5 }), "2+");
+  assert.equal(computeSave(emp, { entryId: "white-wolf", size: 5 }), "3+");
+  assert.equal(computeSave(emp, { entryId: "pistoliers", size: 5 }), "5+");
+  assert.equal(computeSave(emp, { entryId: "outriders", size: 5 }), "4+");
+  assert.equal(computeSave(emp, { entryId: "reiksguard", size: 5 }), "4+");
+});
+t("Empire: halberdiers 20, LA + shields, standard, musician, champion", () => {
+  const sel = { entryId: "halberdiers", size: 20, options: { "light-armour": true, shields: true }, standard: true, musician: true, boss: { enabled: true } };
+  const c = selectionCost(emp, sel);
+  assert.equal(c.byCategory.regiments, 19 * 10 + 10 + 10);
+  assert.equal(c.byCategory.characters, 30 + 2 + 2 + 1); // champion + halberd + LA + shield
+});
+t("Empire: hero on barded warhorse with HA + shield = 65+3+4+3+1, save 2+", () => {
+  const sel = { entryId: "hero", gear: ["heavy-armour", "shield", "barding"], mount: "mount:warhorse" };
+  assert.equal(selectionCost(emp, sel).total, 76);
+  assert.equal(computeSave(emp, sel), "2+");
+});
+t("Empire: Karl Franz with Hammer + Seal = 285; Elector saves 3+/2+", () => {
+  const kf = { entryId: "karl-franz", extras: [{ itemId: "the-hammer-of-sigmar" }, { itemId: "the-silver-seal" }] };
+  assert.equal(selectionCost(emp, kf).total, 285);
+  assert.equal(computeSave(emp, { entryId: "aldebrand-ludenhof" }), "3+");
+  assert.equal(computeSave(emp, { entryId: "boris-todbringer" }), "2+");
+});
+t("Empire: general required, runefang limit, steam tank cap, hot pot needs halflings", () => {
+  const list = { points: 5000, selections: [
+    { uid: "a", entryId: "hero", extras: [{ itemId: "runefang" }] },
+    { uid: "b", entryId: "hero", extras: [{ itemId: "runefang" }] },
+    { uid: "c", entryId: "aldebrand-ludenhof", extras: [{ itemId: "runefang" }] },
+    { uid: "d", entryId: "steam-tanks", size: 5 },
+    { uid: "e", entryId: "steam-tanks", size: 4 },
+    { uid: "f", entryId: "hot-pot", size: 1 } ] };
+  const m = emsg(list);
+  assert.match(m, /exactly one General/);
+  assert.match(m, /only one character may carry a Runefang .*\(currently 2\)/);
+  assert.match(m, /Steam Tanks: 9 in the army, the maximum is 8/);
+  assert.match(m, /Hot Pot requires at least one Halfling/);
+  assert.doesNotMatch(m, /Runefang is taken/);
+});
+t("Empire: detachments", () => {
+  const list = { points: 2000, selections: [
+    { uid: "g", entryId: "general" },
+    { uid: "p", entryId: "halberdiers", size: 20 },
+    { uid: "d1", entryId: "hand-gunners", size: 10, parent: "p" },
+    { uid: "d2", entryId: "crossbowmen", size: 11, parent: "p", standard: true },
+    { uid: "d3", entryId: "archers", size: 5, parent: "p" },
+    { uid: "k", entryId: "knights-panther", size: 5, parent: "p" } ] };
+  const m = emsg(list);
+  assert.match(m, /at most half the size of its regiment \(10\)/);
+  assert.match(m, /may not include a standard bearer/);
+  assert.match(m, /4 detachments, the maximum is 2/);
+  assert.match(m, /only state troops may form detachments/);
+  assert.doesNotMatch(m, /Hand Gunners: a detachment may be at most/);
+});
+t("Empire: special-character items and mounted-only gear", () => {
+  const list = { points: 3000, selections: [
+    { uid: "g", entryId: "general", gear: ["lance"], extras: [{ itemId: "fearfrost" }] },
+    { uid: "t", entryId: "tzarina-katarin", extras: [{ itemId: "fearfrost" }] },
+    { uid: "h", entryId: "halberdiers", size: 20 } ] };
+  const m = emsg(list);
+  assert.match(m, /General of the Empire: Fearfrost is Tzarina Katarin only/);
+  assert.match(m, /Lance can only be used by a mounted model/);
+  assert.match(m, /Tzarina requires at least one unit of Kislev/);
+});
 console.log(`${n} tests passed`);

@@ -2,7 +2,7 @@
 // and the A4 roster sheet PDF, laid out after the classic Warhammer roster sheet.
 import { MiniPdf } from "./minipdf.js";
 import { extraName } from "./magic.js";
-import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss } from "./calc.js";
+import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss, defaultNotes, parentOf } from "./calc.js";
 
 export function rosterRows(army, list) {
   const order = (s) => army.categories.findIndex((c) => c.id === findEntry(army, s.entryId)?.category);
@@ -52,13 +52,15 @@ export function rosterRows(army, list) {
         const single = size === 1 ? (v?.single || e.single) : null;
         lines.push(`${size} ${single || v?.name || e.name}`);
       }
+      const parent = parentOf(list, s);
+      if (parent) lines.push(`Detachment of ${parent.name || findEntry(army, parent.entryId).name}`);
       for (const p of e.profiles || []) profiles.push(p);
       if (s.standard) lines.push("Standard");
       if (s.musician) lines.push("Musician");
       if (s.boss?.enabled && canHaveBoss(army, e)) {
-        lines.push("Boss" + (e.bossOptions || []).filter((o) => s.boss.options?.[o.id]).map((o) => ` (${o.name.toLowerCase()})`).join(""));
+        lines.push((army.championName || "Boss") + (e.bossOptions || []).filter((o) => s.boss.options?.[o.id]).map((o) => ` (${o.name.toLowerCase()})`).join(""));
         const bp = army.bossProfiles?.[e.race];
-        if (bp) profiles.push({ name: "Boss", profile: bp });
+        if (bp) profiles.push({ name: army.championName || "Boss", profile: bp });
       }
       for (const o of e.options || []) {
         const val = s.options?.[o.id];
@@ -69,7 +71,7 @@ export function rosterRows(army, list) {
     }
     for (const x of s.extras || []) {
       const n = extraName(army, x);
-      if (n) lines.push((x.onBoss ? "Boss: " : "") + n);
+      if (n) lines.push((x.onBoss ? `${army.championName || "Boss"}: ` : "") + n);
     }
 
     return {
@@ -78,7 +80,7 @@ export function rosterRows(army, list) {
       lines: lines.filter(Boolean),
       profiles,
       save: s.save || computeSave(army, s),
-      notes: s.notes ?? e.rulesText ?? "",
+      notes: s.notes ?? defaultNotes(army, s),
       points: fmt(selectionCost(army, s).total),
     };
   }).filter(Boolean);

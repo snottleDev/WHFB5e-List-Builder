@@ -1,7 +1,7 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
 import { attachMagic, extraItem, pickerGroups } from "./magic.js";
-import { itemContext } from "./calc.js";
+import { itemContext, defaultNotes, parentOf } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
 const app = document.getElementById("app");
@@ -188,6 +188,10 @@ function newSelection(army, e) {
 function titleOf(army, s) {
   const e = findEntry(army, s.entryId);
   const v = variantOf(e, s);
+  if (s.parent && current) {
+    const p = parentOf(current.list, s);
+    if (p) return `${unitSize(e, s)} ${v?.name || e.name} – detachment of ${p.name || findEntry(army, p.entryId).name}`;
+  }
   if (e.kind === "unit" && !e.noCommand) return `${unitSize(e, s)} ${v?.name || e.name}`;
   if (e.kind === "unit" || e.kind === "monster") return `${s.size} × ${v?.name || e.name}`;
   return v?.name || e.name;
@@ -243,8 +247,22 @@ function renderCard(army, list, s) {
     } else {
       body.append(field(e.sizeLabel ? e.sizeLabel[0].toUpperCase() + e.sizeLabel.slice(1) : (e.kind === "monster" ? "Number" : "Models"),
         h("input", { type: "number", min: 1, value: s.size, onchange: (ev) => { s.size = Math.max(0, Number(ev.target.value) || 0); change(); } }),
-        e.kind === "unit" && !e.noCommand ? h("small", { class: "note" }, "including leader, standard, musician and Boss") : null));
+        e.kind === "unit" && !e.noCommand ? h("small", { class: "note" }, `including leader, standard, musician and ${(army.championName || "Boss").toLowerCase()}`) : null));
     }
+  }
+
+  // detachments (Empire state troops)
+  if (e.stateTroops && (army.rules || []).some((r) => r.type === "detachments")) {
+    const parents = list.selections.filter((x) => x !== s && !x.parent && findEntry(army, x.entryId)?.stateTroops);
+    body.append(field("Detachment",
+      h("select", { onchange: (ev) => {
+          s.parent = ev.target.value || undefined;
+          if (s.parent) { s.standard = false; s.musician = false; if (s.boss) s.boss.enabled = false; }
+          change(); } },
+        h("option", { value: "" }, "Independent regiment"),
+        parents.map((p) => h("option", { value: p.uid, selected: p.uid === s.parent ? true : null },
+          `Detachment of: ${p.name || titleOf(army, p)}`))),
+      h("small", { class: "note" }, "max half the size of its regiment; no standard, musician or champion")));
   }
 
   // options
@@ -279,8 +297,8 @@ function renderCard(army, list, s) {
     body.append(field("Options", rendered));
   }
 
-  // command
-  if (e.kind === "unit" && !e.noCommand) {
+  // command (detachments have none)
+  if (e.kind === "unit" && !e.noCommand && !s.parent) {
     const cmd = [
       h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.standard, onchange: (ev) => { s.standard = ev.target.checked; change(); } }), "Standard"),
       h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.musician, onchange: (ev) => { s.musician = ev.target.checked; change(); } }), "Musician"),
@@ -288,10 +306,10 @@ function renderCard(army, list, s) {
     if (canHaveBoss(army, e)) {
       cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.boss?.enabled,
         onchange: (ev) => { s.boss = s.boss || { options: {} }; s.boss.enabled = ev.target.checked; change(); } }),
-        "Boss", h("small", {}, `${fmt(bossCost(army, e, s))} pts, from Characters`)));
+        army.championName || "Boss", h("small", {}, `${fmt(bossCost(army, e, s))} pts, from Characters`)));
       for (const o of e.bossOptions || []) {
         if (s.boss?.enabled) cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.boss.options?.[o.id],
-          onchange: (ev) => { s.boss.options = s.boss.options || {}; s.boss.options[o.id] = ev.target.checked; change(); } }), `Boss ${o.name.toLowerCase()}`, h("small", {}, `+${o.cost}`)));
+          onchange: (ev) => { s.boss.options = s.boss.options || {}; s.boss.options[o.id] = ev.target.checked; change(); } }), `${army.championName || "Boss"} ${o.name.toLowerCase()}`, h("small", {}, `+${o.cost}`)));
       }
     }
     body.append(field("Command", cmd));
@@ -301,7 +319,7 @@ function renderCard(army, list, s) {
   if (e.kind === "character") {
     if (e.equipmentList) {
       body.append(field("Equipment", h("small", { class: "note" }, `${e.equipmentText}, plus:`),
-        army.equipment.map((g) => h("label", { class: "opt" },
+        army.equipment.filter((g) => !g.troopOnly).map((g) => h("label", { class: "opt" },
           h("input", { type: "checkbox", checked: (s.gear || []).includes(g.id), onchange: (ev) => {
             s.gear = (s.gear || []).filter((x) => x !== g.id); if (ev.target.checked) s.gear.push(g.id); change(); } }),
           g.name, h("small", {}, `+${g.cost}`)))));
@@ -326,8 +344,8 @@ function renderCard(army, list, s) {
       oninput: (ev) => { s.save = ev.target.value || undefined; persist(); } }),
     h("small", { class: "note" }, `calculated: ${autoSave} — type to override`)));
   body.append(field("Notes",
-    h("textarea", { placeholder: e.rulesText || "Special rules shown in the roster's Notes column",
-      oninput: (ev) => { s.notes = ev.target.value; persist(); } }, s.notes ?? e.rulesText ?? "")));
+    h("textarea", { placeholder: defaultNotes(army, s) || "Special rules shown in the roster's Notes column",
+      oninput: (ev) => { s.notes = ev.target.value; persist(); } }, s.notes ?? defaultNotes(army, s))));
 
   body.append(renderProfiles(army, s));
   body.append(h("div", { class: "breakdown" }, cost.lines.map((l) => `${l.label}: ${fmt(l.pts)}${l.cat !== e.category ? ` (${catName(army, l.cat)})` : ""}`).join(" · ")));
@@ -350,7 +368,7 @@ function mountOptions(army, e, s) {
   const out = [["", "On foot"]];
   const race = variantOf(e, s)?.race || e.race;
   if (e.mountChart) {
-    for (const m of army.mounts) if (m.races.includes(race)) out.push([`mount:${m.id}`, `${m.name} (+${m.cost})`]);
+    for (const m of army.mounts) if (!m.specialOnly && (!m.races || m.races.includes(race))) out.push([`mount:${m.id}`, `${m.name} (+${m.cost})`]);
   }
   for (const id of e.mounts || []) {
     const m = army.mounts.find((x) => x.id === id);
@@ -383,7 +401,7 @@ function renderExtras(army, e, s, change) {
   const rows = s.extras.map((x, i) => {
     const it = extraItem(army, x);
     const remove = h("button", { class: "btn small ghost", title: "Remove", onclick: () => { s.extras.splice(i, 1); change(); } }, "×");
-    const who = x.onBoss ? "Boss · " : "";
+    const who = x.onBoss ? `${army.championName || "Boss"} · ` : "";
     if (it) {
       return h("div", { class: "extras-row item" },
         h("b", {}, it.name), h("span", { class: "pts-sm" }, `${fmt(it.points)} pts`),
@@ -399,7 +417,7 @@ function renderExtras(army, e, s, change) {
 
   // one picker per purpose; "custom" adds a free-text row for anything not in the catalogue
   const picker = (label, opts, make) => {
-    const groups = pickerGroups(army, "magic", opts);
+    const groups = pickerGroups(army, "magic", { ...opts, entryId: e.id });
     const sel = h("select", { "aria-label": label },
       h("option", { value: "" }, label),
       groups.map((g) => h("optgroup", { label: g.name },
@@ -420,7 +438,7 @@ function renderExtras(army, e, s, change) {
     pickers.push(picker(`+ Magic item (${used}/${allowed})`, ctx.canStandard ? {} : { noStandards: true }, (custom) => (custom ? { kind: "item" } : {})));
   }
   if (canStd) pickers.push(picker("+ Magic standard", { standardsOnly: true }, (custom) => (custom ? { kind: "standard", type: "standard" } : {})));
-  if (bossOk) pickers.push(picker("+ Boss magic item (max 1)", { noStandards: true }, (custom) => (custom ? { kind: "item", onBoss: true } : { onBoss: true })));
+  if (bossOk) pickers.push(picker(`+ ${army.championName || "Boss"} magic item (max 1)`, { noStandards: true }, (custom) => (custom ? { kind: "item", onBoss: true } : { onBoss: true })));
   return h("div", { class: "field" }, h("span", { class: "lbl" }, "Magic"),
     h("div", { class: "extras" }, rows, h("div", { class: "extras-row" }, pickers)));
 }

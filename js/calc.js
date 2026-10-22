@@ -132,7 +132,7 @@ export function selectionCost(army, sel) {
       if (sel.standard) add(cat, trooper, "Standard bearer (double cost)");
       if (sel.musician) add(cat, trooper, "Musician (double cost)");
       if (sel.boss?.enabled && canHaveBoss(army, entry)) {
-        add("characters", bossCost(army, entry, sel), `${army.races[entry.race]} Boss`);
+        add("characters", bossCost(army, entry, sel), army.championName ? army.championName : `${army.races[entry.race]} Boss`);
       }
     }
   }
@@ -186,6 +186,8 @@ export function computeSave(army, sel) {
       cavalry = true;
       bonus += m.saveBonus;
     }
+    // barding only counts for a model on a horse-type mount
+    if (armour.has("barding") && cavalry) bonus += 1;
   }
   let save = 7; // 7 = no save
   const s = armour.has("shield"), l = armour.has("light"), h = armour.has("heavy");
@@ -273,6 +275,10 @@ export function validate(army, list) {
   for (const [id, n] of Object.entries(counts)) {
     const e = findEntry(army, id);
     if (e?.max != null && n > e.max) warn(`${e.name}: ${n} taken, the maximum is ${e.max}.`);
+    if (e?.maxModels != null) {
+      const total = list.selections.filter((s) => s.entryId === id).reduce((t, s) => t + unitSize(e, s), 0);
+      if (total > e.maxModels) warn(`${e.name}: ${total} in the army, the maximum is ${e.maxModels}.`);
+    }
   }
 
   // army-wide rules from data
@@ -285,6 +291,11 @@ export function validate(army, list) {
       const units = list.selections.filter((s) => r.per.includes(s.entryId)).length;
       if (have > units * r.max) warn(`${r.message} You have ${have}, the maximum is ${units * r.max}.`);
     }
+    if (r.type === "itemLimit") {
+      const carriers = list.selections.filter((s) => !r.exceptEntries.includes(s.entryId) && (s.extras || []).some((x) => x.itemId === r.item));
+      if (carriers.length > r.max) warn(`${r.message} (currently ${carriers.length})`);
+    }
+    if (r.type === "detachments") issues.push(...checkDetachments(army, list, r));
   }
 
   // per-selection checks
@@ -299,7 +310,9 @@ export function validate(army, list) {
         warn(`${label}: requires at least one Mob of ${army.races[race]}s.`, s.uid);
     }
     for (const req of e.requires || []) {
-      const ok = req.race ? hasMobOfRace(army, list, req.race) : list.selections.some((x) => x.entryId === req.entry);
+      const ok = req.race ? hasMobOfRace(army, list, req.race)
+        : req.entries ? list.selections.some((x) => req.entries.includes(x.entryId))
+        : list.selections.some((x) => x.entryId === req.entry);
       if (!ok) warn(`${label}: ${req.message}`, s.uid);
     }
     if (e.kind === "unit") {
@@ -317,9 +330,10 @@ export function validate(army, list) {
         magicStdCount[e.id] = (magicStdCount[e.id] || 0) + 1;
       }
       const bossItems = (s.extras || []).filter((x) => x.onBoss);
-      if (bossItems.length && !canHaveBoss(army, e)) warn(`${label}: this unit has no Boss to carry a magic item.`, s.uid);
-      if (bossItems.length > 1) warn(`${label}: a Boss may carry only one magic item.`, s.uid);
-      if (bossItems.length && !s.boss?.enabled) warn(`${label}: has a Boss magic item but no Boss.`, s.uid);
+      const champ = army.championName || "Boss";
+      if (bossItems.length && !canHaveBoss(army, e)) warn(`${label}: this unit has no ${champ} to carry a magic item.`, s.uid);
+      if (bossItems.length > 1) warn(`${label}: a ${champ} may carry only one magic item.`, s.uid);
+      if (bossItems.length && !s.boss?.enabled) warn(`${label}: has a ${champ} magic item but no ${champ}.`, s.uid);
     }
     if (e.kind === "character") {
       const g = s.gear || [];
@@ -327,6 +341,10 @@ export function validate(army, list) {
         warn(`${label}: cannot wield both a double-handed weapon and a halberd.`, s.uid);
       const missile = g.filter((id) => gearItem(army, id)?.group === "missile");
       if (missile.length > 1) warn(`${label}: more than one missile weapon selected.`, s.uid);
+      if (!isMounted(army, s)) for (const id of g) {
+        const it = gearItem(army, id);
+        if (it?.mountedOnly) warn(`${label}: ${it.name.replace(/ \(mounted only\)/, "")} can only be used by a mounted model.`, s.uid);
+      }
     }
   }
   for (const [id, n] of Object.entries(magicStdCount)) {
@@ -346,10 +364,57 @@ export function itemContext(army, s) {
   return {
     label: s.name || v?.name || e.name,
     uid: s.uid,
+    entryId: e.id,
     kind: e.kind,
     race: v?.race || e.race || null,
     wizard: !!(v?.wizard ?? e.wizard),
     canStandard: e.kind === "character" && tags.includes("bsb"),
     allowance: { magicItems: v?.magicItems ?? e.magicItems ?? 0, ...(v?.allowances || e.allowances || {}) },
   };
+}
+
+export function isMounted(army, s) {
+  const e = findEntry(army, s.entryId);
+  if (e?.cavalry) return true;
+  const m = describeMount(army, s.mount);
+  return !!m;
+}
+
+// Default text for the roster's Notes column: entry rules plus variant (race/type) rules
+export function defaultNotes(army, s) {
+  const e = findEntry(army, s.entryId);
+  if (!e) return "";
+  const v = variantOf(e, s);
+  return [e.rulesText, v?.rulesText].filter(Boolean).join(", ");
+}
+
+// Empire-style detachments: a state troop unit attached to another state troop regiment
+export function parentOf(list, s) {
+  return s.parent ? list.selections.find((x) => x.uid === s.parent) || null : null;
+}
+function checkDetachments(army, list, r) {
+  const issues = [];
+  const warn = (msg, uid) => issues.push({ msg, uid });
+  const byParent = new Map();
+  for (const s of list.selections) {
+    if (!s.parent) continue;
+    const e = findEntry(army, s.entryId);
+    const label = s.name || e?.name || "Detachment";
+    const p = parentOf(list, s);
+    if (!p) { warn(`${label}: its parent regiment is no longer in the list.`, s.uid); continue; }
+    const pe = findEntry(army, p.entryId);
+    if (!e?.stateTroops || !pe?.stateTroops) warn(`${label}: only state troops may form detachments of state troop regiments.`, s.uid);
+    if (p.parent) warn(`${label}: a detachment cannot be attached to another detachment.`, s.uid);
+    if (unitSize(e, s) > unitSize(pe, p) / 2) warn(`${label}: a detachment may be at most half the size of its regiment (${Math.floor(unitSize(pe, p) / 2)}).`, s.uid);
+    if (s.standard || s.musician) warn(`${label}: a detachment may not include a standard bearer or musician.`, s.uid);
+    if (s.boss?.enabled) warn(`${label}: a detachment may not have a ${army.championName || "champion"}.`, s.uid);
+    byParent.set(p.uid, (byParent.get(p.uid) || 0) + 1);
+  }
+  for (const [uid, n] of byParent) {
+    if (n > r.max) {
+      const p = list.selections.find((x) => x.uid === uid);
+      warn(`${p.name || findEntry(army, p.entryId).name}: ${n} detachments, the maximum is ${r.max}.`, uid);
+    }
+  }
+  return issues;
 }
