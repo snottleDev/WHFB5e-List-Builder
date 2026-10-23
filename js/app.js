@@ -1,7 +1,7 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
 import { attachMagic, extraItem, pickerGroups } from "./magic.js";
-import { itemContext, defaultNotes, parentOf, attachedParent } from "./calc.js";
+import { itemContext, defaultNotes, parentOf, attachedParent, bossName, retinueValue, isWarlord, selLabel } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
 const app = document.getElementById("app");
@@ -195,7 +195,7 @@ function titleOf(army, s) {
   if (s.attachedTo && current) {
     const p = attachedParent(current.list, s);
     const base = e.kind === "character" ? (v?.name || e.name) : `${unitSize(e, s)} ${v?.name || e.name}`;
-    if (p) return `${base} – ${(e.attachTo.label || "with").toLowerCase()} ${p.name || findEntry(army, p.entryId).name}`;
+    if (p) return `${base} – ${(e.attachTo.label || "with").toLowerCase()} ${selLabel(army, p)}`;
   }
   if (e.kind === "unit" && !e.noCommand) return `${unitSize(e, s)} ${v?.name || e.name}`;
   if (e.kind === "unit" || e.kind === "monster") return `${s.size} × ${v?.name || e.name}`;
@@ -277,7 +277,7 @@ function renderCard(army, list, s) {
     body.append(field(a.label || "With",
       h("select", { onchange: (ev) => {
           s.attachedTo = ev.target.value || undefined;
-          if (s.attachedTo && e.kind === "unit") { s.standard = false; s.musician = false; if (s.boss) s.boss.enabled = false; }
+          if (s.attachedTo && e.kind === "unit" && !a.retinue) { s.standard = false; s.musician = false; if (s.boss) s.boss.enabled = false; }
           change(); } },
         h("option", { value: "" }, a.required ? "— choose a regiment —" : (a.alone || "On its own")),
         parents.map((p) => h("option", { value: p.uid, selected: p.uid === s.attachedTo ? true : null }, p.name || titleOf(army, p)))),
@@ -317,21 +317,39 @@ function renderCard(army, list, s) {
   }
 
   // command (detachments have none)
-  if (e.kind === "unit" && !e.noCommand && !s.parent && !s.attachedTo) {
-    const cmd = [
-      h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.standard, onchange: (ev) => { s.standard = ev.target.checked; change(); } }), "Standard"),
-      h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.musician, onchange: (ev) => { s.musician = ev.target.checked; change(); } }), "Musician"),
-    ];
+  if (e.kind === "unit" && !e.noCommand && !s.parent && (!s.attachedTo || e.attachTo?.retinue)) {
+    const cmd = [];
+    if (!e.noStandard) cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.standard, onchange: (ev) => { s.standard = ev.target.checked; change(); } }), "Standard"));
+    if (!e.noMusician) cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.musician, onchange: (ev) => { s.musician = ev.target.checked; change(); } }), "Musician"));
     if (canHaveBoss(army, e)) {
-      cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.boss?.enabled,
-        onchange: (ev) => { s.boss = s.boss || { options: {} }; s.boss.enabled = ev.target.checked; change(); } }),
-        army.championName || "Boss", h("small", {}, `${fmt(bossCost(army, e, s))} pts, from Characters`)));
+      const from = army.championCategory === "unit" ? "" : ", from Characters";
+      if (e.bossLevels) {
+        // a choice of leader (e.g. Ogre Champion, Chief or War Chief)
+        const cur = s.boss?.enabled ? (s.boss.level || e.bossLevels[0].id) : "";
+        cmd.push(h("span", { class: "opt" }, h("select", { "aria-label": "Leader", onchange: (ev) => {
+            s.boss = s.boss || { options: {} };
+            s.boss.enabled = !!ev.target.value; s.boss.level = ev.target.value || undefined; change(); } },
+          h("option", { value: "" }, "No leader"),
+          e.bossLevels.map((l) => h("option", { value: l.id, selected: l.id === cur ? true : null },
+            `${l.name} (${fmt(bossCost(army, e, { ...s, boss: { ...s.boss, level: l.id } }))} pts${l.minSize ? `, unit of ${l.minSize}+` : ""})`)))));
+      } else {
+        cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.boss?.enabled,
+          onchange: (ev) => { s.boss = s.boss || { options: {} }; s.boss.enabled = ev.target.checked; change(); } }),
+          bossName(army, e, s), h("small", {}, `${fmt(bossCost(army, e, s))} pts${from}`)));
+      }
       for (const o of e.bossOptions || []) {
         if (s.boss?.enabled) cmd.push(h("label", { class: "opt" }, h("input", { type: "checkbox", checked: !!s.boss.options?.[o.id],
-          onchange: (ev) => { s.boss.options = s.boss.options || {}; s.boss.options[o.id] = ev.target.checked; change(); } }), `${army.championName || "Boss"} ${o.name.toLowerCase()}`, h("small", {}, `+${o.cost}`)));
+          onchange: (ev) => { s.boss.options = s.boss.options || {}; s.boss.options[o.id] = ev.target.checked; change(); } }), `${bossName(army, e, s)}: ${o.name.toLowerCase()}`, h("small", {}, `+${o.cost}`)));
       }
     }
-    body.append(field("Command", cmd));
+    if (cmd.length) body.append(field("Command", cmd));
+  }
+
+  // Chaos Warlords: how much their retinue is worth
+  if (isWarlord(army, s) && (army.rules || []).some((r) => r.type === "retinues")) {
+    const ret = retinueValue(army, list, s), own = cost.total;
+    body.append(field("Retinue", h("span", { class: ret >= own ? "" : "warn-text" },
+      `${fmt(ret)} pts in units attached to this Warlord; needs at least ${fmt(own)} pts`)));
   }
 
   // character gear & mounts
@@ -414,7 +432,7 @@ function renderExtras(army, e, s, change) {
   const ctx = itemContext(army, s);
   const isChar = e.kind === "character";
   const canStd = e.kind === "unit" && e.magicStandard;
-  const bossOk = e.kind === "unit" && s.boss?.enabled;
+  const bossOk = e.kind === "unit" && s.boss?.enabled && e.bossItems !== false;
   if (!isChar && !canStd && !bossOk && !s.extras.length) return document.createDocumentFragment();
 
   const typeName = (t) => army.itemTypes?.[t]?.name?.replace(/s$/, "") || (t === "standard" ? "Magic Standard" : "Item");
@@ -425,7 +443,7 @@ function renderExtras(army, e, s, change) {
     if (it) {
       return h("div", { class: "extras-row item" },
         h("b", {}, it.name), h("span", { class: "pts-sm" }, `${fmt(it.points)} pts`),
-        h("small", {}, `${who}${typeName(it.type)}${it.only ? ` · ${it.only}` : ""}${it.uses ? ` · ${it.uses === 1 ? "one use" : `${it.uses} uses`}` : ""} · WM p.${it.page}`),
+        h("small", {}, `${who}${typeName(it.type)}${it.only ? ` · ${it.only}` : ""}${it.uses ? ` · ${it.uses === 1 ? "one use" : `${it.uses} uses`}` : ""} · ${it.book || "WM"} p.${it.page}`),
         remove);
     }
     return h("div", { class: "extras-row" },
@@ -436,8 +454,8 @@ function renderExtras(army, e, s, change) {
   });
 
   // one picker per purpose; "custom" adds a free-text row for anything not in the catalogue
-  const picker = (label, opts, make) => {
-    const groups = pickerGroups(army, "magic", { ...opts, entryId: e.id });
+  const picker = (label, opts, make, pool = "magic") => {
+    const groups = pickerGroups(army, pool, { ...opts, entryId: e.id });
     const sel = h("select", { "aria-label": label },
       h("option", { value: "" }, label),
       groups.map((g) => h("optgroup", { label: g.name },
@@ -454,8 +472,16 @@ function renderExtras(army, e, s, change) {
   if (isChar) {
     const v = variantOf(e, s);
     const allowed = v?.magicItems ?? e.magicItems ?? 0;
-    const used = s.extras.filter((x) => !x.onBoss).length;
-    pickers.push(picker(`+ Magic item (${used}/${allowed})`, ctx.canStandard ? {} : { noStandards: true }, (custom) => (custom ? { kind: "item" } : {})));
+    const poolOf = (x) => extraItem(army, x)?.pool || x.pool || "magic";
+    const used = s.extras.filter((x) => !x.onBoss && poolOf(x) === "magic").length;
+    // other pools (e.g. Daemonic Rewards) get their own picker when the character has an allowance for them
+    const others = (army.magicPools || []).filter((p) => p.id !== "magic" && (ctx.allowance?.[p.allowance] || 0) > 0);
+    if (allowed > 0 || !others.length)
+      pickers.push(picker(`+ Magic item (${used}/${allowed})`, ctx.canStandard ? {} : { noStandards: true }, (custom) => (custom ? { kind: "item" } : {})));
+    for (const p of others) {
+      const n = s.extras.filter((x) => poolOf(x) === p.id).length;
+      pickers.push(picker(`+ ${p.name.replace(/s$/, "")} (${n}/${ctx.allowance[p.allowance]})`, {}, (custom) => (custom ? { kind: "item", pool: p.id } : {}), p.id));
+    }
   }
   if (canStd) pickers.push(picker("+ Magic standard", { standardsOnly: true }, (custom) => (custom ? { kind: "standard", type: "standard" } : {})));
   if (bossOk) pickers.push(picker(`+ ${army.championName || "Boss"} magic item (max 1)`, { noStandards: true }, (custom) => (custom ? { kind: "item", onBoss: true } : { onBoss: true })));
@@ -478,13 +504,17 @@ function refreshSummary() {
   const { total, byCategory } = listTotals(army, list);
   const summary = document.getElementById("summary");
   if (!summary) return;
-  const chips = army.categories.map((c) => {
-    const pts = byCategory[c.id] || 0;
+  // armies with limits over several categories (Chaos warband / allies) show those instead
+  const groups = army.limits
+    ? army.limits.map((g) => ({ name: g.name, min: g.min, max: g.max, pts: g.categories.reduce((n, id) => n + (byCategory[id] || 0), 0) }))
+    : army.categories.map((c) => ({ ...c, pts: byCategory[c.id] || 0 }));
+  const chips = groups.map((c) => {
+    const pts = c.pts;
     const pct = list.points ? (pts / list.points) * 100 : 0;
     const bad = (c.max != null && pct > c.max) || (c.min != null && pct < c.min);
     const ref = c.max ?? 100;
     return h("div", { class: `cat-chip${bad ? " bad" : ""}` },
-      h("b", {}, c.name), ` ${fmt(pts)} · ${pct.toFixed(0)}% `, h("small", {}, c.max != null ? `(max ${c.max}%)` : `(min ${c.min}%)`),
+      h("b", {}, c.name), ` ${fmt(pts)} · ${pct.toFixed(0)}% `, h("small", {}, c.max != null ? `(max ${c.max}%)` : c.min != null ? `(min ${c.min}%)` : ""),
       h("div", { class: "bar" }, h("i", { style: `width:${Math.min(100, (pct / ref) * 100)}%` })));
   });
   summary.replaceChildren(h("div", { class: "totals" },
