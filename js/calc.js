@@ -65,8 +65,15 @@ function unitGear(entry, sel) {
   return gear;
 }
 
+// Leader levels (e.g. Ogre Champion / Chief / War Chief): the chosen level, or the first one
+export function bossLevel(entry, sel) {
+  if (!entry.bossLevels) return null;
+  return entry.bossLevels.find((l) => l.id === sel.boss?.level) || entry.bossLevels[0];
+}
+
 export function bossCost(army, entry, sel) {
-  const boss = army.bossCosts?.[entry.race];
+  const level = bossLevel(entry, sel);
+  const boss = level ? level.cost : entry.bossCost ?? army.bossCosts?.[entry.race];
   let c = boss != null ? boss : 0;
   for (const g of unitGear(entry, sel)) c += gearItem(army, g)?.cost || 0;
   if (entry.bossMount) c += mountItem(army, entry.bossMount)?.cost || 0;
@@ -74,8 +81,23 @@ export function bossCost(army, entry, sel) {
   return c;
 }
 
+export function bossName(army, entry, sel) {
+  return bossLevel(entry, sel)?.name || entry.bossName || army.championName || "Boss";
+}
+
+export function bossProfile(army, entry, sel) {
+  return bossLevel(entry, sel)?.profile || entry.bossProfile || army.bossProfiles?.[entry.race] || null;
+}
+
 export function canHaveBoss(army, entry) {
-  return entry.kind === "unit" && !entry.noCommand && !!entry.race && army.bossCosts?.[entry.race] != null;
+  if (entry.kind !== "unit" || entry.noCommand) return false;
+  if (entry.bossCost != null || entry.bossLevels) return true;
+  return !!entry.race && army.bossCosts?.[entry.race] != null;
+}
+
+// Champions' points: normally Characters; armies such as Chaos keep them with their unit
+function bossCategory(army, cat) {
+  return army.championCategory === "unit" ? cat : "characters";
 }
 
 // ---------- cost of one selection ----------
@@ -144,16 +166,20 @@ export function selectionCost(army, sel) {
       const trooper = entry.trooperCost != null ? entry.trooperCost : perModelCost(entry, sel);
       // Standard bearers and musicians cost double an ordinary trooper (p.82):
       // the model is already counted in the unit size, so add one extra trooper cost.
-      if (sel.standard && !entry.freeStandard) add(cat, trooper, "Standard bearer (double cost)");
-      if (sel.musician && !entry.freeMusician) add(cat, trooper, "Musician (double cost)");
+      // commandCost: the full price of a standard bearer or musician model (Daemons, e.g. 40 for a Bloodletter)
+      const extra = entry.commandCost != null ? entry.commandCost - trooper : trooper;
+      const how = entry.commandCost != null ? `${fmt(entry.commandCost)} pts` : "double cost";
+      if (sel.standard && !entry.freeStandard && !entry.noStandard) add(cat, extra, `Standard bearer (${how})`);
+      if (sel.musician && !entry.freeMusician && !entry.noMusician) add(cat, extra, `Musician (${how})`);
       if (sel.boss?.enabled && canHaveBoss(army, entry)) {
-        add("characters", bossCost(army, entry, sel), army.championName ? army.championName : `${army.races[entry.race]} Boss`);
+        const name = entry.bossLevels || entry.bossName || army.championName ? bossName(army, entry, sel) : `${army.races[entry.race]} Boss`;
+        add(bossCategory(army, cat), bossCost(army, entry, sel), name);
       }
     }
   }
   for (const x of sel.extras || []) {
     // magic items belong with whoever carries them: a Boss's item counts as Characters
-    const xcat = x.onBoss ? "characters" : cat;
+    const xcat = x.onBoss ? bossCategory(army, cat) : cat;
     let pts = extraPoints(army, x);
     if (!x.onBoss && entry.magicStandardFactor != null && extraType(army, x) === "standard") pts *= entry.magicStandardFactor;
     add(xcat, pts, extraName(army, x) || "Item");
@@ -218,7 +244,10 @@ export function computeSave(army, sel) {
   let save = 7; // 7 = no save
   const s = armour.has("shield"), l = armour.has("light"), h = armour.has("heavy");
   const natural = v0?.naturalSave ?? entry.naturalSave;
-  if (natural) {
+  if (armour.has("chaos")) {
+    // Chaos armour: 4+, combines with a shield (3+) and a mount as normal
+    save = s ? 3 : 4;
+  } else if (natural) {
     // Lizardmen: scaly skin gives a base save; light armour and a shield each improve it by 1
     save = natural - (l ? 1 : 0) - (s ? 1 : 0);
   } else if (s && h) save = 4;
@@ -266,6 +295,59 @@ function selectionTags(army, sel) {
   return tags;
 }
 
+// The Chaos god a selection serves: from its variant (Greater Daemons), entry (Daemon units)
+// or a chosen Mark of Chaos option; null = unaligned
+export function selectionGod(army, sel) {
+  const entry = findEntry(army, sel.entryId);
+  if (!entry) return null;
+  const v = variantOf(entry, sel);
+  if (v?.god) return v.god;
+  if (entry.god) return entry.god;
+  for (const o of entry.options || []) if (o.god && sel.options?.[o.id]) return o.god;
+  return null;
+}
+
+// An attachment that makes a model part of another unit (war teams, champions) rather than
+// a Chaos retinue, whose units stay separate regiments
+function isPartOfUnit(army, s) {
+  if (!s.attachedTo) return false;
+  return !findEntry(army, s.entryId)?.attachTo?.retinue;
+}
+
+// Points of a Warlord's retinue: everything attached to him as retinue, and what is attached to those
+export function retinueValue(army, list, warlord) {
+  let total = 0;
+  const seen = new Set([warlord.uid]);
+  const walk = (parent) => {
+    for (const s of list.selections) {
+      if (s.attachedTo !== parent.uid || seen.has(s.uid)) continue;
+      if (!findEntry(army, s.entryId)?.attachTo?.retinue) continue;
+      seen.add(s.uid);
+      total += selectionCost(army, s).total;
+      walk(s);
+    }
+  };
+  walk(warlord);
+  return total;
+}
+
+// The Warlord at the top of a chain of retinue attachments
+function retinueRoot(list, s) {
+  let cur = s;
+  const seen = new Set();
+  while (cur?.attachedTo && !seen.has(cur.uid)) {
+    seen.add(cur.uid);
+    const p = list.selections.find((x) => x.uid === cur.attachedTo);
+    if (!p) return null;
+    cur = p;
+  }
+  return cur;
+}
+
+export function isWarlord(army, s) {
+  return selectionTags(army, s).includes("warlord");
+}
+
 function selectionRace(army, sel) {
   const entry = findEntry(army, sel.entryId);
   if (!entry) return null;
@@ -298,6 +380,15 @@ export function validate(army, list) {
     if (c.min != null && pts < (limit * c.min) / 100)
       warn(`${c.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) is below the ${c.min}% minimum of ${fmt((limit * c.min) / 100)} pts.`);
   }
+  // limits over several categories together (Chaos: the main warband 75%+, allies up to 25%)
+  for (const g of army.limits || []) {
+    const pts = g.categories.reduce((n, id) => n + (byCategory[id] || 0), 0);
+    const pct = limit ? (pts / limit) * 100 : 0;
+    if (g.max != null && pts > (limit * g.max) / 100)
+      warn(`${g.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) exceeds the ${g.max}% maximum of ${fmt((limit * g.max) / 100)} pts.`);
+    if (g.min != null && pts < (limit * g.min) / 100)
+      warn(`${g.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) is below the ${g.min}% minimum of ${fmt((limit * g.min) / 100)} pts.`);
+  }
 
   // per-entry maximums (0-1 choices, special characters)
   const counts = {};
@@ -320,14 +411,14 @@ export function validate(army, list) {
       const entries = Array.isArray(r.entry) ? r.entry : [r.entry];
       const mine = list.selections.filter((s) => entries.includes(s.entryId));
       const have = r.units ? mine.length : mine.reduce((n, s) => n + countOf(army, s, r.model), 0);
-      const units = list.selections.filter((s) => r.per.includes(s.entryId) && !s.attachedTo).length;
+      const units = list.selections.filter((s) => r.per.includes(s.entryId) && !isPartOfUnit(army, s)).length;
       const allowed = Math.max(r.atLeast || 0, units * r.max);
       if (have > allowed) warn(`${r.message} You have ${have}, the maximum is ${allowed}.`);
     }
     if (r.type === "unitsBySize") {
       // e.g. up to five warpfire teams form one unit, 6-10 up to two units, and so on
       for (const id of r.entries) {
-        const units = list.selections.filter((s) => s.entryId === id && !s.attachedTo);
+        const units = list.selections.filter((s) => s.entryId === id && !isPartOfUnit(army, s));
         const models = units.reduce((n, s) => n + countOf(army, s), 0);
         const allowed = Math.max(1, Math.ceil(models / (r.per || 5)));
         if (units.length > allowed) warn(`${findEntry(army, id).name}: ${models} in ${units.length} units, at most ${allowed} unit${allowed > 1 ? "s" : ""}. ${r.message}`);
@@ -344,6 +435,21 @@ export function validate(army, list) {
       if (carriers.length > r.max) warn(`${r.message} (currently ${carriers.length})`);
     }
     if (r.type === "detachments") issues.push(...checkDetachments(army, list, r));
+    if (r.type === "retinues") issues.push(...checkRetinues(army, list, r));
+    if (r.type === "requiresGeneral") {
+      // e.g. a Chaos Battle Standard Bearer only if the General is a Champion of Chaos or Sorcerer
+      const general = list.selections.find((s) => selectionTags(army, s).includes("general"));
+      for (const s of list.selections.filter((x) => r.entries.includes(x.entryId))) {
+        if (general && !r.general.includes(general.entryId)) warn(`${s.name || findEntry(army, s.entryId).name}: ${r.message}`, s.uid);
+      }
+    }
+    if (r.type === "maxUnits") {
+      // e.g. one unit of Harpies, any number if the General is a Beastman Warlord
+      const general = list.selections.find((s) => selectionTags(army, s).includes("general"));
+      const free = general && (r.unlessGeneral || []).includes(general.entryId);
+      const n = list.selections.filter((s) => s.entryId === r.entry).length;
+      if (!free && n > r.max) warn(`${r.message} (currently ${n})`);
+    }
   }
 
   // per-selection checks
@@ -367,9 +473,22 @@ export function validate(army, list) {
       if (!(e.options || []).some((o) => o.group === rg.group && s.options?.[o.id])) warn(`${label}: ${rg.message}`, s.uid);
     }
     if (e.requireStandard && !s.standard) warn(`${label}: ${e.requireStandard}`, s.uid);
+    // options that need another option (a Juggernaut needs the Mark of Khorne, barding needs a Chaos Steed)
+    for (const o of e.options || []) {
+      if (!s.options?.[o.id] || !o.requires) continue;
+      const need = Array.isArray(o.requires) ? o.requires : [o.requires];
+      if (!need.some((id) => s.options?.[id])) {
+        const names = need.map((id) => e.options.find((x) => x.id === id)?.name || id).join(" or ");
+        warn(`${label}: ${o.name} needs ${names}.`, s.uid);
+      }
+    }
     if (e.kind === "unit") {
       const size = unitSize(e, s);
-      if (e.minSize && size < e.minSize && !s.attachedTo) warn(`${label}: ${size} ${e.sizeLabel || "models"}, the minimum is ${e.minSize}.`, s.uid);
+      if (e.minSize && size < e.minSize && !isPartOfUnit(army, s)) warn(`${label}: ${size} ${e.sizeLabel || "models"}, the minimum is ${e.minSize}.`, s.uid);
+      const lvl = s.boss?.enabled ? bossLevel(e, s) : null;
+      if (lvl?.minSize && size < lvl.minSize) warn(`${label}: an ${lvl.name} may only lead a unit of at least ${lvl.minSize} models.`, s.uid);
+      if ((s.standard && e.noStandard) || (s.musician && e.noMusician)) warn(`${label}: this unit may not have a standard bearer or musician.`, s.uid);
+      if (e.bossItems === false && (s.extras || []).some((x) => x.onBoss)) warn(`${label}: its ${bossName(army, e, s)} may not carry magic items.`, s.uid);
       if (e.ratio) {
         const a = s.models?.[e.ratio.model] || 0, b = s.models?.[e.ratio.per] || 0;
         if (a > b * e.ratio.max || (e.ratio.min && a < b * e.ratio.min)) warn(`${label}: ${e.ratio.message}`, s.uid);
@@ -440,6 +559,39 @@ function checkAttached(army, list) {
     t.units += 1; t.models += countOf(army, s);
     per.set(key, t);
   }
+  // Chaos retinues
+  for (const s of list.selections) {
+    const e = findEntry(army, s.entryId);
+    const a = e?.attachTo;
+    const p = a && attachedParent(list, s);
+    if (!p) continue;
+    const label = selLabel(army, s);
+    const pe = findEntry(army, p.entryId);
+    const who = selLabel(army, p);
+    if (a.requiresSibling) {
+      // e.g. chariots need a unit of Chaos Warriors, Knights, Marauders or Marauder Horsemen in the same retinue
+      const ok = list.selections.some((x) => x !== s && x.attachedTo === p.uid && a.requiresSibling.entries.includes(x.entryId));
+      if (!ok) warn(`${label}: ${a.requiresSibling.message}`, s.uid);
+    }
+    if (a.sameGod) {
+      // a Greater Daemon (or Daemon Prince with a Mark) only takes Daemons of his own god
+      const root = retinueRoot(list, s);
+      const mine = selectionGod(army, s), theirs = root && selectionGod(army, root);
+      if (mine && theirs && mine !== theirs) warn(`${label}: Daemons of ${cap(mine)} cannot join the retinue of ${selLabel(army, root)} (${cap(theirs)}).`, s.uid);
+    }
+    if (a.inGeneralRetinue) {
+      const root = retinueRoot(list, s);
+      if (root && !selectionTags(army, root).includes("general")) warn(`${label}: must be part of the General's retinue.`, s.uid);
+    }
+    if (a.leadsUnit && selectionGod(army, s) !== selectionGod(army, p))
+      warn(`${label}: must lead a unit of his own kind (${who} is not).`, s.uid);
+    if (a.leadsUnit && p.boss?.enabled) warn(`${who}: the ${e.name} replaces the unit's normal Champion, so it cannot have both.`, p.uid);
+    if (a.leadsUnit && e.leadsMounted != null) {
+      const mounted = !!findEntry(army, p.entryId)?.mounted;
+      const rides = (e.options || []).some((o) => o.group === "steed" && s.options?.[o.id]);
+      if (mounted !== rides) warn(`${label}: must ride his god's steed if, and only if, his unit does.`, s.uid);
+    }
+  }
   for (const { units, models, e, p, pe } of per.values()) {
     const who = p.name || pe.name;
     if (e.attachTo.maxModels != null && models > e.attachTo.maxModels) warn(`${who}: ${models} ${e.name} with it, the maximum is ${e.attachTo.maxModels}.`, p.uid);
@@ -448,6 +600,34 @@ function checkAttached(army, list) {
       if (models > max) warn(`${who}: ${models} ${e.name} with it, the maximum is ${max} (one per ${e.attachTo.perParentModels} models).`, p.uid);
     }
     if (e.attachTo.maxUnits != null && units > e.attachTo.maxUnits) warn(`${who}: ${units} units of ${e.name} with it, the maximum is ${e.attachTo.maxUnits}.`, p.uid);
+  }
+  return issues;
+}
+
+const cap = (s) => s[0].toUpperCase() + s.slice(1);
+// A name for warnings: custom name, else the character's variant (e.g. "Bloodthirster of Khorne"), else the entry
+export function selLabel(army, s) {
+  const e = findEntry(army, s.entryId);
+  if (s.name) return s.name;
+  return (e?.kind === "character" && variantOf(e, s)?.name) || e?.name || "";
+}
+
+// Chaos: every Warlord needs a retinue worth at least as many points as he is
+function checkRetinues(army, list, r) {
+  const issues = [];
+  let summoned = 0;
+  for (const s of list.selections) {
+    if (!isWarlord(army, s)) continue;
+    const e = findEntry(army, s.entryId);
+    const own = selectionCost(army, s).total;
+    const ret = retinueValue(army, list, s);
+    const label = selLabel(army, s);
+    if (ret === 0 && e.summonable && r.summoned) {
+      summoned++;
+      if (summoned > r.summoned) issues.push({ msg: `${label}: only ${r.summoned} Greater Daemon may be summoned without a retinue.`, uid: s.uid });
+      continue;
+    }
+    if (ret < own) issues.push({ msg: `${label}: retinue is worth ${fmt(ret)} pts; it must be worth at least ${fmt(own)} pts, the Warlord's own value.`, uid: s.uid });
   }
   return issues;
 }
@@ -467,6 +647,7 @@ export function itemContext(army, s) {
     // e.g. Krell and Settra may use items meant for Liches, Vampires or Necromancers
     races: [v?.race || e.race, ...(e.itemRaces || [])].filter(Boolean),
     allowedItems: e.allowedItems || [],
+    god: selectionGod(army, s),
     wizard: !!(v?.wizard ?? e.wizard),
     canStandard: e.kind === "character" && tags.includes("bsb"),
     allowance: { magicItems: v?.magicItems ?? e.magicItems ?? 0, ...(v?.allowances || e.allowances || {}) },
@@ -476,6 +657,7 @@ export function itemContext(army, s) {
 export function isMounted(army, s) {
   const e = findEntry(army, s.entryId);
   if (e?.cavalry) return true;
+  if ((e?.options || []).some((o) => o.cavalry && s.options?.[o.id])) return true;
   const m = describeMount(army, s.mount);
   return !!m && !m.noCavalry;
 }
