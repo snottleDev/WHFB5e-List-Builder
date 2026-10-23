@@ -25,7 +25,9 @@ async function loadArmy(id) {
   if (armies[id]) return armies[id];
   const meta = armyIndex.find((a) => a.id === id);
   const res = await fetch(`data/armies/${meta.file}`, { cache: "no-cache" });
-  const army = await res.json();
+  let army = await res.json();
+  // armies sharing one entry list (Realm of Chaos) point to it with "base"; their own keys win
+  if (army.base) army = { ...(await (await fetch(`data/armies/${army.base}`, { cache: "no-cache" })).json()), ...army };
   const catIds = [...new Set((army.magic?.pools || []).flatMap((p) => p.catalogues || []))];
   const catalogues = await Promise.all(catIds.map((c) => fetch(`data/magic/${c}.json`, { cache: "no-cache" }).then((r) => r.json())));
   armies[id] = attachMagic(army, catalogues);
