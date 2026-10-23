@@ -1,6 +1,6 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
-import { attachMagic, extraItem, pickerGroups } from "./magic.js";
+import { attachMagic, extraItem, pickerGroups, usedType } from "./magic.js";
 import { itemContext, defaultNotes, parentOf, attachedParent, bossName, retinueValue, isWarlord, selLabel } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
@@ -374,7 +374,7 @@ function renderCard(army, list, s) {
   }
 
   // magic items / standards (placeholder until magic item cards are added)
-  body.append(renderExtras(army, e, s, change));
+  body.append(renderExtras(army, e, s, change, list));
 
   // roster details
   const autoSave = computeSave(army, s);
@@ -429,7 +429,7 @@ function mountOptions(army, e, s) {
   return out;
 }
 
-function renderExtras(army, e, s, change) {
+function renderExtras(army, e, s, change, list = null) {
   s.extras = s.extras || [];
   const ctx = itemContext(army, s);
   const isChar = e.kind === "character";
@@ -457,7 +457,9 @@ function renderExtras(army, e, s, change) {
 
   // one picker per purpose; "custom" adds a free-text row for anything not in the catalogue
   const picker = (label, opts, make, pool = "magic") => {
-    const groups = pickerGroups(army, pool, { ...opts, entryId: e.id });
+    // pools that must share one type (Vampire bloodlines) only offer the type the army already uses
+    const onlyType = list ? usedType(army, list, pool) : null;
+    const groups = pickerGroups(army, pool, { ...opts, entryId: e.id, onlyType });
     const sel = h("select", { "aria-label": label },
       h("option", { value: "" }, label),
       groups.map((g) => h("optgroup", { label: g.name },
