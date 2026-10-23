@@ -1,0 +1,1193 @@
+{
+  "id": "chaos-realm",
+  "note": "Shared entries for the three Realm of Chaos armies (chaos-warriors, chaos-beastmen, chaos-daemons). Those files set the categories, limits and rules and point here with \"base\".",
+  "source": "Warhammer Armies: Realm of Chaos (5th edition), army lists pp.96-120 (book page numbers)",
+  "keywordsSource": "Special rule keywords from the Realm of Chaos army lists",
+  "races": {"warrior": "Champion of Chaos", "sorcerer": "Chaos Sorcerer", "beastman": "Beastman Chieftain", "shaman": "Beastman Shaman", "beast-bsb": "Beastman Battle Standard Bearer"},
+  "championName": "Champion",
+  "championCategory": "unit",
+  "equipment": [
+    {"id": "additional-hand-weapon", "name": "Additional hand weapon", "cost": 1, "group": "melee", "races": ["warrior", "sorcerer", "beastman", "shaman"]},
+    {"id": "double-handed-weapon", "name": "Double-handed weapon", "cost": 2, "group": "melee", "races": ["warrior", "sorcerer", "beastman", "shaman"]},
+    {"id": "halberd", "name": "Halberd", "cost": 2, "group": "melee", "races": ["warrior", "sorcerer", "beastman", "shaman"]},
+    {"id": "spear", "name": "Spear", "cost": 1, "group": "melee", "races": ["warrior", "sorcerer", "beastman", "shaman"]},
+    {"id": "flail", "name": "Flail", "cost": 1, "group": "melee", "races": ["warrior", "sorcerer", "beastman", "shaman"]},
+    {"id": "lance", "name": "Lance (mounted only)", "cost": 2, "group": "melee", "mountedOnly": true, "races": ["warrior", "sorcerer"]},
+    {"id": "shield", "name": "Shield", "cost": 1, "armour": "shield", "races": ["warrior", "beastman", "beast-bsb"]},
+    {"id": "light-armour", "name": "Light armour", "cost": 2, "armour": "light", "races": ["warrior", "beastman", "beast-bsb"]},
+    {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "armour": "heavy", "races": ["warrior", "beastman", "beast-bsb"]},
+    {"id": "chaos-armour", "name": "Chaos armour", "cost": 10, "armour": "chaos", "races": ["warrior", "sorcerer"]}
+  ],
+  "mounts": [],
+  "magic": {
+    "tags": ["chaos"],
+    "pools": [
+      {"id": "magic", "name": "Magic items", "catalogues": ["warhammer-magic"], "allowance": "magicItems"},
+      {"id": "rewards", "name": "Daemonic Rewards", "catalogues": ["daemonic-rewards"], "allowance": "rewards"}
+    ],
+    "items": []
+  },
+  "entries": [
+    {
+      "id": "champion",
+      "name": "Champion of Chaos",
+      "kind": "character",
+      "category": "w-warlords",
+      "page": 100,
+      "race": "warrior",
+      "equipmentText": "Sword, axe, club or other hand weapon",
+      "equipmentList": true,
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "champion", "name": "Chaos Champion", "cost": 61, "magicItems": 1, "profile": ["4","7","7","5","4","1","7","3","9"]},
+        {"id": "hero", "name": "Chaos Hero", "cost": 163, "magicItems": 2, "profile": ["4","8","8","5","5","2","8","4","10"]},
+        {"id": "lord", "name": "Chaos Lord", "cost": 255, "magicItems": 3, "profile": ["4","9","9","5","5","3","9","5","10"]}
+      ],
+      "groupLabels": {"mark": "No Mark of Chaos", "steed": "On foot"},
+      "options": [
+        {"id": "mark-khorne", "name": "Mark of Khorne (Frenzy, Chaos armour)", "cost": 45, "group": "mark", "god": "khorne", "armour": "chaos"},
+        {"id": "mark-nurgle", "name": "Mark of Nurgle (+1 Toughness)", "cost": 40, "group": "mark", "god": "nurgle"},
+        {"id": "mark-tzeentch", "name": "Mark of Tzeentch (One re-roll +/-1)", "cost": 10, "group": "mark", "god": "tzeentch"},
+        {"id": "mark-slaanesh", "name": "Mark of Slaanesh (Immune to psychology)", "cost": 35, "group": "mark", "god": "slaanesh"},
+        {"id": "chaos-steed", "name": "Chaos Steed", "cost": 4, "group": "steed", "cavalry": true, "extraProfile": {"name": "Chaos Steed", "profile": ["8","4","0","4","4","1","4","1","5"]}},
+        {"id": "juggernaut", "name": "Juggernaut of Khorne", "cost": 70, "group": "steed", "cavalry": true, "requires": "mark-khorne", "extraProfile": {"name": "Juggernaut", "profile": ["7","3","0","5","5","3","2","2","10"]}},
+        {"id": "steed-of-slaanesh", "name": "Steed of Slaanesh", "cost": 15, "group": "steed", "cavalry": true, "requires": "mark-slaanesh", "extraProfile": {"name": "Steed of Slaanesh", "profile": ["12","3","0","4","5","1","6","1","10"]}},
+        {"id": "disc", "name": "Disc of Tzeentch", "cost": 15, "group": "steed", "cavalry": true, "requires": "mark-tzeentch", "extraProfile": {"name": "Disc of Tzeentch", "profile": ["12","3","0","3","3","1","3","1","10"]}},
+        {"id": "beast-of-nurgle", "name": "Beast of Nurgle", "cost": 75, "group": "steed", "cavalry": true, "requires": "mark-nurgle", "extraProfile": {"name": "Beast of Nurgle", "profile": ["3","3","0","3","5","3","3","D6","6"]}},
+        {"id": "barding", "name": "Barding for the Chaos Steed", "cost": 4, "requires": "chaos-steed", "saveBonus": 1}
+      ],
+      "notes": "May ride a chariot from his own retinue, or a large monster from the Monstrous Host (choose the monster there); neither adds to his own points.",
+      "roles": [
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]},
+        {"id": "general", "name": "as General", "tags": ["warlord", "general"]}
+      ]
+    },
+    {
+      "id": "sorcerer",
+      "name": "Chaos Sorcerer",
+      "kind": "character",
+      "category": "w-warlords",
+      "page": 101,
+      "race": "sorcerer",
+      "wizard": true,
+      "equipmentText": "Sword or other hand weapon",
+      "equipmentList": true,
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "sorcerer", "name": "Sorcerer", "cost": 84, "magicItems": 1, "profile": ["4","6","6","4","5","1","7","2","9"], "rulesText": "Level 1 wizard"},
+        {"id": "champion", "name": "Sorcerer Champion", "cost": 166, "magicItems": 2, "profile": ["4","6","6","5","5","2","7","2","9"], "rulesText": "Level 2 wizard"},
+        {"id": "master", "name": "Master Sorcerer", "cost": 240, "magicItems": 3, "profile": ["4","6","6","5","5","3","8","3","9"], "rulesText": "Level 3 wizard"},
+        {"id": "lord", "name": "Sorcerer Lord", "cost": 356, "magicItems": 4, "profile": ["4","6","6","5","5","4","9","4","10"], "rulesText": "Level 4 wizard"}
+      ],
+      "groupLabels": {"mark": "No Mark (choose Unaligned for free Chaos armour)", "steed": "On foot"},
+      "options": [
+        {"id": "mark-nurgle", "name": "Mark of Nurgle", "cost": 0, "group": "mark", "god": "nurgle"},
+        {"id": "mark-tzeentch", "name": "Mark of Tzeentch", "cost": 0, "group": "mark", "god": "tzeentch"},
+        {"id": "mark-slaanesh", "name": "Mark of Slaanesh", "cost": 0, "group": "mark", "god": "slaanesh"},
+        {"id": "unaligned", "name": "Unaligned (Chaos armour at no cost)", "cost": 0, "group": "mark", "armour": "chaos"},
+        {"id": "chaos-steed", "name": "Chaos Steed", "cost": 4, "group": "steed", "cavalry": true, "extraProfile": {"name": "Chaos Steed", "profile": ["8","4","0","4","4","1","4","1","5"]}},
+        {"id": "steed-of-slaanesh", "name": "Steed of Slaanesh", "cost": 15, "group": "steed", "cavalry": true, "requires": "mark-slaanesh", "extraProfile": {"name": "Steed of Slaanesh", "profile": ["12","3","0","4","5","1","6","1","10"]}},
+        {"id": "disc", "name": "Disc of Tzeentch", "cost": 15, "group": "steed", "cavalry": true, "requires": "mark-tzeentch", "extraProfile": {"name": "Disc of Tzeentch", "profile": ["12","3","0","3","3","1","3","1","10"]}},
+        {"id": "beast-of-nurgle", "name": "Beast of Nurgle", "cost": 75, "group": "steed", "cavalry": true, "requires": "mark-nurgle", "extraProfile": {"name": "Beast of Nurgle", "profile": ["3","3","0","3","5","3","3","D6","6"]}},
+        {"id": "barding", "name": "Barding for the Chaos Steed", "cost": 4, "requires": "chaos-steed", "saveBonus": 1}
+      ],
+      "notes": "The Mark costs nothing for a Sorcerer. One spell per magic level, of his god or Dark Magic. May ride a chariot of his retinue or a large monster.",
+      "roles": [
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]},
+        {"id": "general", "name": "as General", "tags": ["warlord", "general"]}
+      ]
+    },
+    {
+      "id": "battle-standard",
+      "name": "Chaos Battle Standard Bearer",
+      "kind": "character",
+      "category": "w-warlords",
+      "page": 102,
+      "race": "warrior",
+      "max": 1,
+      "tags": ["warlord", "bsb"],
+      "cost": 170,
+      "magicItems": 1,
+      "profile": ["4","8","7","5","4","2","7","4","9"],
+      "equipmentText": "Sword, axe, club or other hand weapon; battle standard",
+      "equipmentList": true,
+      "groupLabels": {"mark": "No Mark of Chaos", "steed": "On foot"},
+      "options": [
+        {"id": "mark-khorne", "name": "Mark of Khorne (Frenzy, Chaos armour)", "cost": 45, "group": "mark", "god": "khorne", "armour": "chaos"},
+        {"id": "mark-nurgle", "name": "Mark of Nurgle (+1 Toughness)", "cost": 40, "group": "mark", "god": "nurgle"},
+        {"id": "mark-tzeentch", "name": "Mark of Tzeentch (One re-roll +/-1)", "cost": 10, "group": "mark", "god": "tzeentch"},
+        {"id": "mark-slaanesh", "name": "Mark of Slaanesh (Immune to psychology)", "cost": 35, "group": "mark", "god": "slaanesh"},
+        {"id": "chaos-steed", "name": "Chaos Steed", "cost": 4, "group": "steed", "cavalry": true, "extraProfile": {"name": "Chaos Steed", "profile": ["8","4","0","4","4","1","4","1","5"]}},
+        {"id": "juggernaut", "name": "Juggernaut of Khorne", "cost": 70, "group": "steed", "cavalry": true, "requires": "mark-khorne", "extraProfile": {"name": "Juggernaut", "profile": ["7","3","0","5","5","3","2","2","10"]}},
+        {"id": "steed-of-slaanesh", "name": "Steed of Slaanesh", "cost": 15, "group": "steed", "cavalry": true, "requires": "mark-slaanesh", "extraProfile": {"name": "Steed of Slaanesh", "profile": ["12","3","0","4","5","1","6","1","10"]}},
+        {"id": "disc", "name": "Disc of Tzeentch", "cost": 15, "group": "steed", "cavalry": true, "requires": "mark-tzeentch", "extraProfile": {"name": "Disc of Tzeentch", "profile": ["12","3","0","3","3","1","3","1","10"]}},
+        {"id": "beast-of-nurgle", "name": "Beast of Nurgle", "cost": 75, "group": "steed", "cavalry": true, "requires": "mark-nurgle", "extraProfile": {"name": "Beast of Nurgle", "profile": ["3","3","0","3","5","3","3","D6","6"]}},
+        {"id": "barding", "name": "Barding for the Chaos Steed", "cost": 4, "requires": "chaos-steed", "saveBonus": 1}
+      ],
+      "notes": "Only if the General is a Champion of Chaos or Chaos Sorcerer; cannot be the General. His Mark, if any, should be that of the General's god. He leads his own retinue like any Warlord."
+    },
+    {
+      "id": "chaos-knights",
+      "name": "Chaos Knights",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 103,
+      "cost": 66,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Knight", "profile": ["4","6","6","4","4","1","6","2","9"]},
+        {"name": "Chaos Steed", "profile": ["8","4","0","4","4","1","4","1","5"]}
+      ],
+      "armour": ["heavy", "shield"],
+      "cavalry": true,
+      "saveBonus": 1,
+      "freeStandard": true,
+      "freeMusician": true,
+      "magicStandard": "any",
+      "equipmentText": "Heavy armour, shield, lance, sword; barded Chaos Steed",
+      "options": [
+        {"id": "chaos-armour", "name": "Chaos armour instead of heavy armour", "cost": 14, "armour": "chaos", "replacesArmour": "heavy"}
+      ],
+      "notes": "Standard bearer and musician cost the same as an ordinary Knight. May carry the magic standard of their Warlord's god.",
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "chaos-warriors",
+      "name": "Chaos Warriors",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 103,
+      "cost": 24,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Warrior", "profile": ["4","6","6","4","4","1","6","2","9"]}
+      ],
+      "armour": ["heavy"],
+      "freeStandard": true,
+      "freeMusician": true,
+      "magicStandard": "any",
+      "equipmentText": "Heavy armour, sword or other hand weapon",
+      "options": [
+        {"id": "chaos-armour", "name": "Chaos armour instead of heavy armour", "cost": 7, "armour": "chaos", "replacesArmour": "heavy"},
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "gear": "double-handed-weapon"},
+        {"id": "halberd", "name": "Halberds", "cost": 2, "group": "weapon", "gear": "halberd"},
+        {"id": "ahw", "name": "Additional hand weapons", "cost": 1, "group": "weapon", "gear": "additional-hand-weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"}
+      ],
+      "notes": "Standard bearer and musician cost the same as an ordinary Warrior.",
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "chaos-hounds",
+      "name": "Chaos Hounds",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 103,
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Hound", "profile": ["6","4","0","4","4","1","4","2","6"]}
+      ],
+      "noStandard": true,
+      "noMusician": true,
+      "equipmentText": "None",
+      "bossCost": 24,
+      "bossName": "Chaos Warrior handler",
+      "bossProfile": ["4", "6", "6", "4", "4", "1", "6", "2", "9"],
+      "bossItems": false,
+      "bossOptions": [
+        {"id": "chaos-armour", "name": "Chaos armour instead of heavy", "cost": 7},
+        {"id": "dhw", "name": "Double-handed weapon", "cost": 2},
+        {"id": "halberd", "name": "Halberd", "cost": 2},
+        {"id": "ahw", "name": "Additional hand weapon", "cost": 1},
+        {"id": "shield", "name": "Shield", "cost": 1}
+      ],
+      "notes": "The handler wears heavy armour and carries a hand weapon; he may take one extra weapon.",
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"},
+      "options": []
+    },
+    {
+      "id": "warrior-chariots",
+      "name": "Chaos Chariots (Chaos Warrior crew)",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 104,
+      "cost": 122,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Chaos Warrior (2)", "profile": ["4","6","6","4","4","1","6","2","9"]},
+        {"name": "Chaos Steed (2)", "profile": ["8","4","0","4","4","1","4","1","5"]},
+        {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]}
+      ],
+      "noCommand": true,
+      "crew": 2,
+      "sizeLabel": "chariots",
+      "single": "Chaos Chariot",
+      "armour": ["heavy"],
+      "magicStandard": "one",
+      "equipmentText": "Crew: heavy armour, swords; barded Chaos Steeds",
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "per": "crew"},
+        {"id": "flail", "name": "Flails", "cost": 1, "group": "weapon", "per": "crew"},
+        {"id": "halberd", "name": "Halberds", "cost": 2, "group": "weapon", "per": "crew"},
+        {"id": "shields", "name": "Crew shields", "cost": 1, "per": "crew", "armour": "shield"},
+        {"id": "chaos-armour", "name": "Crew Chaos armour instead of heavy", "cost": 7, "per": "crew", "armour": "chaos", "replacesArmour": "heavy"},
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"}
+      ],
+      "rulesText": "Chaos Steeds save 6+",
+      "notes": "A Warlord of this retinue may ride a chariot, replacing a crewman; his daemonic steeds, if any, are paid on the Warlord. One chariot in the retinue may carry a magic standard.",
+      "attachTo": {
+        "entries": ["champion", "sorcerer", "battle-standard"],
+        "label": "Retinue of",
+        "required": true,
+        "retinue": true,
+        "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)",
+        "requiresSibling": {"entries": ["chaos-warriors", "chaos-knights", "marauders", "marauder-horsemen"], "message": "a retinue may only include chariots if it has a unit of Chaos Warriors, Chaos Knights, Marauders or Marauder Horsemen (p.104)."}
+      }
+    },
+    {
+      "id": "marauder-chariots",
+      "name": "Chaos Chariots (Marauder crew)",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 104,
+      "cost": 80,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Marauder (2)", "profile": ["4","4","3","4","3","1","4","2","7"]},
+        {"name": "Warhorse (2)", "profile": ["8","3","0","3","3","1","3","1","5"]},
+        {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]}
+      ],
+      "noCommand": true,
+      "crew": 2,
+      "sizeLabel": "chariots",
+      "single": "Chaos Chariot",
+      "magicStandard": "one",
+      "equipmentText": "Crew: swords or other hand weapons; warhorses",
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "per": "crew"},
+        {"id": "flail", "name": "Flails", "cost": 1, "group": "weapon", "per": "crew"},
+        {"id": "halberd", "name": "Halberds", "cost": 2, "group": "weapon", "per": "crew"},
+        {"id": "shields", "name": "Crew shields", "cost": 1, "per": "crew", "armour": "shield"},
+        {"id": "light-armour", "name": "Crew light armour", "cost": 2, "per": "crew", "armour": "light"},
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"}
+      ],
+      "notes": "A Warlord of this retinue may ride a chariot, replacing a crewman. One chariot in the retinue may carry a magic standard.",
+      "attachTo": {
+        "entries": ["champion", "sorcerer", "battle-standard"],
+        "label": "Retinue of",
+        "required": true,
+        "retinue": true,
+        "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)",
+        "requiresSibling": {"entries": ["chaos-warriors", "chaos-knights", "marauders", "marauder-horsemen"], "message": "a retinue may only include chariots if it has a unit of Chaos Warriors, Chaos Knights, Marauders or Marauder Horsemen (p.104)."}
+      }
+    },
+    {
+      "id": "marauders",
+      "name": "Chaos Marauders",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 104,
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Marauder", "profile": ["4","4","3","4","3","1","4","2","7"]}
+      ],
+      "magicStandard": "one",
+      "equipmentText": "Swords, axes or other hand weapons",
+      "bossCost": 21,
+      "bossName": "Chaos Warrior leader",
+      "bossProfile": ["4", "6", "6", "4", "4", "1", "6", "2", "9"],
+      "bossItems": false,
+      "bossOptions": [
+        {"id": "chaos-armour", "name": "Chaos armour", "cost": 10}
+      ],
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "gear": "double-handed-weapon"},
+        {"id": "flail", "name": "Flails", "cost": 1, "group": "weapon", "gear": "flail"},
+        {"id": "ahw", "name": "Additional hand weapons", "cost": 1, "group": "weapon", "gear": "additional-hand-weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "notes": "The leader is equipped like his unit at the same cost. Only one unit of Marauders may carry a magic standard.",
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "marauder-horsemen",
+      "name": "Marauder Horsemen",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 105,
+      "cost": 31,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Marauder Horseman", "profile": ["4","4","3","4","3","1","4","2","7"]},
+        {"name": "Warhorse", "profile": ["8","3","0","3","3","1","3","1","5"]}
+      ],
+      "armour": ["light"],
+      "cavalry": true,
+      "magicStandard": "any",
+      "equipmentText": "Light armour, sword or other hand weapon; warhorse",
+      "bossCost": 50,
+      "bossName": "Chaos Knight leader",
+      "bossProfile": ["4", "6", "6", "4", "4", "1", "6", "2", "9"],
+      "bossItems": false,
+      "bossOptions": [
+        {"id": "chaos-armour", "name": "Chaos armour", "cost": 16}
+      ],
+      "options": [
+        {"id": "flails", "name": "Flails", "cost": 2, "gear": "flail"},
+        {"id": "shields", "name": "Shields", "cost": 2, "gear": "shield", "armour": "shield"}
+      ],
+      "notes": "The Chaos Knight leader costs 50 including his Chaos Steed and light armour; his flail or shield is priced at the equipment list cost.",
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "ogres",
+      "name": "Ogres",
+      "kind": "unit",
+      "category": "w-retinues",
+      "page": 105,
+      "cost": 40,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Ogre", "profile": ["6","3","2","4","5","3","3","2","7"]}
+      ],
+      "equipmentText": "Swords, axes or other hand weapons",
+      "bossLevels": [
+        {"id": "champion", "name": "Ogre Champion", "cost": 110, "minSize": 3, "profile": ["6","4","3","5","5","3","4","3","7"]},
+        {"id": "chief", "name": "Ogre Chief", "cost": 240, "minSize": 7, "profile": ["6","5","4","5","6","4","5","4","8"]},
+        {"id": "war-chief", "name": "Ogre War Chief", "cost": 380, "minSize": 10, "profile": ["6","6","5","5","6","5","6","5","9"]}
+      ],
+      "groupLabels": {"armour": "No armour"},
+      "options": [
+        {"id": "ahw", "name": "Additional hand weapons", "cost": 1, "group": "weapon", "gear": "additional-hand-weapon"},
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "gear": "double-handed-weapon"},
+        {"id": "halberd", "name": "Halberds", "cost": 2, "group": "weapon", "gear": "halberd"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light", "group": "armour"},
+        {"id": "heavy-armour", "name": "Heavy armour", "cost": 3, "gear": "heavy-armour", "armour": "heavy", "group": "armour"}
+      ],
+      "rulesText": "Fear",
+      "notes": "One unit of Ogres per retinue, and only if the retinue has Chaos Warriors, Knights, Marauders or Marauder Horsemen. Units may be smaller than five.",
+      "attachTo": {
+        "entries": ["champion", "sorcerer", "battle-standard"],
+        "label": "Retinue of",
+        "required": true,
+        "retinue": true,
+        "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)",
+        "maxUnits": 1,
+        "requiresSibling": {"entries": ["chaos-warriors", "chaos-knights", "marauders", "marauder-horsemen"], "message": "a retinue may only include Ogres if it has a unit of Chaos Warriors, Chaos Knights, Marauders or Marauder Horsemen (p.105)."}
+      }
+    },
+    {
+      "id": "chieftain",
+      "name": "Beastman Chieftain",
+      "kind": "character",
+      "category": "b-warlords",
+      "page": 106,
+      "race": "beastman",
+      "equipmentText": "Sword, axe, club or other hand weapon",
+      "equipmentList": true,
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "chief", "name": "Beastman Chief", "cost": 130, "magicItems": 2, "profile": ["4","6","5","4","5","3","5","3","8"]},
+        {"id": "beastlord", "name": "Beastlord", "cost": 200, "magicItems": 3, "profile": ["4","7","6","4","5","4","6","4","9"]}
+      ],
+      "notes": "Magic items from Warhammer Magic. May ride a chariot of his retinue.",
+      "roles": [
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]},
+        {"id": "general", "name": "as General", "tags": ["warlord", "general"]}
+      ]
+    },
+    {
+      "id": "shaman",
+      "name": "Beastman Shaman",
+      "kind": "character",
+      "category": "b-warlords",
+      "page": 107,
+      "race": "shaman",
+      "wizard": true,
+      "equipmentText": "Sword, axe, club or other hand weapon; no armour",
+      "equipmentList": true,
+      "variantsLabel": "Level",
+      "variants": [
+        {"id": "shaman", "name": "Beastman Shaman", "cost": 68, "magicItems": 1, "profile": ["4","4","3","3","5","2","4","1","7"], "rulesText": "Level 1 wizard"},
+        {"id": "champion", "name": "Shaman Champion", "cost": 134, "magicItems": 2, "profile": ["4","4","3","4","5","3","4","1","7"], "rulesText": "Level 2 wizard"},
+        {"id": "master", "name": "Master Shaman", "cost": 225, "magicItems": 3, "profile": ["4","4","3","4","5","4","5","2","7"], "rulesText": "Level 3 wizard"},
+        {"id": "lord", "name": "Shaman Lord", "cost": 336, "magicItems": 4, "profile": ["4","4","3","4","5","5","6","3","8"], "rulesText": "Level 4 wizard"}
+      ],
+      "notes": "Spells from any of the Chaos decks, or Dark Magic. May ride a chariot of his retinue.",
+      "roles": [
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]},
+        {"id": "general", "name": "as General", "tags": ["warlord", "general"]}
+      ]
+    },
+    {
+      "id": "beast-bsb",
+      "name": "Beastman Battle Standard Bearer",
+      "kind": "character",
+      "category": "b-warlords",
+      "page": 107,
+      "race": "beast-bsb",
+      "max": 1,
+      "tags": ["warlord", "bsb"],
+      "cost": 125,
+      "magicItems": 1,
+      "profile": ["4","6","4","4","4","2","4","3","7"],
+      "equipmentText": "Sword, axe, club or other hand weapon; battle standard",
+      "equipmentList": true,
+      "notes": "Only if the General is a Beastman Chieftain or Shaman; cannot be the General. May carry a magic standard of one of the Chaos gods. He leads his own retinue like any Warlord."
+    },
+    {
+      "id": "gors",
+      "name": "Beastman Gors",
+      "kind": "unit",
+      "category": "b-retinues",
+      "page": 108,
+      "cost": 10,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Gor", "profile": ["4","4","3","3","4","2","3","1","7"]}
+      ],
+      "magicStandard": "any",
+      "equipmentText": "Swords or other hand weapons",
+      "bossCost": 60,
+      "bossName": "Beastman Champion",
+      "bossProfile": ["4", "5", "4", "4", "4", "2", "4", "2", "7"],
+      "options": [
+        {"id": "halberd", "name": "Halberds", "cost": 2, "group": "weapon", "gear": "halberd"},
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "gear": "double-handed-weapon"},
+        {"id": "ahw", "name": "Additional hand weapons", "cost": 1, "group": "weapon", "gear": "additional-hand-weapon"},
+        {"id": "shields", "name": "Shields", "cost": 1, "gear": "shield", "armour": "shield"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "rulesText": "Infighting",
+      "attachTo": {"entries": ["chieftain", "shaman", "beast-bsb"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "ungors",
+      "name": "Beastman Ungors",
+      "kind": "unit",
+      "category": "b-retinues",
+      "page": 108,
+      "cost": 4.5,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Ungor", "profile": ["4","3","2","3","4","1","3","1","6"]}
+      ],
+      "equipmentText": "Clubs or other crude hand weapons",
+      "bossCost": 60,
+      "bossName": "Beastman Champion",
+      "bossProfile": ["4", "5", "4", "4", "4", "2", "4", "2", "7"],
+      "options": [
+        {"id": "spears", "name": "Spears", "cost": 0.5, "gear": "spear"},
+        {"id": "shields", "name": "Shields", "cost": 0.5, "gear": "shield", "armour": "shield"}
+      ],
+      "rulesText": "Infighting",
+      "notes": "The Champion pays the full equipment cost (spear +1, shield +1). One Ungor unit in the army may skirmish (then it is not affected by infighting).",
+      "attachTo": {"entries": ["chieftain", "shaman", "beast-bsb"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "bestigors",
+      "name": "Bestigors",
+      "kind": "unit",
+      "category": "b-retinues",
+      "page": 109,
+      "max": 1,
+      "cost": 18,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Bestigor", "profile": ["4","5","3","4","4","2","3","1","7"]}
+      ],
+      "armour": ["heavy"],
+      "magicStandard": "any",
+      "equipmentText": "Halberds, heavy armour",
+      "bossCost": 65,
+      "bossName": "Beastman Champion",
+      "bossProfile": ["4", "5", "4", "4", "4", "2", "4", "2", "7"],
+      "options": [
+        {"id": "shields", "name": "Shields (4+ against shooting)", "cost": 1, "gear": "shield", "save": "5+/4+"}
+      ],
+      "rulesText": "Immune to infighting, No panic from Ungors",
+      "notes": "Only one unit of Bestigors in the army. The Champion's 65 points include his halberd and heavy armour.",
+      "attachTo": {"entries": ["chieftain", "shaman", "beast-bsb"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"}
+    },
+    {
+      "id": "beast-chariots",
+      "name": "Beastman Chariots",
+      "kind": "unit",
+      "category": "b-retinues",
+      "page": 109,
+      "cost": 88,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Gor (2)", "profile": ["4","4","3","3","4","2","3","1","7"]},
+        {"name": "Tuskgor (2)", "profile": ["7","3","0","4","4","2","2","1","3"]},
+        {"name": "Chariot", "profile": ["-","-","-","7","7","3","1","-","-"]}
+      ],
+      "noCommand": true,
+      "crew": 2,
+      "sizeLabel": "chariots",
+      "single": "Beastman Chariot",
+      "magicStandard": "one",
+      "equipmentText": "Crew: swords; pulled by two Tuskgors",
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "per": "crew"},
+        {"id": "halberd", "name": "Halberds", "cost": 2, "group": "weapon", "per": "crew"},
+        {"id": "light-armour", "name": "Crew light armour", "cost": 2, "per": "crew", "armour": "light"},
+        {"id": "shields", "name": "Crew shields", "cost": 1, "per": "crew", "armour": "shield"},
+        {"id": "scythes", "name": "Scythed wheels", "cost": 20, "per": "chariot"}
+      ],
+      "rulesText": "Tuskgors save 4+",
+      "notes": "A Warlord of this retinue may ride a chariot, replacing a crewman. One chariot may carry a magic standard.",
+      "attachTo": {
+        "entries": ["chieftain", "shaman", "beast-bsb"],
+        "label": "Retinue of",
+        "required": true,
+        "retinue": true,
+        "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)",
+        "requiresSibling": {"entries": ["gors", "ungors", "bestigors"], "message": "a retinue may only include chariots if it has a unit of Gors, Ungors or Bestigors (p.109)."}
+      }
+    },
+    {
+      "id": "minotaurs",
+      "name": "Minotaurs",
+      "kind": "unit",
+      "category": "b-retinues",
+      "page": 110,
+      "cost": 42,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Minotaur", "profile": ["6","4","3","4","4","3","3","2","9"]}
+      ],
+      "magicStandard": "any",
+      "equipmentText": "Swords, axes, clubs or other hand weapons",
+      "bossLevels": [
+        {"id": "champion", "name": "Minotaur Champion", "cost": 115, "minSize": 3, "profile": ["6","5","4","5","4","3","4","3","9"]},
+        {"id": "hero", "name": "Minotaur Hero", "cost": 250, "minSize": 7, "profile": ["6","6","5","5","5","4","5","4","10"]},
+        {"id": "lord", "name": "Minotaur Lord", "cost": 395, "minSize": 10, "profile": ["6","7","6","5","5","5","6","5","10"]}
+      ],
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "gear": "double-handed-weapon"},
+        {"id": "ahw", "name": "Additional hand weapons", "cost": 1, "group": "weapon", "gear": "additional-hand-weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "rulesText": "Fear, Bloodgreed",
+      "notes": "One unit of Minotaurs per retinue, and only if the retinue has Gors, Ungors or Bestigors. Units may be smaller than five.",
+      "attachTo": {
+        "entries": ["chieftain", "shaman", "beast-bsb"],
+        "label": "Retinue of",
+        "required": true,
+        "retinue": true,
+        "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)",
+        "maxUnits": 1,
+        "requiresSibling": {"entries": ["gors", "ungors", "bestigors"], "message": "a retinue may only include Minotaurs if it has a unit of Gors, Ungors or Bestigors (p.110)."}
+      }
+    },
+    {
+      "id": "beast-hounds",
+      "name": "Chaos Hounds (Beastman)",
+      "kind": "unit",
+      "category": "b-retinues",
+      "page": 110,
+      "cost": 12,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Chaos Hound", "profile": ["6","4","0","4","4","1","4","2","6"]}
+      ],
+      "noStandard": true,
+      "noMusician": true,
+      "equipmentText": "None",
+      "bossCost": 60,
+      "bossName": "Beastman Champion",
+      "bossProfile": ["4", "5", "4", "4", "4", "2", "4", "2", "7"],
+      "bossOptions": [
+        {"id": "ahw", "name": "Additional hand weapon", "cost": 1},
+        {"id": "dhw", "name": "Double-handed weapon", "cost": 2},
+        {"id": "halberd", "name": "Halberd", "cost": 2},
+        {"id": "spear", "name": "Spear", "cost": 1},
+        {"id": "flail", "name": "Flail", "cost": 1},
+        {"id": "shield", "name": "Shield", "cost": 1},
+        {"id": "light-armour", "name": "Light armour", "cost": 2},
+        {"id": "heavy-armour", "name": "Heavy armour", "cost": 3}
+      ],
+      "notes": "The Beastman Champion may take one extra weapon, a shield, and light or heavy armour.",
+      "attachTo": {"entries": ["chieftain", "shaman", "beast-bsb"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"},
+      "options": []
+    },
+    {
+      "id": "greater-daemon",
+      "name": "Greater Daemon",
+      "kind": "character",
+      "category": "d-warlords",
+      "page": 112,
+      "variantsLabel": "Daemon",
+      "variants": [
+        {"id": "bloodthirster", "name": "Bloodthirster of Khorne", "cost": 750, "profile": ["6","10","10","8","7","10","8","10","10"], "god": "khorne"},
+        {"id": "lord-of-change", "name": "Lord of Change (Tzeentch)", "cost": 525, "profile": ["8","9","10","7","7","7","10","6","10"], "god": "tzeentch"},
+        {"id": "great-unclean-one", "name": "Great Unclean One (Nurgle)", "cost": 525, "profile": ["4","7","7","7","8","10","4","7","10"], "god": "nurgle"},
+        {"id": "keeper-of-secrets", "name": "Keeper of Secrets (Slaanesh)", "cost": 525, "profile": ["6","9","10","7","7","8","7","6","10"], "god": "slaanesh"}
+      ],
+      "save": "4+",
+      "magicItems": 0,
+      "allowances": {"rewards": 2},
+      "equipmentText": "None needed (often a sword, axe or other weapon)",
+      "rulesText": "Terror, Daemon",
+      "notes": "Up to two Daemonic Rewards. Only Daemons of his own god may join his retinue. An army led by a Chaos Warrior or Beastman Warlord may summon one Greater Daemon as an ally without a retinue (p.112).",
+      "roles": [
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]},
+        {"id": "general", "name": "as General", "tags": ["warlord", "general"]}
+      ],
+      "summonable": true
+    },
+    {
+      "id": "daemon-prince",
+      "name": "Daemon Prince",
+      "kind": "character",
+      "category": "d-warlords",
+      "page": 112,
+      "cost": 275,
+      "profile": ["6","7","7","6","5","4","8","5","10"],
+      "save": "4+",
+      "magicItems": 0,
+      "allowances": {"rewards": 2},
+      "equipmentText": "Sword or other hand weapon",
+      "groupLabels": {"mark": "Unaligned (no Mark)"},
+      "options": [
+        {"id": "mark-khorne", "name": "Mark of Khorne", "cost": 45, "group": "mark", "god": "khorne"},
+        {"id": "mark-nurgle", "name": "Mark of Nurgle", "cost": 40, "group": "mark", "god": "nurgle"},
+        {"id": "mark-tzeentch", "name": "Mark of Tzeentch", "cost": 10, "group": "mark", "god": "tzeentch"},
+        {"id": "mark-slaanesh", "name": "Mark of Slaanesh", "cost": 35, "group": "mark", "god": "slaanesh"}
+      ],
+      "rulesText": "Terror, Fly, Daemon",
+      "notes": "Up to two Daemonic Rewards. With a Mark, only Daemons of that god may join his retinue; unaligned Princes may take any.",
+      "roles": [
+        {"id": "warlord", "name": "as Warlord", "tags": ["warlord"]},
+        {"id": "general", "name": "as General", "tags": ["warlord", "general"]}
+      ]
+    },
+    {
+      "id": "daemon-bsb",
+      "name": "Daemon Battle Standard Bearer",
+      "kind": "character",
+      "category": "d-retinues",
+      "page": 113,
+      "max": 1,
+      "tags": ["bsb"],
+      "magicItems": 1,
+      "variantsLabel": "Daemon",
+      "variants": [
+        {"id": "bloodletter", "name": "Bloodletter Champion", "cost": 110, "profile": ["4","6","6","5","3","1","7","3","10"], "god": "khorne", "save": "4+", "rulesText": "Hellblade"},
+        {"id": "plaguebearer", "name": "Plaguebearer Champion", "cost": 120, "profile": ["4","6","6","5","3","1","7","3","10"], "god": "nurgle", "save": "4+", "rulesText": "Plague Sword"},
+        {"id": "pink-horror", "name": "Pink Horror Champion", "cost": 125, "profile": ["4","6","6","5","3","1","7","3","10"], "god": "tzeentch"},
+        {"id": "daemonette", "name": "Daemonette Champion", "cost": 125, "profile": ["4","7","6","5","3","1","7","4","10"], "god": "slaanesh", "save": "4+"}
+      ],
+      "groupLabels": {"steed": "On foot"},
+      "leadsMounted": true,
+      "options": [
+        {"id": "juggernaut", "name": "Juggernaut (Bloodletter)", "cost": 70, "group": "steed", "extraProfile": {"name": "Juggernaut", "profile": ["7","3","0","5","5","3","2","2","10"]}},
+        {"id": "beast-of-nurgle", "name": "Beast of Nurgle (Plaguebearer)", "cost": 75, "group": "steed", "extraProfile": {"name": "Beast of Nurgle", "profile": ["3","3","0","3","5","3","3","D6","6"]}},
+        {"id": "steed-of-slaanesh", "name": "Steed of Slaanesh (Daemonette)", "cost": 15, "group": "steed", "extraProfile": {"name": "Steed of Slaanesh", "profile": ["12","3","0","4","5","1","6","1","10"]}}
+      ],
+      "attachTo": {
+        "entries": ["bloodletters", "bloodcrushers", "plaguebearers", "plagueriders", "pink-horrors", "daemonettes", "mounted-daemonettes"],
+        "label": "Leads",
+        "required": true,
+        "retinue": true,
+        "leadsUnit": true,
+        "inGeneralRetinue": true,
+        "requiredMessage": "must lead a unit of Bloodletters, Plaguebearers, Pink Horrors or Daemonettes in the General's retinue"
+      },
+      "rulesText": "Daemon, Fear",
+      "notes": "Replaces the unit's normal leader. Rides his god's steed if his unit does. His magic standard must be the War Banner of his god (Realm of Chaos card: add it as a custom item)."
+    },
+    {
+      "id": "daemon-spawn",
+      "name": "Chaos Spawn",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 113,
+      "cost": 70,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Spawn", "profile": ["2D6","3","0","4","5","3","3","D6","10"]}
+      ],
+      "noCommand": true,
+      "sizeLabel": "Spawn",
+      "single": "Chaos Spawn",
+      "rulesText": "Chaos Spawn",
+      "notes": "Up to five Spawn form a single unit, six to ten one or two units, and so on.",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)"},
+      "options": []
+    },
+    {
+      "id": "bloodletters",
+      "name": "Bloodletters of Khorne",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 114,
+      "god": "khorne",
+      "cost": 20,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Bloodletter", "profile": ["4","5","5","4","3","1","6","2","10"]}
+      ],
+      "save": "4+",
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 40,
+      "bossCost": 60,
+      "bossName": "Bloodletter Champion",
+      "bossProfile": ["4", "6", "6", "5", "3", "1", "7", "3", "10"],
+      "equipmentText": "Hellblades",
+      "rulesText": "Fear, Hellblades (D3 hits), Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "bloodcrushers",
+      "name": "Bloodcrushers of Khorne",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 114,
+      "max": 1,
+      "god": "khorne",
+      "cost": 90,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Bloodletter", "profile": ["4","5","5","4","3","1","6","2","10"]},
+        {"name": "Juggernaut", "profile": ["7","3","0","5","5","3","2","2","10"]}
+      ],
+      "mounted": true,
+      "save": "4+",
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 110,
+      "bossCost": 130,
+      "bossName": "Bloodcrusher Champion",
+      "bossProfile": ["4", "6", "6", "5", "3", "1", "7", "3", "10"],
+      "equipmentText": "Hellblades; Juggernauts",
+      "rulesText": "Fear, Hellblades (D3 hits), Daemon",
+      "notes": "Only one unit of Bloodletters in the army may ride Juggernauts. Bloodletters 20 + Juggernaut 70.",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "flesh-hounds",
+      "name": "Flesh Hounds of Khorne",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 114,
+      "god": "khorne",
+      "cost": 35,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Flesh Hound", "profile": ["10","5","0","5","4","2","6","1","10"]}
+      ],
+      "noCommand": true,
+      "save": "4+",
+      "rulesText": "Fear, Collar of Khorne, Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "nurglings",
+      "name": "Nurglings",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 114,
+      "god": "nurgle",
+      "cost": 30,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Nurgling base", "profile": ["4","3","3","3","3","3","4","3","7"]}
+      ],
+      "noCommand": true,
+      "save": "4+",
+      "sizeLabel": "bases",
+      "single": "Nurgling base",
+      "rulesText": "Fear, Daemon",
+      "notes": "Up to five bases form a single unit, six to ten one or two units, and so on.",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "plaguebearers",
+      "name": "Plaguebearers of Nurgle",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 115,
+      "god": "nurgle",
+      "cost": 30,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Plaguebearer", "profile": ["4","5","5","4","3","1","6","2","10"]}
+      ],
+      "save": "4+",
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 60,
+      "bossCost": 70,
+      "bossName": "Plaguebearer Champion",
+      "bossProfile": ["4", "6", "6", "5", "3", "1", "7", "3", "10"],
+      "equipmentText": "Plagueswords",
+      "rulesText": "Fear, Plagueswords, Unit magic level by size, Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "plagueriders",
+      "name": "Plagueriders of Nurgle",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 115,
+      "max": 1,
+      "god": "nurgle",
+      "cost": 105,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Plaguebearer", "profile": ["4","5","5","4","3","1","6","2","10"]},
+        {"name": "Beast of Nurgle", "profile": ["3","3","0","3","5","3","3","D6","6"]}
+      ],
+      "mounted": true,
+      "save": "4+",
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 135,
+      "bossCost": 145,
+      "bossName": "Plaguerider Champion",
+      "bossProfile": ["4", "6", "6", "5", "3", "1", "7", "3", "10"],
+      "equipmentText": "Plagueswords; Beasts of Nurgle",
+      "rulesText": "Fear, Plagueswords, Unit magic level by size, Daemon",
+      "notes": "Only one unit of Plaguebearers in the army may ride Beasts of Nurgle. Plaguebearer 30 + Beast 75.",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "beasts-of-nurgle",
+      "name": "Beasts of Nurgle",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 115,
+      "god": "nurgle",
+      "cost": 75,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Beast of Nurgle", "profile": ["3","3","0","3","5","3","3","D6","6"]}
+      ],
+      "noCommand": true,
+      "save": "4+",
+      "single": "Beast of Nurgle",
+      "rulesText": "Fear, Slime trail, Daemon",
+      "notes": "Up to five Beasts form a single unit, six to ten one or two units, and so on.",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "pink-horrors",
+      "name": "Pink Horrors of Tzeentch",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 116,
+      "god": "tzeentch",
+      "cost": 35,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Pink Horror", "profile": ["4","5","5","4","3","1","6","2","10"]},
+        {"name": "Blue Horror", "profile": ["4","3","3","3","3","1","7","1","10"]}
+      ],
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 70,
+      "bossCost": 75,
+      "bossName": "Pink Horror Champion",
+      "bossProfile": ["4", "6", "6", "5", "3", "1", "7", "3", "10"],
+      "equipmentText": "None",
+      "rulesText": "Fear, Split, Unit magic level by size, Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "flamers",
+      "name": "Flamers of Tzeentch",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 116,
+      "god": "tzeentch",
+      "cost": 50,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Flamer", "profile": ["9","3","5","5","4","2","4","2","10"]}
+      ],
+      "noCommand": true,
+      "save": "4+",
+      "rulesText": "Fear, Shoot flames, Bound, Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "daemonettes",
+      "name": "Daemonettes of Slaanesh",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 117,
+      "god": "slaanesh",
+      "cost": 35,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Daemonette", "profile": ["4","6","5","4","3","1","6","3","10"]}
+      ],
+      "save": "4+",
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 70,
+      "bossCost": 75,
+      "bossName": "Daemonette Champion",
+      "bossProfile": ["4", "7", "6", "5", "3", "1", "7", "4", "10"],
+      "equipmentText": "None",
+      "rulesText": "Fear, Unit magic level by size, Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "mounted-daemonettes",
+      "name": "Daemonettes on Steeds of Slaanesh",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 117,
+      "max": 1,
+      "god": "slaanesh",
+      "cost": 60,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Daemonette", "profile": ["4","6","5","4","3","1","6","3","10"]},
+        {"name": "Steed of Slaanesh", "profile": ["12","3","0","4","5","1","6","1","10"]}
+      ],
+      "mounted": true,
+      "save": "4+",
+      "magicStandard": "any",
+      "bossItems": false,
+      "commandCost": 95,
+      "bossCost": 100,
+      "bossName": "Daemonette Champion",
+      "bossProfile": ["4", "7", "6", "5", "3", "1", "7", "4", "10"],
+      "equipmentText": "None; Steeds of Slaanesh",
+      "rulesText": "Fear, Unit magic level by size, Daemon",
+      "notes": "Only one unit of Daemonettes in the army may be mounted. Daemonette 35 + Steed 25.",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "fiends",
+      "name": "Fiends of Slaanesh",
+      "kind": "unit",
+      "category": "d-retinues",
+      "page": 117,
+      "god": "slaanesh",
+      "cost": 30,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Fiend", "profile": ["6","3","0","3","3","1","3","3","8"]}
+      ],
+      "noCommand": true,
+      "save": "4+",
+      "rulesText": "Fear, Scorpion tail, Soporific musk, Daemon",
+      "attachTo": {"entries": ["greater-daemon", "daemon-prince"], "label": "Retinue of", "required": true, "retinue": true, "requiredMessage": "must be part of a Warlord's retinue (choose a Warlord)", "sameGod": true},
+      "options": []
+    },
+    {
+      "id": "harpies",
+      "name": "Harpies",
+      "kind": "unit",
+      "category": "host",
+      "page": 118,
+      "cost": 15,
+      "minSize": 5,
+      "profiles": [
+        {"name": "Harpy", "profile": ["4","4","0","4","4","2","2","1","6"]}
+      ],
+      "noCommand": true,
+      "rulesText": "Fly",
+      "notes": "Any number of units if the General is a Beastman Warlord, otherwise one. Never led by characters.",
+      "options": []
+    },
+    {
+      "id": "chaos-trolls",
+      "name": "Chaos Trolls",
+      "kind": "unit",
+      "category": "host",
+      "page": 118,
+      "cost": 65,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Chaos Troll", "profile": ["6","3","1","5","4","3","1","4","7"]}
+      ],
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2}
+      ],
+      "rulesText": "Fear, Stupidity, Regenerate, Vomit",
+      "notes": "1-5 Trolls form a single unit, 6-10 one or two units, and so on. No champions."
+    },
+    {
+      "id": "swarms",
+      "name": "Swarm",
+      "kind": "monster",
+      "category": "host",
+      "page": 119,
+      "cost": 100,
+      "notMount": true,
+      "variantsLabel": "Type",
+      "sizeLabel": "bases",
+      "variants": [
+        {"id": "rats", "name": "Rats", "profile": ["6","3","0","3","2","5","1","5","10"]},
+        {"id": "frogs", "name": "Frogs", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "lizards", "name": "Lizards", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "bats", "name": "Bats", "profile": ["8","3","0","3","2","5","1","5","10"]},
+        {"id": "serpents", "name": "Serpents", "profile": ["3","3","0","4","2","5","1","5","10"]},
+        {"id": "insects", "name": "Insects/Spiders", "profile": ["4","3","0","3","2","5","1","5","10"]},
+        {"id": "scorpions", "name": "Scorpions", "profile": ["4","3","0","4","2","5","1","5","10"]}
+      ],
+      "notes": "All bases of the same type form a single unit."
+    },
+    {
+      "id": "dragon-ogres",
+      "name": "Dragon Ogres",
+      "kind": "unit",
+      "category": "host",
+      "page": 119,
+      "cost": 87,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Dragon Ogre", "profile": ["6","4","2","5","5","4","2","3","7"]}
+      ],
+      "naturalSave": 5,
+      "magicStandard": "any",
+      "equipmentText": "Swords, axes, clubs or other hand weapons",
+      "bossLevels": [
+        {"id": "champion", "name": "Dragon Ogre Champion", "cost": 155, "minSize": 3, "profile": ["6","5","3","6","5","4","3","4","7"]},
+        {"id": "hero", "name": "Dragon Ogre Hero", "cost": 330, "minSize": 5, "profile": ["6","6","4","6","6","5","4","5","8"]},
+        {"id": "lord", "name": "Dragon Ogre Lord", "cost": 521, "minSize": 7, "profile": ["6","7","5","6","6","6","5","6","9"]}
+      ],
+      "options": [
+        {"id": "dhw", "name": "Double-handed weapons", "cost": 2, "group": "weapon", "gear": "double-handed-weapon"},
+        {"id": "ahw", "name": "Additional hand weapons", "cost": 1, "group": "weapon", "gear": "additional-hand-weapon"},
+        {"id": "light-armour", "name": "Light armour", "cost": 2, "gear": "light-armour", "armour": "light"}
+      ],
+      "rulesText": "Scaly skin 5+",
+      "notes": "1-5 Dragon Ogres form a single unit, 6-10 one or two units, and so on."
+    },
+    {
+      "id": "spawn",
+      "name": "Chaos Spawn",
+      "kind": "unit",
+      "category": "host",
+      "page": 120,
+      "cost": 70,
+      "minSize": 1,
+      "profiles": [
+        {"name": "Spawn", "profile": ["2D6","3","0","4","5","3","3","D6","10"]}
+      ],
+      "noCommand": true,
+      "sizeLabel": "Spawn",
+      "single": "Chaos Spawn",
+      "rulesText": "Chaos Spawn",
+      "notes": "Allies for a Chaos Warrior or Beastman warband (a Daemon warband takes Spawn in its retinues). Up to five Spawn form a single unit, and so on.",
+      "options": []
+    },
+    {
+      "id": "chaos-dragon",
+      "name": "Chaos Dragon",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 625,
+      "profile": ["6","6","0","7","7","7","6","8","8"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "chimera",
+      "name": "Chimera",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 250,
+      "profile": ["6","4","0","7","6","6","4","6","8"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "cockatrice",
+      "name": "Cockatrice",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 150,
+      "profile": ["4","3","0","4","4","2","4","3","6"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "variantsLabel": "Type",
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"},
+      "variants": [
+        {"id": "dragon", "name": "Dragon", "cost": 450, "profile": ["6","6","0","6","6","7","8","7","7"]},
+        {"id": "great", "name": "Great Dragon", "cost": 600, "profile": ["6","7","0","7","7","8","7","8","8"]},
+        {"id": "emperor", "name": "Emperor Dragon", "cost": 750, "profile": ["6","8","0","8","8","9","6","9","9"]}
+      ]
+    },
+    {
+      "id": "griffon",
+      "name": "Griffon",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 150,
+      "profile": ["6","5","0","6","5","5","7","4","8"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "hippogriff",
+      "name": "Hippogriff",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 145,
+      "profile": ["8","5","0","6","5","5","6","3","8"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "hydra",
+      "name": "Hydra",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 225,
+      "profile": ["6","3","0","5","6","7","3","5","6"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "manticore",
+      "name": "Manticore",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 200,
+      "profile": ["6","6","0","7","7","5","4","4","8"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    },
+    {
+      "id": "wyvern",
+      "name": "Wyvern",
+      "kind": "monster",
+      "category": "host",
+      "page": 120,
+      "cost": 180,
+      "profile": ["6","5","0","6","6","4","4","3","5"],
+      "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
+    }
+  ]
+}
