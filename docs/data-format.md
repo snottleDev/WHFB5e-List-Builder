@@ -105,6 +105,16 @@ An army file opts in with:
 }
 ```
 
+**Extra pools** (Daemonic Rewards, Vampire Powers) are listed under `pools` with their own catalogue and allowance key
+(`allowances: {powers: 3}` on the character or variant). A pool may also set `min` (every character with an allowance must
+take at least this many, e.g. one Vampire Power each) and `oneType` (all of the pool's items in the army must share one
+`type`, e.g. one bloodline; the value names an entry field, here `"bloodline"`, through which special characters bring
+their own type), with `oneTypeMessage`. The catalogue's `types` then act as the groups shown in the picker, and once the
+army uses one type the picker only offers that one. Pool items may set `variants: [ids]` (only these character variants,
+e.g. Lords-only powers), `onFoot` (warned about if the model is mounted) and `ward` (counts against one Ward per model).
+`itemNeeds: [{item, needs: [ids], message}]` under `magic` warns when a model carries `item` without one of `needs`
+(the Carstein Ring needs the Pure Blood power). The same item twice on one model is always warned about.
+
 `excludeItems: [ids]` blocks catalogue items the army may not use (Chaos Dwarfs and god-specific Chaos items).
 `items` holds army-book items missing from the shared catalogue; `entries: [...]` restricts an item to particular
 special characters (e.g. Fearfrost). Characters get their allowance from
@@ -112,8 +122,6 @@ special characters (e.g. Fearfrost). Characters get their allowance from
 items (e.g. Gorbad's Morgor the Mangler) that the player can still remove.
 
 **Planned extensions** (not built yet):
-- *Chaos gifts*: a second pool, e.g. `{ "id": "gifts", "catalogues": ["chaos-gifts"], "allowance": "gifts" }`,
-  with `"gifts": n` on the character variants. Gifts are then counted separately from magic items.
 - *Dwarf runes*: a `runes` pool replacing `magic`, with rune-specific checks (runes per item, master runes once per
   army, etc.) added as new rule types in `js/magic.js`.
 
@@ -132,7 +140,12 @@ items (e.g. Gorbad's Morgor the Mangler) that the player can still remove.
 { "type": "requiresGeneral", "entries": ["battle-standard"], "general": ["champion", "sorcerer"], "message": "…" }
 { "type": "maxUnits", "entry": "harpies", "max": 1, "unlessGeneral": ["chieftain", "shaman"], "message": "…" }
 { "type": "generalFrom", "categories": ["w-warlords"], "message": "…" }
+{ "type": "perPoints", "entry": "banshees", "per": 1000, "max"?: 1, "message": "…" }
 ```
+
+`perPoints`: at most `max` (default 1) models of the entry for every full `per` points of the army's points limit.
+In `perUnits`, a `per` id may name one variant as `"entry:variant"` (e.g. `"battle-standard:thrall"` counts only a
+Vampire Thrall standard bearer when allowing half-cost Bat Swarms per Vampire).
 
 `perUnits` counts characters as one each and, with `model`, only that model type (half-price Rat Swarm bases);
 `units: true` counts units instead of models, `atLeast` is a guaranteed minimum (two Repeater Bolt Throwers),

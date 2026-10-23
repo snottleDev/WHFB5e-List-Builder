@@ -15,6 +15,8 @@ An army list builder for **Warhammer Fantasy Battle, 5th edition**, in the spiri
 Armies so far: **Orcs & Goblins**, **The Empire** (detachments, Champions, Elector Counts, the Runefang limit),
 **Skaven** (war teams and Assassins with their regiments, Clan Moulder packs, half-price Rat Swarms, Ikit Claw's
 war machine minimum), **The Undead** (Undead Champions leading regiments, character chariots, Carrion and Wraith units),
+**Vampire Counts** (Vampire Powers by bloodline as a separate allowance next to magic items, one bloodline per army,
+Banshees per 1,000 points, half-cost Bat Swarms per Vampire),
 **High Elves**, **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
 virtues, free Knight command models, Commoners allowance), **Chaos Dwarfs** and **Chaos** from *Realm of Chaos*
 (Chaos Warrior, Beastman or Daemon warband, with the other warbands and the Monstrous Host as allies; each Warlord's
@@ -43,7 +45,7 @@ js/fontmetrics.js        glyph widths for those fonts
 js/magic.js              magic item catalogues, pickers and checks
 data/armies/index.json   list of available armies
 data/armies/*.json       one file per army book (chaos-realm.json is shared by the three Chaos warbands)
-data/magic/*.json        magic item catalogues and Daemonic Rewards (names, points, restrictions)
+data/magic/*.json        magic item catalogues, Daemonic Rewards and Vampire Powers (names, points, restrictions)
 docs/data-format.md      how an army file is structured
 tests/calc.test.mjs      `node tests/calc.test.mjs`
 ```

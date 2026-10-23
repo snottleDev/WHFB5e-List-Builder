@@ -510,4 +510,83 @@ t("Chaos Daemons: daemon command prices, mounted units, rewards and gods", () =>
   assert.doesNotMatch(m, /Master of Sorcery/);
   assert.match(m, /Radiance of Dark Glory is taken 2 times/);
 });
+// ---------- Vampire Counts ----------
+const vc = attachMagic(load("../data/armies/vampire-counts.json"), [load("../data/magic/warhammer-magic.json"), load("../data/magic/vampire-powers.json")]);
+const vcmsg = (list) => validate(vc, list).map((i) => i.msg).join("\n");
+t("Vampire Counts: Lord on barded Nightmare with HA, shield, lance = 362, save 2+; powers add their points", () => {
+  const lord = { entryId: "general", variant: "vampire-lord", mount: "mount:nightmare", gear: ["heavy-armour", "shield", "lance", "barding"] };
+  assert.equal(selectionCost(vc, lord).total, 362);
+  assert.equal(computeSave(vc, lord), "2+");
+  assert.equal(selectionCost(vc, { ...lord, extras: [{ itemId: "carstein-pure-blood" }, { itemId: "carstein-call-winds" }] }).total, 362 + 5 + 60);
+  assert.equal(vc.magicPools.find((p) => p.id === "powers").items.length, 36);
+});
+t("Vampire Counts: power counts, Lords-only and on-foot powers, one bloodline, Carstein Ring needs Pure Blood", () => {
+  const list = { points: 3000, selections: [
+    { uid: "g", entryId: "general", variant: "vampire-lord", mount: "mount:nightmare", extras: [{ itemId: "carstein-bat-form" }, { itemId: "carstein-transfix" }, { itemId: "carstein-summon-bats" }, { itemId: "carstein-wolf-form" }] },
+    { uid: "t1", entryId: "vampires", variant: "thrall", extras: [{ itemId: "carstein-summon-bats" }] },
+    { uid: "t2", entryId: "vampires", variant: "thrall", extras: [] },
+    { uid: "c", entryId: "vampires", variant: "count", extras: [{ itemId: "necrarch-dark-acolyte" }, { itemId: "the-carstein-ring" }] },
+    { uid: "b", entryId: "battle-standard", variant: "wight-lord", extras: [] },
+    { uid: "n", entryId: "necromancers", variant: "lord", extras: [] },
+    { uid: "s", entryId: "skeleton-warriors", size: 20 } ] };
+  const m = vcmsg(list);
+  assert.match(m, /Vampire Lord: 4 vampire powers, the maximum is 3/);
+  assert.match(m, /Vampire Lord: Bat Form can only be used by a model on foot/);
+  assert.match(m, /Vampire Thrall: Summon Bats is Vampire Lords only/);
+  assert.match(m, /Vampire Thrall: must have at least 1 vampire power \(has 0\)/);
+  assert.match(m, /same bloodline .*Von Carstein \(Vampire Lord\), Necrarch \(Vampire Count\)/);
+  assert.match(m, /Vampire Count: only a Vampire with the Pure Blood power may carry the Carstein Ring/);
+  assert.doesNotMatch(m, /Wight Lord: must have|Necromancer Lord: must have/);
+  assert.doesNotMatch(m, /Vampire Lord: Summon Bats/);
+});
+t("Vampire Counts: special characters bring their bloodline; Krell needs Kemmler, Isabella needs Vlad", () => {
+  const m = vcmsg({ points: 3000, selections: [
+    { uid: "v", entryId: "vlad" }, { uid: "c", entryId: "vampires", variant: "count", extras: [{ itemId: "lahmia-transfix" }] },
+    { uid: "k", entryId: "krell" }, { uid: "s", entryId: "skeleton-warriors", size: 30 } ] });
+  assert.match(m, /same bloodline .*Von Carstein \(Vlad von Carstein\), Lahmia \(Vampire Count\)/);
+  assert.match(m, /Krell may only be included if the army is led by Heinrich Kemmler/);
+  assert.doesNotMatch(m, /exactly|led by one General/);
+  assert.match(vcmsg({ points: 2000, selections: [{ uid: "i", entryId: "isabella" }, { uid: "g", entryId: "general", variant: "vampire-count", extras: [{ itemId: "carstein-transfix" }] }] }), /Isabella may only be included/);
+  assert.equal(computeSave(vc, { entryId: "walach" }), "2+");
+});
+t("Vampire Counts: Wight Cavalry 480 at 2+, Grave Guard 273 at 4+, Dire Wolves with a Doom Wolf", () => {
+  const wc = { entryId: "wight-cavalry", size: 10, standard: true, musician: true, options: { lances: true, "heavy-armour": true, shields: true, barding: true } };
+  assert.equal(selectionCost(vc, wc).total, 480);
+  assert.equal(computeSave(vc, wc), "2+");
+  assert.equal(computeSave(vc, { entryId: "wight-cavalry", size: 5 }), "5+");
+  const gg = { entryId: "grave-guard", size: 20, standard: true, options: { "heavy-armour": true } };
+  assert.equal(selectionCost(vc, gg).total, 273);
+  assert.equal(computeSave(vc, gg), "4+");
+  const dw = selectionCost(vc, { entryId: "dire-wolves", size: 10, boss: { enabled: true } });
+  assert.equal(dw.total, 9 * 10 + 25);
+  assert.equal(dw.byCategory.characters, 25);
+});
+t("Vampire Counts: Banshees per 1,000 points, Bat Swarms per Vampire, Bat units per regiment, champions and the Black Coach", () => {
+  const list = { points: 2000, selections: [
+    { uid: "g", entryId: "general", variant: "vampire-count", extras: [{ itemId: "lahmia-swiftness" }] },
+    { uid: "b", entryId: "battle-standard", variant: "thrall", extras: [{ itemId: "lahmia-quickblood" }] },
+    { uid: "w", entryId: "battle-standard", variant: "wight-lord" },
+    { uid: "s", entryId: "skeleton-warriors", size: 20 },
+    { uid: "h", entryId: "banshees", size: 3 },
+    { uid: "x", entryId: "bat-swarms", models: { half: 3, full: 1 } },
+    { uid: "v1", entryId: "vampire-bats", size: 2 }, { uid: "v2", entryId: "vampire-bats", size: 2 }, { uid: "v3", entryId: "vampire-bats", size: 2 },
+    { uid: "c", entryId: "undead-champion", variant: "wraith", attachedTo: "gh" }, { uid: "gh", entryId: "ghouls", size: 10 },
+    { uid: "k", entryId: "black-coach", size: 1, extras: [{ itemId: "banner-of-doom" }] } ] };
+  const m = vcmsg(list);
+  assert.match(m, /One Banshee for every full 1,000 points.*You have 3, the maximum is 2/);
+  assert.match(m, /Half-cost Bat Swarms.*You have 3, the maximum is 2/);
+  assert.match(m, /No more units of Vampire Bats.*You have 3, the maximum is 2/);
+  assert.match(m, /Vampire Bats: 6 in 3 units, at most 2 units/);
+  assert.match(m, /Undead Champion: cannot go with Ghouls/);
+  assert.doesNotMatch(m, /Black Coach: a Magic Standard needs/);
+  const q = vcmsg({ points: 2000, selections: [{ uid: "g", entryId: "general", variant: "vampire-count", extras: [{ itemId: "lahmia-quickblood" }, { itemId: "dawnstone" }] }] });
+  assert.match(q, /Vampire Count: a model may never have more than one Ward/);
+  assert.match(m, /Only one Battle Standard Bearer/);
+  assert.equal(selectionCost(vc, list.selections[5]).total, 250);
+});
+t("Vampire Counts: a General on a Zombie Dragon counts the dragon as Characters", () => {
+  const t2 = listTotals(vc, { points: 2000, selections: [{ uid: "g", entryId: "general", variant: "vampire-lord", mount: "monster:zombie-dragon" }] });
+  assert.equal(t2.byCategory.characters, 850);
+  assert.equal(t2.byCategory.monsters || 0, 0);
+});
 console.log(`${n} tests passed`);
