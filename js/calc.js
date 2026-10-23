@@ -443,6 +443,11 @@ export function validate(army, list) {
         if (general && !r.general.includes(general.entryId)) warn(`${s.name || findEntry(army, s.entryId).name}: ${r.message}`, s.uid);
       }
     }
+    if (r.type === "generalFrom") {
+      // Chaos: the General must be one of the main warband's Warlords, not an ally
+      for (const s of list.selections.filter((x) => selectionTags(army, x).includes("general")))
+        if (!r.categories.includes(findEntry(army, s.entryId)?.category)) warn(`${selLabel(army, s)}: ${r.message}`, s.uid);
+    }
     if (r.type === "maxUnits") {
       // e.g. one unit of Harpies, any number if the General is a Beastman Warlord
       const general = list.selections.find((s) => selectionTags(army, s).includes("general"));
