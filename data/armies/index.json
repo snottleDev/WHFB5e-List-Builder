@@ -6,5 +6,8 @@
   {"id": "high-elves", "name": "High Elves", "file": "high-elves.json"},
   {"id": "lizardmen", "name": "Lizardmen", "file": "lizardmen.json"},
   {"id": "bretonnia", "name": "Bretonnia", "file": "bretonnia.json"},
-  {"id": "chaos-dwarfs", "name": "Chaos Dwarfs", "file": "chaos-dwarfs.json"}
+  {"id": "chaos-dwarfs", "name": "Chaos Dwarfs", "file": "chaos-dwarfs.json"},
+  {"id": "chaos-warriors", "name": "Chaos: Chaos Warrior warband", "file": "chaos-warriors.json"},
+  {"id": "chaos-beastmen", "name": "Chaos: Beastman warband", "file": "chaos-beastmen.json"},
+  {"id": "chaos-daemons", "name": "Chaos: Daemon warband", "file": "chaos-daemons.json"}
 ]

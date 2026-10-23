@@ -1186,7 +1186,7 @@
       "category": "host",
       "page": 120,
       "cost": 180,
-      "profile": ["6","5","0","6","6","4","4","3","5"],
+      "profile": ["6","5","0","5","6","4","4","3","5"],
       "attachTo": {"entries": ["champion", "sorcerer", "battle-standard"], "label": "Ridden by", "alone": "Not ridden", "maxUnits": 1, "hint": "Only Chaos Warriors' Warlords (Champions, Sorcerers, the Battle Standard Bearer) may ride a large monster"}
     }
   ]

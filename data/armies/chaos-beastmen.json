@@ -1,0 +1,49 @@
+{
+  "id": "chaos-beastmen",
+  "name": "Chaos: Beastman warband",
+  "base": "chaos-realm.json",
+  "categories": [
+    {"id": "b-warlords", "name": "Beastman Warlords"},
+    {"id": "b-retinues", "name": "Beastman retinues"},
+    {"id": "w-warlords", "name": "Allies: Chaos Warrior Warlords"},
+    {"id": "w-retinues", "name": "Allies: Warrior retinues"},
+    {"id": "d-warlords", "name": "Allies: Daemon Warlords"},
+    {"id": "d-retinues", "name": "Allies: Daemon retinues"},
+    {"id": "host", "name": "Allies: Monstrous Host"}
+  ],
+  "limits": [
+    {"name": "Beastman warband", "categories": ["b-warlords", "b-retinues"], "min": 75},
+    {"name": "Allies", "categories": ["w-warlords", "w-retinues", "d-warlords", "d-retinues", "host"], "max": 25}
+  ],
+  "rules": [
+    {"type": "exactlyTag", "tag": "general", "count": 1, "message": "The army must have exactly one General (p.96)."},
+    {"type": "generalFrom", "categories": ["b-warlords"], "message": "the General must be one of the army's own Warlords, not an ally (p.96)."},
+    {"type": "maxTag", "tag": "bsb", "count": 1, "message": "Only one Battle Standard Bearer is allowed."},
+    {"type": "retinues", "summoned": 1, "message": "Each Warlord's retinue must be worth at least as many points as the Warlord (p.96)."},
+    {
+      "type": "requiresGeneral",
+      "entries": ["battle-standard"],
+      "general": ["champion", "sorcerer"],
+      "message": "a Chaos Battle Standard Bearer may only be included if the General is a Champion of Chaos or Chaos Sorcerer (p.102)."
+    },
+    {
+      "type": "requiresGeneral",
+      "entries": ["beast-bsb"],
+      "general": ["chieftain", "shaman"],
+      "message": "a Beastman Battle Standard Bearer may only be included if the General is a Beastman Chieftain or Shaman (p.107)."
+    },
+    {
+      "type": "maxUnits",
+      "entry": "harpies",
+      "max": 1,
+      "unlessGeneral": ["chieftain", "shaman"],
+      "message": "Only one unit of Harpies, unless the General is a Beastman Warlord (p.118)."
+    },
+    {
+      "type": "unitsBySize",
+      "entries": ["daemon-spawn", "spawn", "nurglings", "beasts-of-nurgle", "chaos-trolls", "dragon-ogres"],
+      "per": 5,
+      "message": "Up to five form one unit, six to ten up to two units, and so on."
+    }
+  ]
+}
