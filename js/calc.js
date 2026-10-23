@@ -411,8 +411,17 @@ export function validate(army, list) {
       const entries = Array.isArray(r.entry) ? r.entry : [r.entry];
       const mine = list.selections.filter((s) => entries.includes(s.entryId));
       const have = r.units ? mine.length : mine.reduce((n, s) => n + countOf(army, s, r.model), 0);
-      const units = list.selections.filter((s) => r.per.includes(s.entryId) && !isPartOfUnit(army, s)).length;
+      // a "per" id may name one variant, e.g. "battle-standard:thrall" counts only Vampire Thrall standard bearers
+      const counts = (s) => r.per.includes(s.entryId) || (s.variant && r.per.includes(`${s.entryId}:${s.variant}`));
+      const units = list.selections.filter((s) => counts(s) && !isPartOfUnit(army, s)).length;
       const allowed = Math.max(r.atLeast || 0, units * r.max);
+      if (have > allowed) warn(`${r.message} You have ${have}, the maximum is ${allowed}.`);
+    }
+    if (r.type === "perPoints") {
+      // e.g. one Banshee for every full 1,000 points in the army
+      const entries = Array.isArray(r.entry) ? r.entry : [r.entry];
+      const have = list.selections.filter((s) => entries.includes(s.entryId)).reduce((n, s) => n + countOf(army, s), 0);
+      const allowed = Math.floor(limit / r.per) * (r.max || 1);
       if (have > allowed) warn(`${r.message} You have ${have}, the maximum is ${allowed}.`);
     }
     if (r.type === "unitsBySize") {
@@ -502,7 +511,7 @@ export function validate(army, list) {
       if (ms.length) {
         if (!e.magicStandard) warn(`${label}: this unit may not carry a Magic Standard.`, s.uid);
         if (ms.length > 1) warn(`${label}: only one Magic Standard per unit.`, s.uid);
-        if (ms.length && !s.standard) warn(`${label}: a Magic Standard needs a standard bearer.`, s.uid);
+        if (ms.length && !s.standard && !e.noCommand) warn(`${label}: a Magic Standard needs a standard bearer.`, s.uid);
         magicStdCount[e.id] = (magicStdCount[e.id] || 0) + 1;
       }
       const bossItems = (s.extras || []).filter((x) => x.onBoss);
@@ -653,6 +662,9 @@ export function itemContext(army, s) {
     races: [v?.race || e.race, ...(e.itemRaces || [])].filter(Boolean),
     allowedItems: e.allowedItems || [],
     god: selectionGod(army, s),
+    variant: v?.id || null,
+    mounted: isMounted(army, s) || !!s.mount,
+    typeOf: e.bloodline ? { bloodline: e.bloodline } : {},
     wizard: !!(v?.wizard ?? e.wizard),
     canStandard: e.kind === "character" && tags.includes("bsb"),
     allowance: { magicItems: v?.magicItems ?? e.magicItems ?? 0, ...(v?.allowances || e.allowances || {}) },

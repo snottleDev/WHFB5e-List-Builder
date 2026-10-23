@@ -53,17 +53,30 @@ export function extraType(army, x) {
 }
 
 // Items for a picker, grouped by type, in the order the catalogue lists the types.
-export function pickerGroups(army, poolId, { standardsOnly = false, noStandards = false, entryId = null } = {}) {
+export function pickerGroups(army, poolId, { standardsOnly = false, noStandards = false, entryId = null, onlyType = null } = {}) {
   const pool = army.magicPools.find((p) => p.id === poolId);
   if (!pool) return [];
   const groups = [];
   for (const [type, def] of Object.entries(army.itemTypes)) {
     if (standardsOnly && type !== "standard") continue;
     if (noStandards && type === "standard") continue;
+    if (onlyType && type !== onlyType) continue;
     const items = pool.items.filter((i) => i.type === type && (!i.entries || i.entries.includes(entryId)));
     if (items.length) groups.push({ type, name: def.name, items });
   }
   return groups;
+}
+
+// For a pool whose items must share one type (bloodlines): the type the list already uses, if any
+export function usedType(army, list, poolId) {
+  const pool = army.magicPools.find((p) => p.id === poolId);
+  if (!pool?.oneType) return null;
+  for (const s of list.selections) {
+    const e = army.entries.find((x) => x.id === s.entryId);
+    if (e?.[pool.oneType]) return e[pool.oneType];
+    for (const x of s.extras || []) { const it = extraItem(army, x); if (it?.pool === poolId) return it.type; }
+  }
+  return null;
 }
 
 // Rule checks. `ctx` describes the selection: { label, uid, kind, race, wizard, canStandard, allowance }
@@ -82,14 +95,25 @@ export function checkItems(army, list, ctxFor) {
         const mine = extras.filter((x) => (extraItem(army, x)?.pool || x.pool || "magic") === pool.id);
         const allowed = ctx.allowance?.[pool.allowance] ?? 0;
         if (mine.length > allowed) warn(`${ctx.label}: ${mine.length} ${pool.name.toLowerCase()}, the maximum is ${allowed}.`, s.uid);
+        // e.g. every Vampire must take at least one power
+        if (pool.min && allowed > 0 && mine.length < pool.min)
+          warn(`${ctx.label}: must have at least ${pool.min} ${pool.min === 1 ? pool.name.toLowerCase().replace(/s$/, "") : pool.name.toLowerCase()} (has ${mine.length}).`, s.uid);
       }
+    }
+    // the same item twice on one model
+    const ids = extras.filter((x) => x.itemId).map((x) => `${x.onBoss ? "b" : "m"}|${x.itemId}`);
+    for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i)))
+      warn(`${ctx.label}: ${army.itemById.get(id.slice(2))?.name || "an item"} is chosen twice for the same model.`, s.uid);
+    for (const need of army.magic?.itemNeeds || []) {
+      if (extras.some((x) => !x.onBoss && x.itemId === need.item) && !extras.some((x) => need.needs.includes(x.itemId)))
+        warn(`${ctx.label}: ${need.message}.`, s.uid);
     }
     const groups = [
       { who: ctx.label, items: extras.filter((x) => !x.onBoss), races: ctx.races || [ctx.race], wizard: ctx.wizard, canStandard: ctx.canStandard, kind: ctx.kind },
       { who: `${ctx.label} ${army.championName || "Boss"}`, items: extras.filter((x) => x.onBoss), races: ctx.races || [ctx.race], wizard: false, canStandard: false, kind: "boss" },
     ];
     for (const g of groups) {
-      const wards = g.items.filter((x) => extraType(army, x) === "ward");
+      const wards = g.items.filter((x) => extraType(army, x) === "ward" || extraItem(army, x)?.ward);
       if (wards.length > 1) warn(`${g.who}: a model may never have more than one Ward (Warhammer Magic p.38).`, s.uid);
       for (const x of g.items) {
         const it = extraItem(army, x);
@@ -111,8 +135,28 @@ export function checkItems(army, list, ctxFor) {
         }
         if (it.gods && g.kind !== "boss" && !it.gods.includes(ctx.god || "unaligned"))
           warn(`${g.who}: ${it.name} is ${it.only || "restricted to another god"}.`, s.uid);
+        if (it.variants && (g.kind === "boss" || !it.variants.includes(ctx.variant)))
+          warn(`${g.who}: ${it.name} is ${it.only || "not available to this character"}.`, s.uid);
+        if (it.onFoot && g.kind !== "boss" && ctx.mounted)
+          warn(`${g.who}: ${it.name} can only be used by a model on foot.`, s.uid);
         taken.set(it.id, (taken.get(it.id) || 0) + 1);
       }
+    }
+  }
+  // pools whose items must all be of one type across the army (all Vampires share one bloodline);
+  // special characters bring their own type in the entry field the pool names (e.g. "bloodline")
+  for (const pool of army.magicPools) {
+    if (!pool.oneType) continue;
+    const types = new Map(); // type -> first carrier
+    for (const s of list.selections) {
+      const ctx = ctxFor(s);
+      if (!ctx) continue;
+      const own = [ctx.typeOf?.[pool.oneType], ...(s.extras || []).filter((x) => extraItem(army, x)?.pool === pool.id).map((x) => extraItem(army, x).type)];
+      for (const t of own) if (t && !types.has(t)) types.set(t, ctx.label);
+    }
+    if (types.size > 1) {
+      const name = (t) => army.itemTypes[t]?.name || t;
+      warn(`${pool.oneTypeMessage || `${pool.name}: all must be of one type.`} Found ${[...types].map(([t, who]) => `${name(t)} (${who})`).join(", ")}.`);
     }
   }
   for (const [id, n] of taken) {
