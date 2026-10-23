@@ -2,7 +2,7 @@
 // and the A4 roster sheet PDF, laid out after the classic Warhammer roster sheet.
 import { MiniPdf } from "./minipdf.js";
 import { extraName } from "./magic.js";
-import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss, defaultNotes, parentOf, attachedParent } from "./calc.js";
+import { findEntry, variantOf, selectionCost, computeSave, describeMount, unitSize, listTotals, fmt, canHaveBoss, defaultNotes, parentOf, attachedParent, bossName, bossProfile, selLabel } from "./calc.js";
 
 export function rosterRows(army, list) {
   const order = (s) => army.categories.findIndex((c) => c.id === findEntry(army, s.entryId)?.category);
@@ -41,11 +41,13 @@ export function rosterRows(army, list) {
         if (m.profiles) for (const p of m.kind === "chariot" ? m.profiles.slice(1) : m.profiles) profiles.push(p);
       }
       const ap = attachedParent(list, s);
-      if (ap) lines.push(`${e.attachTo.label || "With"} ${ap.name || findEntry(army, ap.entryId).name}`);
+      if (ap) lines.push(`${e.attachTo.label || "With"} ${selLabel(army, ap)}`);
     } else if (e.kind === "monster") {
       title = s.name || v?.name || e.name;
       if (s.name || (s.size || 1) > 1) lines.push(`${s.size || 1} ${v?.name || e.name}`);
       profiles.push({ name: v?.name || e.name, profile: v?.profile || e.profile });
+      const ap = attachedParent(list, s);
+      if (ap) lines.push(`${e.attachTo.label || "With"} ${selLabel(army, ap)}`);
     } else {
       const size = unitSize(e, s);
       title = s.name || e.name;
@@ -58,14 +60,15 @@ export function rosterRows(army, list) {
       const parent = parentOf(list, s);
       if (parent) lines.push(`Detachment of ${parent.name || findEntry(army, parent.entryId).name}`);
       const ap = attachedParent(list, s);
-      if (ap) lines.push(`${e.attachTo.label || "With"} ${ap.name || findEntry(army, ap.entryId).name}`);
+      if (ap) lines.push(`${e.attachTo.label || "With"} ${selLabel(army, ap)}`);
       for (const p of e.profiles || []) profiles.push(p);
       if (s.standard) lines.push("Standard");
       if (s.musician) lines.push("Musician");
       if (s.boss?.enabled && canHaveBoss(army, e)) {
-        lines.push((army.championName || "Boss") + (e.bossOptions || []).filter((o) => s.boss.options?.[o.id]).map((o) => ` (${o.name.toLowerCase()})`).join(""));
-        const bp = army.bossProfiles?.[e.race];
-        if (bp) profiles.push({ name: army.championName || "Boss", profile: bp });
+        const bn = bossName(army, e, s);
+        lines.push(bn + (e.bossOptions || []).filter((o) => s.boss.options?.[o.id]).map((o) => ` (${o.name.toLowerCase()})`).join(""));
+        const bp = bossProfile(army, e, s);
+        if (bp) profiles.push({ name: bn, profile: bp });
       }
       for (const o of e.options || []) {
         const val = s.options?.[o.id];
@@ -76,7 +79,7 @@ export function rosterRows(army, list) {
     }
     for (const x of s.extras || []) {
       const n = extraName(army, x);
-      if (n) lines.push((x.onBoss ? `${army.championName || "Boss"}: ` : "") + n);
+      if (n) lines.push((x.onBoss ? `${bossName(army, e, s)}: ` : "") + n);
     }
 
     return {

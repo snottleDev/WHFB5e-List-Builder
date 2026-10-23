@@ -134,3 +134,4 @@ label { cursor: pointer; }
 @media (max-width: 600px) { .sticky { position: static; } }
 .field > .extras { flex: 1 1 280px; min-width: 0; }
 .extras select { width: 100%; max-width: 460px; text-overflow: ellipsis; }
+.warn-text { color: var(--accent); font-weight: 600; }

@@ -109,6 +109,8 @@ export function checkItems(army, list, ctxFor) {
           const who = it.races.filter((r) => army.races?.[r]).map((r) => army.racePlurals?.[r] || `${army.races[r]}s`).join(" or ") || it.only;
           warn(`${g.who}: ${it.name} may only be used by ${who} (${it.only}).`, s.uid);
         }
+        if (it.gods && g.kind !== "boss" && !it.gods.includes(ctx.god || "unaligned"))
+          warn(`${g.who}: ${it.name} is ${it.only || "restricted to another god"}.`, s.uid);
         taken.set(it.id, (taken.get(it.id) || 0) + 1);
       }
     }
