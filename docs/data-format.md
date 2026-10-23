@@ -15,6 +15,9 @@ Each army is one JSON file in `data/armies/`. Profiles are always 9 strings in t
 | `characterChariots` | entry ids of chariots a character may ride (cost added to the character) |
 | `bossCosts`, `bossProfiles` | unit champion base cost/profile by race (O&G "Bosses", Empire "Champions"); omit if the army has none |
 | `championName` | what unit champions are called (default "Boss") |
+| `championCategory` | `"unit"` puts champions' points (and their items) in their unit's category instead of Characters (Chaos) |
+| `limits` | percentage limits over several categories together: `[{name, categories: [...], min?, max?}]`. Chaos uses them for the 75% warband and 25% allies; the summary shows these instead of the categories |
+| `base` | another file in `data/armies/` whose keys this one extends (its own keys win). The three Realm of Chaos armies share `chaos-realm.json` and only set their categories, limits and rules |
 | `rules` | army-wide checks, see below |
 | `entries` | everything you can add to a list |
 
@@ -36,6 +39,10 @@ Common keys: `id`, `name`, `kind` (`character` / `unit` / `monster`), `category`
 `monsterRaces` (only these races may ride a monster, e.g. Chaos Dwarf but not Hobgoblin Heroes);
 `requiredGroups: [{group, message}]` (an option group that must be chosen, e.g. a Bretonnian Knight's first virtue).
 Variants may carry their own `requires`, `extraProfiles`, `save` and `naturalSave`.
+`god` (on an entry, a variant or a Mark option) is the Chaos god a selection serves, used for Daemon retinues and
+Daemonic Rewards. Character options may set `cavalry` (a steed bought as an option) and `requires` (an option id or
+list: warns if none of them is chosen, e.g. a Juggernaut needs the Mark of Khorne). `allowances: {rewards: 2}` gives
+an allowance in an extra magic pool. `summonable`: one such Warlord may come without a retinue (allied Greater Daemon).
 
 **Units:** `cost` (per model) or `models: [{id, name, cost, counts}]` for mixed units;
 `variants` (e.g. troll type or rock lobber size, may carry their own `cost` and `single` name);
@@ -48,12 +55,24 @@ replaces, e.g. a Packmaster); `groupLabels` (text for the empty choice of an opt
 `requireStandard` (message if the unit has no standard bearer, e.g. Dragon Princes); `magicStandardFactor`
 (e.g. 0.5: Dragon Princes pay half for a magic standard); `naturalSave` (Lizardmen scaly skin: base save that
 light armour and a shield each improve by 1).
+`bossCost`, `bossName`, `bossProfile` (champion cost, name and profile for this unit, instead of the army's by race);
+`bossLevels: [{id, name, cost, profile, minSize}]` (a choice of leader, e.g. Ogre Champion / Chief / War Chief, each
+allowed from a unit size); `bossItems: false` (the leader may not carry magic items); `commandCost` (full price of a
+standard bearer or musician model, e.g. 40 for Bloodletters); `noStandard` / `noMusician`; `mounted` (a mounted Daemon
+unit, checked against its Battle Standard Bearer's steed). Armour `chaos` is Chaos armour: 4+, 3+ with a shield.
 
 **Going with a regiment** (units or characters): `attachTo: {entries, label, alone?, required?, requiredMessage?,
 maxModels?, maxUnits?, maxFraction?, hint?}`. The selection stores `attachedTo` (the regiment's uid). Used for Skaven
 Globadiers, warpfire teams and Assassins, Plague Censer Bearers (`maxFraction: 0.5`) and Undead Champions
 (`required`, `maxUnits: 1`). Attached units skip the minimum size and have no command models.
 `perParentModels: 8` allows one model per eight in the regiment (Kroxigor with Skinks).
+
+**Chaos retinues** use the same `attachTo` with `retinue: true`: the unit stays a regiment of its own (normal minimum
+size and command) but belongs to a Warlord. Further keys: `requiresSibling: {entries, message}` (the same Warlord must
+also have one of these, e.g. chariots need Chaos Warriors, Knights or Marauders); `sameGod` (a Daemon unit may not join
+a Warlord of another god); `leadsUnit` (the Daemon Battle Standard Bearer replaces the unit's champion and must be of the
+unit's kind); `inGeneralRetinue` (must end up in the General's retinue). Large monsters use a plain `attachTo`
+("Ridden by") so their points stay in the Monstrous Host.
 
 Unit `options`: `{id, name, cost, per?, perModel?, group?, count?, max?, gear?, armour?, replacesArmour?, cavalry?, addsCrew?, replacesGear?}`
 - `perModel`: cost per model of one type in a `models` unit (e.g. extra hand weapons for Packmasters only)
@@ -109,12 +128,21 @@ items (e.g. Gorbad's Morgor the Mangler) that the player can still remove.
 { "type": "minCategoryIf", "entry": "ikit-claw", "category": "war-machines", "min": 25, "message": "…" }
 { "type": "itemLimit", "item": "runefang", "exceptEntries": ["boris-todbringer", …], "max": 1, "message": "…" }
 { "type": "detachments", "max": 2, "message": "…" }
+{ "type": "retinues", "summoned": 1, "message": "…" }
+{ "type": "requiresGeneral", "entries": ["battle-standard"], "general": ["champion", "sorcerer"], "message": "…" }
+{ "type": "maxUnits", "entry": "harpies", "max": 1, "unlessGeneral": ["chieftain", "shaman"], "message": "…" }
+{ "type": "generalFrom", "categories": ["w-warlords"], "message": "…" }
 ```
 
 `perUnits` counts characters as one each and, with `model`, only that model type (half-price Rat Swarm bases);
 `units: true` counts units instead of models, `atLeast` is a guaranteed minimum (two Repeater Bolt Throwers),
 and `entry` may be a list.
 `unitsBySize`: up to `per` models may form one unit, `2 × per` up to two units, and so on (models attached to a regiment are not counted).
+
+`retinues`: every selection tagged `warlord` needs units attached to it (`attachTo.retinue`, followed down the chain)
+worth at least its own points; `summoned` Warlords marked `summonable` may have none.
+`requiresGeneral`: these entries need the General to be one of `general`. `maxUnits`: at most `max` units of an entry
+unless the General is one of `unlessGeneral`. `generalFrom`: the General must come from these categories (not from the allies).
 
 Detachments: a `stateTroops` unit can point to a parent regiment (`parent` on the selection). The check flags
 more than `max` detachments per regiment, a detachment bigger than half its regiment, and command models in a detachment.
@@ -127,4 +155,6 @@ New army books will need new rule types. Add them to `validate()` in `js/calc.js
 - Standard bearer and musician cost double a trooper (with options), so each adds one trooper's cost.
 - A Boss replaces a trooper; his cost (race cost + the unit's gear priced from `equipment` + mount)
   goes to Characters, as do his magic items.
+- Magic item catalogues may set `book` on items (e.g. "RoC") for the page reference shown in the picker, and `gods`
+  for Daemonic Rewards restricted to a god (`"unaligned"` = a Daemon Prince without a Mark).
 - Halves are kept exact and shown as ½; nothing is rounded.

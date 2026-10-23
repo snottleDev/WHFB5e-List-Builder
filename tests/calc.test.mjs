@@ -414,4 +414,100 @@ t("Chaos Dwarfs: champions by race, Zhatan on a Great Taurus", () => {
   assert.equal(selectionCost(cd, { entryId: "wolf-riders", size: 5, boss: { enabled: true } }).byCategory.characters, 27 + 1 + 4);
   assert.equal(selectionCost(cd, { entryId: "zhatan", options: { taurus: true } }).total, 397);
 });
+// ---------- Chaos (Realm of Chaos) ----------
+const loadChaos = (id) => attachMagic({ ...load("../data/armies/chaos-realm.json"), ...load(`../data/armies/${id}.json`) }, [load("../data/magic/warhammer-magic.json"), load("../data/magic/daemonic-rewards.json")]);
+const cw = loadChaos("chaos-warriors"), cb = loadChaos("chaos-beastmen"), cdm = loadChaos("chaos-daemons");
+const vmsg = (a, list) => validate(a, list).map((i) => i.msg).join("\n");
+t("Chaos: Khorne Lord on Juggernaut with shield and lance = 373, save 2+; Knights in Chaos armour 1+; Warriors 3+", () => {
+  const lord = { entryId: "champion", variant: "lord", role: "general", gear: ["shield", "lance"], options: { "mark-khorne": true, juggernaut: true } };
+  assert.equal(selectionCost(cw, lord).total, 373);
+  assert.equal(computeSave(cw, lord), "2+");
+  assert.equal(computeSave(cw, { entryId: "chaos-knights", size: 5 }), "2+");
+  assert.equal(computeSave(cw, { entryId: "chaos-knights", size: 5, options: { "chaos-armour": true } }), "1+");
+  assert.equal(computeSave(cw, { entryId: "chaos-warriors", size: 10, options: { "chaos-armour": true, shields: true } }), "3+");
+  assert.equal(computeSave(cw, { entryId: "sorcerer", options: { unaligned: true } }), "4+");
+});
+t("Chaos: free command for Knights and Warriors, Marauder leader priced like his unit, champions count with their unit", () => {
+  assert.equal(selectionCost(cw, { entryId: "chaos-knights", size: 5, standard: true, musician: true, options: { "chaos-armour": true } }).total, 400);
+  const m = selectionCost(cw, { entryId: "marauders", size: 10, standard: true, options: { flail: true }, boss: { enabled: true } });
+  assert.equal(m.total, 9 * 13 + 13 + 22);
+  assert.equal(m.byCategory["w-retinues"], m.total);
+  assert.equal(selectionCost(cw, { entryId: "chaos-hounds", size: 6, boss: { enabled: true, options: { "chaos-armour": true } } }).total, 5 * 12 + 31);
+});
+t("Chaos: retinue must be worth the Warlord; chariots and Ogres need core units; Juggernaut needs the Mark", () => {
+  const list = { points: 2000, selections: [
+    { uid: "g", entryId: "champion", variant: "lord", role: "general", gear: [], options: { "mark-khorne": true, juggernaut: true } },
+    { uid: "w", entryId: "chaos-warriors", size: 10, attachedTo: "g", options: {} },
+    { uid: "s", entryId: "sorcerer", variant: "sorcerer", gear: [], options: { "steed-of-slaanesh": true } },
+    { uid: "c", entryId: "warrior-chariots", size: 1, attachedTo: "s", options: {} },
+    { uid: "o1", entryId: "ogres", size: 3, attachedTo: "s", options: {} },
+    { uid: "h", entryId: "chaos-hounds", size: 5, options: {} } ] };
+  const m = vmsg(cw, list);
+  assert.match(m, /Chaos Lord: retinue is worth 240 pts; it must be worth at least 370 pts/);
+  assert.match(m, /Chaos Chariots \(Chaos Warrior crew\): a retinue may only include chariots/);
+  assert.match(m, /Ogres: a retinue may only include Ogres/);
+  assert.match(m, /Steed of Slaanesh needs Mark of Slaanesh/);
+  assert.match(m, /Chaos Hounds: must be part of a Warlord's retinue/);
+  assert.doesNotMatch(m, /Sorcerer: retinue/);
+});
+t("Chaos: Ogre leader levels, 75% warband / 25% allies, large monster riders", () => {
+  assert.equal(selectionCost(cw, { entryId: "ogres", size: 7, boss: { enabled: true, level: "chief" }, options: {} }).total, 6 * 40 + 240);
+  const list = { points: 1000, selections: [
+    { uid: "g", entryId: "champion", variant: "champion", role: "general", gear: [], options: {} },
+    { uid: "o", entryId: "ogres", size: 5, attachedTo: "g", boss: { enabled: true, level: "chief" }, options: {} },
+    { uid: "d", entryId: "dragon", variant: "great", size: 1, attachedTo: "g" },
+    { uid: "x", entryId: "hydra", size: 1, attachedTo: "b" },
+    { uid: "b", entryId: "chieftain", variant: "chief", gear: [] } ] };
+  const m = vmsg(cw, list);
+  assert.match(m, /Ogre Chief may only lead a unit of at least 7/);
+  assert.match(m, /Allies: .* exceeds the 25% maximum/);
+  assert.match(m, /Chaos Warrior warband: .* below the 75% minimum/);
+  assert.match(m, /Hydra: cannot go with Beastman Chieftain/);
+  assert.equal(listTotals(cw, list).byCategory.host, 600 + 225);
+});
+t("Chaos: one summoned Greater Daemon without a retinue; Harpies limit depends on the General; BSB needs the right General", () => {
+  const list = { points: 3000, selections: [
+    { uid: "g", entryId: "sorcerer", role: "general", gear: [], options: {} },
+    { uid: "d1", entryId: "greater-daemon", variant: "lord-of-change" },
+    { uid: "d2", entryId: "greater-daemon", variant: "keeper-of-secrets" },
+    { uid: "h1", entryId: "harpies", size: 5 }, { uid: "h2", entryId: "harpies", size: 5 } ] };
+  const m = vmsg(cw, list);
+  assert.match(m, /Keeper of Secrets \(Slaanesh\): only 1 Greater Daemon may be summoned/);
+  assert.doesNotMatch(m, /Lord of Change \(Tzeentch\)/);
+  assert.match(m, /Only one unit of Harpies/);
+  const beast = { points: 3000, selections: [
+    { uid: "g", entryId: "chieftain", role: "general", gear: [] },
+    { uid: "h1", entryId: "harpies", size: 5 }, { uid: "h2", entryId: "harpies", size: 5 }, { uid: "s", entryId: "beast-bsb", gear: [] } ] };
+  assert.doesNotMatch(vmsg(cb, beast), /Harpies|Battle Standard Bearer may only/);
+  beast.selections[0] = { uid: "g", entryId: "champion", role: "general", gear: [], options: {} };
+  assert.match(vmsg(cb, beast), /the General must be one of the army's own Warlords/);
+});
+t("Chaos Beastmen: Gor champion 60 + gear, Ungor champion pays full equipment, Bestigor champion 65, Minotaur Lord", () => {
+  assert.equal(selectionCost(cb, { entryId: "gors", size: 10, options: { halberd: true, shields: true }, boss: { enabled: true } }).total, 9 * 13 + 63);
+  assert.equal(selectionCost(cb, { entryId: "ungors", size: 20, options: { spears: true, shields: true }, boss: { enabled: true } }).total, 19 * 5.5 + 62);
+  assert.equal(selectionCost(cb, { entryId: "bestigors", size: 10, boss: { enabled: true } }).total, 9 * 18 + 65);
+  assert.equal(computeSave(cb, { entryId: "bestigors", size: 10, options: { shields: true } }), "5+/4+");
+  assert.equal(selectionCost(cb, { entryId: "minotaurs", size: 10, options: { dhw: true }, boss: { enabled: true, level: "lord" } }).total, 9 * 44 + 397);
+});
+t("Chaos Daemons: daemon command prices, mounted units, rewards and gods", () => {
+  assert.equal(selectionCost(cdm, { entryId: "bloodletters", size: 20, standard: true, musician: true, boss: { enabled: true } }).total, 19 * 20 + 20 + 20 + 60);
+  assert.equal(selectionCost(cdm, { entryId: "bloodcrushers", size: 3, standard: true, boss: { enabled: true } }).total, 2 * 90 + 20 + 130);
+  assert.equal(selectionCost(cdm, { entryId: "greater-daemon", variant: "bloodthirster", extras: [{ itemId: "daemonic-strength" }, { itemId: "massive-stature" }] }).total, 820);
+  const list = { points: 3000, selections: [
+    { uid: "g", entryId: "greater-daemon", variant: "bloodthirster", role: "general", extras: [{ itemId: "flames-of-tzeentch" }, { itemId: "ward-of-chaos" }, { itemId: "lord-of-chaos" }] },
+    { uid: "b", entryId: "bloodletters", size: 20, attachedTo: "g", boss: { enabled: true } },
+    { uid: "p", entryId: "pink-horrors", size: 10, attachedTo: "g" },
+    { uid: "s", entryId: "daemon-bsb", variant: "plaguebearer", attachedTo: "b", options: {} },
+    { uid: "q", entryId: "daemon-prince", options: {}, extras: [{ itemId: "master-of-sorcery-2" }] },
+    { uid: "q2", entryId: "daemon-prince", options: { "mark-khorne": true }, extras: [{ itemId: "radiance-of-dark-glory" }] },
+    { uid: "q3", entryId: "daemon-prince", options: {}, extras: [{ itemId: "radiance-of-dark-glory" }] } ] };
+  const m = vmsg(cdm, list);
+  assert.match(m, /Bloodthirster of Khorne: 3 daemonic rewards, the maximum is 2/);
+  assert.match(m, /Flames of Tzeentch is Tzeentch only/);
+  assert.match(m, /Pink Horrors of Tzeentch: Daemons of Tzeentch cannot join the retinue of Bloodthirster/);
+  assert.match(m, /Plaguebearer Champion: must lead a unit of his own kind/);
+  assert.match(m, /replaces the unit's normal Champion/);
+  assert.doesNotMatch(m, /Master of Sorcery/);
+  assert.match(m, /Radiance of Dark Glory is taken 2 times/);
+});
 console.log(`${n} tests passed`);

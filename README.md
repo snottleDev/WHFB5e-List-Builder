@@ -16,7 +16,9 @@ Armies so far: **Orcs & Goblins**, **The Empire** (detachments, Champions, Elect
 **Skaven** (war teams and Assassins with their regiments, Clan Moulder packs, half-price Rat Swarms, Ikit Claw's
 war machine minimum), **The Undead** (Undead Champions leading regiments, character chariots, Carrion and Wraith units),
 **High Elves**, **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
-virtues, free Knight command models, Commoners allowance) and **Chaos Dwarfs**. Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
+virtues, free Knight command models, Commoners allowance), **Chaos Dwarfs** and **Chaos** from *Realm of Chaos*
+(Chaos Warrior, Beastman or Daemon warband, with the other warbands and the Monstrous Host as allies; each Warlord's
+retinue must be worth his points; Marks of Chaos, daemonic steeds and Daemonic Rewards). Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
 filtered to what the army may use, with checks for item allowances, one Ward per model, Wizard Arcana,
 race-restricted items and duplicates. Anything missing can still be added as a custom item.
 
@@ -40,8 +42,8 @@ js/minipdf.js            minimal PDF writer using the standard Times/Helvetica f
 js/fontmetrics.js        glyph widths for those fonts
 js/magic.js              magic item catalogues, pickers and checks
 data/armies/index.json   list of available armies
-data/armies/*.json       one file per army book
-data/magic/*.json        magic item catalogues (names, points, restrictions)
+data/armies/*.json       one file per army book (chaos-realm.json is shared by the three Chaos warbands)
+data/magic/*.json        magic item catalogues and Daemonic Rewards (names, points, restrictions)
 docs/data-format.md      how an army file is structured
 tests/calc.test.mjs      `node tests/calc.test.mjs`
 ```
