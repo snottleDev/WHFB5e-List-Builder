@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { selectionCost, computeSave, validate, listTotals, fmt } from "../js/calc.js";
+import { rosterRows } from "../js/pdf.js";
 import { attachMagic, pickerGroups } from "../js/magic.js";
 const load = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url)));
 const army = attachMagic(load("../data/armies/orcs-goblins.json"), [load("../data/magic/warhammer-magic.json")]);
@@ -588,5 +589,79 @@ t("Vampire Counts: a General on a Zombie Dragon counts the dragon as Characters"
   const t2 = listTotals(vc, { points: 2000, selections: [{ uid: "g", entryId: "general", variant: "vampire-lord", mount: "monster:zombie-dragon" }] });
   assert.equal(t2.byCategory.characters, 850);
   assert.equal(t2.byCategory.monsters || 0, 0);
+});
+// ---------- Dwarfs ----------
+const dw = attachMagic(load("../data/armies/dwarfs.json"), [load("../data/magic/warhammer-magic.json"), load("../data/magic/dwarf-runes.json")]);
+const dwmsg = (list) => validate(dw, list).map((i) => i.msg).join("\n");
+const rw = (...runes) => ({ runic: "weapon", runes });
+t("Dwarfs: runic weapon points are the sum of its runes; names list the runes; it counts as a magic item", () => {
+  assert.equal(dw.runes.runes.length, 50);
+  const lord = { entryId: "general", gear: ["heavy-armour", "shield"], extras: [rw("rune-of-fury", "rune-of-fury", "master-rune-of-swiftness"), { runic: "armour", runes: ["rune-of-stone"] }] };
+  assert.equal(selectionCost(dw, lord).total, 160 + 3 + 1 + 20 + 20 + 25 + 5);
+  assert.equal(computeSave(dw, lord), "4+");
+  const rows = rosterRows(dw, { selections: [{ uid: "g", ...lord }] });
+  assert.ok(rows[0].lines.includes("Runic weapon (Rune of Fury ×2, Master Rune of Swiftness)"));
+  const m = dwmsg({ points: 2000, selections: [{ uid: "h", entryId: "hero", extras: [rw("rune-of-fire"), { runic: "talisman", runes: ["rune-of-luck"] }, { itemId: "dawnstone" }] }] });
+  assert.match(m, /Dwarf Hero: 3 magic items, the maximum is 2/);
+});
+t("Dwarfs: Rule of Three, Form, one master per item, Rune of Stone once, Gromril alone, armour needs armour", () => {
+  const m = dwmsg({ points: 3000, selections: [
+    { uid: "g", entryId: "general", tags: [], extras: [rw("rune-of-fury", "rune-of-fury", "rune-of-fury", "rune-of-cleaving"), { runic: "armour", runes: ["rune-of-stone", "rune-of-stone"] }] },
+    { uid: "h", entryId: "hero", gear: ["light-armour"], extras: [rw("master-rune-of-death", "master-rune-of-swiftness"), { runic: "armour", runes: ["master-rune-of-gromril", "rune-of-iron"] }] },
+    { uid: "k", entryId: "hero", extras: [rw("rune-of-iron")] } ] });
+  assert.match(m, /Dwarf General: Runic weapon: 4 runes; no item may carry more than three/);
+  assert.match(m, /Rune of Stone may be used only once on an item/);
+  assert.match(m, /Dwarf General: Runic armour: armour runes need armour or a shield/);
+  assert.match(m, /Dwarf Hero: Runic weapon: more than one master rune on one item/);
+  assert.match(m, /Master Rune of Gromril cannot be combined with any other armour rune/);
+  assert.match(m, /Rune of Iron is not one of the weapon runes \(Rule of Form/);
+});
+t("Dwarfs: master runes once per army (special characters too) and the Rule of Pride, lone Rune of Stone excepted", () => {
+  const m = dwmsg({ points: 3000, selections: [
+    { uid: "g", entryId: "general", gear: ["heavy-armour"], extras: [rw("rune-of-cleaving", "rune-of-fire"), { runic: "armour", runes: ["rune-of-stone"] }] },
+    { uid: "h", entryId: "hero", gear: ["heavy-armour"], extras: [rw("rune-of-fire", "rune-of-cleaving"), { runic: "armour", runes: ["rune-of-stone"] }] },
+    { uid: "x", entryId: "hero", gear: ["shield"], extras: [{ runic: "armour", runes: ["master-rune-of-adamant"] }] },
+    { uid: "k", entryId: "kragg" } ] });
+  assert.match(m, /Rune of Cleaving, Rune of Fire: the same combination of runes is on 2 items \(Dwarf General, Dwarf Hero\)/);
+  assert.doesNotMatch(m, /Rune of Stone: the same combination/);
+  assert.match(m, /Master Rune of Adamant is used 2 times \(Dwarf Hero, Rune Lord Kragg the Grim\)/);
+});
+t("Dwarfs: standards, Runesmith runes, engineering runes, one item of each kind, Slayer Champions weapons only", () => {
+  const m = dwmsg({ points: 3000, selections: [
+    { uid: "b", entryId: "battle-standard", extras: [{ runic: "standard", runes: ["master-rune-of-valaya", "rune-of-battle"] }] },
+    { uid: "w", entryId: "warriors", size: 20, standard: true, extras: [{ runic: "standard", runes: ["master-rune-of-groth-one-eye"] }] },
+    { uid: "h", entryId: "hero", extras: [{ runic: "talisman", runes: ["rune-of-spellbreaking"] }, rw("rune-of-fire"), { itemId: "sword-of-might" }] },
+    { uid: "r", entryId: "runesmith", extras: [{ runic: "talisman", runes: ["rune-of-spellbreaking"] }] },
+    { uid: "c", entryId: "cannons", size: 1, extras: [{ runic: "engineering", runes: ["rune-of-forging", "rune-of-seeking"] }] },
+    { uid: "s", entryId: "slayers", size: 10, options: { "dh-axes": 4, "two-axes": 3 } },
+    { uid: "sc", entryId: "slayer-champion", variant: "dragon", attachedTo: "s", extras: [{ runic: "armour", runes: ["rune-of-iron"] }] } ] });
+  assert.doesNotMatch(m, /Battle Standard Bearer: Runic standard: Master Rune of Valaya/);
+  assert.match(m, /Dwarf Warriors: Runic standard: Master Rune of Groth One-Eye may only be placed on the battle standard/);
+  assert.match(m, /Dwarf Hero: Runic talisman: Rune of Spellbreaking may only be used by a Runesmith/);
+  assert.doesNotMatch(m, /Runesmith: Runic talisman/);
+  assert.match(m, /Dwarf Hero: 2 magic items of the same kind \(weapon\)/);
+  assert.match(m, /Cannons: Engineering runes: Rune of Seeking is bolt throwers only/);
+  assert.doesNotMatch(m, /Rune of Forging is/);
+  assert.match(m, /Dragon Slayer: may only carry a magic weapon/);
+  assert.equal(selectionCost(dw, { entryId: "slayers", size: 10, options: { "dh-axes": 4, "two-axes": 3 } }).total, 110 + 8 + 3);
+});
+t("Dwarfs: unit champions and saves, Iron Breakers, war machines, special characters, Slayer regiments limit", () => {
+  const ib = selectionCost(dw, { entryId: "iron-breakers", size: 10, standard: true, boss: { enabled: true } });
+  assert.equal(ib.byCategory.regiments, 10 * 20);
+  assert.equal(ib.byCategory.characters, 53 + 3 + 1);
+  assert.equal(computeSave(dw, { entryId: "iron-breakers", size: 10 }), "3+");
+  assert.equal(computeSave(dw, { entryId: "warriors", size: 10 }), "5+");
+  assert.equal(selectionCost(dw, { entryId: "thunderers", size: 10, boss: { enabled: true } }).byCategory.characters, 48 + 3 + 2);
+  assert.equal(selectionCost(dw, { entryId: "stone-throwers", variant: "big", size: 1, options: { "crew-la": true } }).total, 104 + 6);
+  assert.equal(selectionCost(dw, { entryId: "runesmith", variant: "rune-lord", options: { anvil: true } }).total, 506);
+  assert.equal(selectionCost(dw, { entryId: "thorgrim", options: { throne: true } }).total, 625);
+  const m = dwmsg({ points: 3000, selections: [
+    { uid: "k", entryId: "kragg" }, { uid: "r", entryId: "runesmith" }, { uid: "g", entryId: "gotrek" },
+    { uid: "u", entryId: "ungrim", role: "general" }, { uid: "w", entryId: "warriors", size: 20 },
+    { uid: "s1", entryId: "slayers", size: 5 }, { uid: "s2", entryId: "slayers", size: 5 } ] });
+  assert.match(m, /Only one Runesmith is allowed/);
+  assert.match(m, /Gotrek always fights alongside Felix/);
+  assert.match(m, /No more Slayer regiments than other Dwarf regiments.*You have 2, the maximum is 1/);
+  assert.doesNotMatch(m, /led by one General/);
 });
 console.log(`${n} tests passed`);
