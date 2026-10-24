@@ -413,7 +413,9 @@ export function validate(army, list) {
       const have = r.units ? mine.length : mine.reduce((n, s) => n + countOf(army, s, r.model), 0);
       // a "per" id may name one variant, e.g. "battle-standard:thrall" counts only Vampire Thrall standard bearers
       const counts = (s) => r.per.includes(s.entryId) || (s.variant && r.per.includes(`${s.entryId}:${s.variant}`));
-      const units = list.selections.filter((s) => counts(s) && !isPartOfUnit(army, s)).length;
+      // minSize: only regiments of at least that many models count (one Reaper per regiment of ten or more)
+      const bigEnough = (s) => !r.minSize || unitSize(findEntry(army, s.entryId), s) >= r.minSize;
+      const units = list.selections.filter((s) => counts(s) && !isPartOfUnit(army, s) && bigEnough(s)).length;
       const allowed = Math.max(r.atLeast || 0, units * r.max);
       if (have > allowed) warn(`${r.message} You have ${have}, the maximum is ${allowed}.`);
     }
