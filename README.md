@@ -17,6 +17,8 @@ Armies so far: **Orcs & Goblins**, **The Empire** (detachments, Champions, Elect
 war machine minimum), **The Undead** (Undead Champions leading regiments, character chariots, Carrion and Wraith units),
 **Vampire Counts** (Vampire Powers by bloodline as a separate allowance next to magic items, one bloodline per army,
 Banshees per 1,000 points, half-cost Bat Swarms per Vampire),
+**Dwarfs** (runic weapons, armour, talismans, standards and engineering runes put together rune by rune, with the Rule of
+Three, Rule of Form, Rule of Pride and master runes once per army; Slayer Champions, Runesmiths and the Anvil of Doom),
 **High Elves**, **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
 virtues, free Knight command models, Commoners allowance), **Chaos Dwarfs** and **Chaos** from *Realm of Chaos*
 (Chaos Warrior, Beastman or Daemon warband, with the other warbands and the Monstrous Host as allies; each Warlord's
@@ -45,7 +47,7 @@ js/fontmetrics.js        glyph widths for those fonts
 js/magic.js              magic item catalogues, pickers and checks
 data/armies/index.json   list of available armies
 data/armies/*.json       one file per army book (chaos-realm.json is shared by the three Chaos warbands)
-data/magic/*.json        magic item catalogues, Daemonic Rewards and Vampire Powers (names, points, restrictions)
+data/magic/*.json        magic item catalogues, Daemonic Rewards, Vampire Powers and Dwarf runes (names, points, restrictions)
 docs/data-format.md      how an army file is structured
 tests/calc.test.mjs      `node tests/calc.test.mjs`
 ```
