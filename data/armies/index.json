@@ -4,6 +4,7 @@
   {"id": "skaven", "name": "Skaven", "file": "skaven.json"},
   {"id": "undead", "name": "The Undead", "file": "undead.json"},
   {"id": "vampire-counts", "name": "Vampire Counts", "file": "vampire-counts.json"},
+  {"id": "dwarfs", "name": "Dwarfs", "file": "dwarfs.json"},
   {"id": "high-elves", "name": "High Elves", "file": "high-elves.json"},
   {"id": "lizardmen", "name": "Lizardmen", "file": "lizardmen.json"},
   {"id": "bretonnia", "name": "Bretonnia", "file": "bretonnia.json"},
