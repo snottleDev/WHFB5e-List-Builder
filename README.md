@@ -19,7 +19,8 @@ war machine minimum), **The Undead** (Undead Champions leading regiments, charac
 Banshees per 1,000 points, half-cost Bat Swarms per Vampire),
 **Dwarfs** (runic weapons, armour, talismans, standards and engineering runes put together rune by rune, with the Rule of
 Three, Rule of Form, Rule of Pride and master runes once per army; Slayer Champions, Runesmiths and the Anvil of Doom),
-**High Elves**, **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
+**High Elves**, **Dark Elves** (Witch Elf characters, Cold One saves, Assassins hidden in regiments, Reaper Bolt
+Throwers per regiment of ten or more, City Guard with mixed weapons), **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
 virtues, free Knight command models, Commoners allowance), **Chaos Dwarfs** and **Chaos** from *Realm of Chaos*
 (Chaos Warrior, Beastman or Daemon warband, with the other warbands and the Monstrous Host as allies; each Warlord's
 retinue must be worth his points; Marks of Chaos, daemonic steeds and Daemonic Rewards). Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,

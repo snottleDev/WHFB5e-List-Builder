@@ -159,6 +159,7 @@ Vampire Thrall standard bearer when allowing half-cost Bat Swarms per Vampire).
 
 `perUnits` counts characters as one each and, with `model`, only that model type (half-price Rat Swarm bases);
 `units: true` counts units instead of models, `atLeast` is a guaranteed minimum (two Repeater Bolt Throwers),
+`minSize` only counts regiments of at least that many models (one Reaper Bolt Thrower per Dark Elf regiment of ten or more),
 and `entry` may be a list.
 `unitsBySize`: up to `per` models may form one unit, `2 × per` up to two units, and so on (models attached to a regiment are not counted).
 
