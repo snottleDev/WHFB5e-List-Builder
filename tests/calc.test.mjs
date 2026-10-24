@@ -664,4 +664,48 @@ t("Dwarfs: unit champions and saves, Iron Breakers, war machines, special charac
   assert.match(m, /No more Slayer regiments than other Dwarf regiments.*You have 2, the maximum is 1/);
   assert.doesNotMatch(m, /led by one General/);
 });
+// ---------- Dark Elves ----------
+const de = attachMagic(load("../data/armies/dark-elves.json"), [load("../data/magic/warhammer-magic.json")]);
+const demsg = (list) => validate(de, list).map((i) => i.msg).join("\n");
+t("Dark Elves: saves (Cold One Knights 2+, Dark Riders 5+, Corsairs 5+, Warriors 6+/5+, Witch Elves none), Cold One gives +2", () => {
+  assert.equal(computeSave(de, { entryId: "cold-one-knights", size: 5 }), "2+");
+  assert.equal(computeSave(de, { entryId: "dark-riders", size: 5 }), "5+");
+  assert.equal(computeSave(de, { entryId: "corsairs", size: 10 }), "5+");
+  assert.equal(computeSave(de, { entryId: "warriors", size: 10 }), "6+");
+  assert.equal(computeSave(de, { entryId: "warriors", size: 10, options: { shields: true } }), "5+");
+  assert.equal(computeSave(de, { entryId: "witch-elves", size: 10 }), "-");
+  assert.equal(computeSave(de, { entryId: "hero", gear: ["light-armour", "shield"], mount: "mount:cold-one" }), "3+");
+  assert.equal(computeSave(de, { entryId: "hero", gear: ["light-armour", "shield"], mount: "mount:dark-steed" }), "4+");
+});
+t("Dark Elves: unit and champion costs (Cold One Knight champion, Witch Elf champion, Corsair cloak, City Guard crossbows)", () => {
+  const k = selectionCost(de, { entryId: "cold-one-knights", size: 6, standard: true, options: { lances: true }, boss: { enabled: true } });
+  assert.equal(k.byCategory.regiments, 6 * 42);
+  assert.equal(k.byCategory.characters, 48 + 3 + 1 + 10 + 2);
+  assert.equal(selectionCost(de, { entryId: "witch-elves", size: 10, boss: { enabled: true } }).byCategory.characters, 62 + 1);
+  assert.equal(selectionCost(de, { entryId: "corsairs", size: 10, boss: { enabled: true } }).byCategory.characters, 53);
+  assert.equal(selectionCost(de, { entryId: "city-guard", size: 20, options: { crossbows: 10, shields: true } }).total, 20 * 12 + 20);
+  assert.equal(selectionCost(de, { entryId: "hero", variant: "witch-elf" }).total, 132);
+  assert.equal(selectionCost(de, { entryId: "general", mount: "monster:manticore" }).total, 360);
+});
+t("Dark Elves: one Reaper per regiment of ten or more, Assassins hidden one per regiment, 0-1 units, special characters", () => {
+  const list = { points: 3000, selections: [
+    { uid: "g", entryId: "general" },
+    { uid: "w", entryId: "warriors", size: 10 }, { uid: "s", entryId: "spearmen", size: 9 },
+    { uid: "b", entryId: "bolt-throwers", size: 2 },
+    { uid: "a1", entryId: "assassin", attachedTo: "w" }, { uid: "a2", entryId: "assassin", attachedTo: "w" },
+    { uid: "a3", entryId: "assassin", attachedTo: "b" },
+    { uid: "h1", entryId: "harpies", size: 5 }, { uid: "h2", entryId: "harpies", size: 5 },
+    { uid: "k", entryId: "kouran" }, { uid: "t", entryId: "tullaris" } ] };
+  const m = demsg(list);
+  assert.match(m, /Up to one Reaper Bolt Thrower per regiment of ten or more.*You have 2, the maximum is 1/);
+  assert.match(m, /Dark Elf Warriors: 2 units of Dark Elf Assassin with it, the maximum is 1/);
+  assert.match(m, /Dark Elf Assassin: cannot go with Reaper Bolt Throwers/);
+  assert.match(m, /Harpies: 2 taken, the maximum is 1/);
+  assert.match(m, /Kouran may only be included if the army also includes the Black Guard/);
+  assert.match(m, /Tullaris may only be included if the army also includes the Har Ganeth Executioners/);
+  assert.equal(selectionCost(de, { entryId: "witch-king" }).total, 675);
+  assert.equal(selectionCost(de, { entryId: "hellebron" }).total, 552);
+  const wk = demsg({ points: 3000, selections: [{ uid: "w", entryId: "witch-king" }, { uid: "s", entryId: "spearmen", size: 20 }, { uid: "b", entryId: "bolt-throwers", size: 1 }] });
+  assert.doesNotMatch(wk, /led by one General|Reaper/);
+});
 console.log(`${n} tests passed`);
