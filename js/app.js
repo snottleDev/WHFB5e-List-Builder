@@ -1,6 +1,6 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
-import { attachMagic, extraItem, pickerGroups, usedType } from "./magic.js";
+import { attachMagic, extraItem, pickerGroups, usedType, runeOf, runicPoints, runeGroups } from "./magic.js";
 import { itemContext, defaultNotes, parentOf, attachedParent, bossName, retinueValue, isWarlord, selLabel } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
@@ -28,7 +28,7 @@ async function loadArmy(id) {
   let army = await res.json();
   // armies sharing one entry list (Realm of Chaos) point to it with "base"; their own keys win
   if (army.base) army = { ...(await (await fetch(`data/armies/${army.base}`, { cache: "no-cache" })).json()), ...army };
-  const catIds = [...new Set((army.magic?.pools || []).flatMap((p) => p.catalogues || []))];
+  const catIds = [...new Set([...(army.magic?.pools || []).flatMap((p) => p.catalogues || []), ...(army.magic?.runes ? [army.magic.runes] : [])])];
   const catalogues = await Promise.all(catIds.map((c) => fetch(`data/magic/${c}.json`, { cache: "no-cache" }).then((r) => r.json())));
   armies[id] = attachMagic(army, catalogues);
   return armies[id];
@@ -435,13 +435,15 @@ function renderExtras(army, e, s, change, list = null) {
   const isChar = e.kind === "character";
   const canStd = e.kind === "unit" && e.magicStandard;
   const bossOk = e.kind === "unit" && s.boss?.enabled && e.bossItems !== false;
-  if (!isChar && !canStd && !bossOk && !s.extras.length) return document.createDocumentFragment();
+  const engineering = !!(army.runes && e.engineering);
+  if (!isChar && !canStd && !bossOk && !engineering && !s.extras.length) return document.createDocumentFragment();
 
   const typeName = (t) => army.itemTypes?.[t]?.name?.replace(/s$/, "") || (t === "standard" ? "Magic Standard" : "Item");
   const rows = s.extras.map((x, i) => {
     const it = extraItem(army, x);
     const remove = h("button", { class: "btn small ghost", title: "Remove", onclick: () => { s.extras.splice(i, 1); change(); } }, "×");
     const who = x.onBoss ? `${army.championName || "Boss"} · ` : "";
+    if (x.runic) return runicRow(army, e, s, x, ctx, who, remove, change);
     if (it) {
       return h("div", { class: "extras-row item" },
         h("b", {}, it.name), h("span", { class: "pts-sm" }, `${fmt(it.points)} pts`),
@@ -488,9 +490,47 @@ function renderExtras(army, e, s, change, list = null) {
     }
   }
   if (canStd) pickers.push(picker("+ Magic standard", { standardsOnly: true }, (custom) => (custom ? { kind: "standard", type: "standard" } : {})));
+  // Dwarf runic items: an empty item of the chosen kind, then runes are added to it one by one
+  if (army.runes) {
+    const forms = army.runes.forms;
+    const runicPicker = (label, ids, extra = {}) => {
+      const sel = h("select", { "aria-label": label }, h("option", { value: "" }, label),
+        ids.map((id) => h("option", { value: id }, `${forms[id].name} (${army.runes.types[forms[id].runes].name.toLowerCase()})`)));
+      sel.addEventListener("change", () => { if (sel.value) { s.extras.push({ runic: sel.value, runes: [], ...extra }); change(); } });
+      return sel;
+    };
+    const allowed = (ids) => ids.filter((id) => !ctx.itemTypes || ctx.itemTypes.includes(forms[id].itemType));
+    if (isChar) pickers.push(runicPicker("+ Runic item", allowed(["weapon", "armour", "talisman", ...(ctx.canStandard ? ["standard"] : [])])));
+    if (canStd) pickers.push(runicPicker("+ Runic standard", ["standard"]));
+    if (bossOk) pickers.push(runicPicker(`+ ${army.championName || "Boss"} runic item`, ["weapon", "armour", "talisman"], { onBoss: true }));
+    if (engineering) pickers.push(runicPicker("+ Engineering runes", ["engineering"]));
+  }
   if (bossOk) pickers.push(picker(`+ ${army.championName || "Boss"} magic item (max 1)`, { noStandards: true }, (custom) => (custom ? { kind: "item", onBoss: true } : { onBoss: true })));
   return h("div", { class: "field" }, h("span", { class: "lbl" }, "Magic"),
     h("div", { class: "extras" }, rows, h("div", { class: "extras-row" }, pickers)));
+}
+
+// One runic item: its runes as removable chips, a picker for the next rune, and the item's total
+function runicRow(army, e, s, x, ctx, who, remove, change) {
+  x.runes = x.runes || [];
+  const form = army.runes.forms[x.runic];
+  const chips = x.runes.map((id, j) => {
+    const r = runeOf(army, id);
+    return h("span", { class: "rune" }, r?.name || id, h("small", {}, ` ${fmt(r?.points || 0)}`),
+      h("button", { class: "btn small ghost", title: "Remove rune", onclick: () => { x.runes.splice(j, 1); change(); } }, "×"));
+  });
+  const groups = runeGroups(army, x.runic, { ...ctx, canStandard: ctx.canStandard && !x.onBoss, runesmith: ctx.runesmith && !x.onBoss });
+  const add = h("select", { "aria-label": "Add rune" }, h("option", { value: "" }, x.runes.length >= 3 ? "Three runes (the maximum)" : "+ Rune"),
+    groups.map((g) => h("optgroup", { label: g.name }, g.runes.map((r) =>
+      h("option", { value: r.id }, `${r.name} (${fmt(r.points)}) – ${r.effect}${r.only ? `; ${r.only}` : ""}`)))));
+  add.addEventListener("change", () => { if (add.value) { x.runes.push(add.value); change(); } });
+  return h("div", { class: "extras-row item runic" },
+    h("input", { type: "text", value: x.label || "", placeholder: form?.name || "Runic item", "aria-label": "Item name",
+      title: "Optional name, e.g. Rune axe", oninput: (ev) => { x.label = ev.target.value || undefined; persist(); }, onchange: change }),
+    h("span", { class: "pts-sm" }, `${fmt(runicPoints(army, x))} pts`),
+    h("small", {}, `${who}${form?.name || "Runic item"} · up to three runes · Dw p.${army.runes.types[form?.runes]?.page || 24}`),
+    remove,
+    h("div", { class: "runes" }, chips, add));
 }
 
 function renderProfiles(army, s) {

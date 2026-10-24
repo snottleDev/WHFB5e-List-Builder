@@ -514,6 +514,7 @@ export function validate(army, list) {
         if (ms.length && !s.standard && !e.noCommand) warn(`${label}: a Magic Standard needs a standard bearer.`, s.uid);
         magicStdCount[e.id] = (magicStdCount[e.id] || 0) + 1;
       }
+      if ((s.extras || []).filter((x) => x.runic === "engineering").length > 1) warn(`${label}: only one set of engineering runes (up to three runes) per war machine.`, s.uid);
       const bossItems = (s.extras || []).filter((x) => x.onBoss);
       const champ = army.championName || "Boss";
       if (bossItems.length && !canHaveBoss(army, e)) warn(`${label}: this unit has no ${champ} to carry a magic item.`, s.uid);
@@ -665,6 +666,12 @@ export function itemContext(army, s) {
     variant: v?.id || null,
     mounted: isMounted(army, s) || !!s.mount,
     typeOf: e.bloodline ? { bloodline: e.bloodline } : {},
+    // Dwarf runes: Runesmiths, armour to inscribe, items limited by kind, war machines, special characters' own runic items
+    runesmith: !!e.runesmith,
+    hasArmour: (e.armour || []).length > 0 || (s.gear || []).some((g) => ["shield", "light", "heavy"].includes(gearItem(army, g)?.armour)),
+    itemTypes: e.itemTypes || null,
+    engineering: !!e.engineering,
+    fixedRunic: e.runicItems || [],
     wizard: !!(v?.wizard ?? e.wizard),
     canStandard: e.kind === "character" && tags.includes("bsb"),
     allowance: { magicItems: v?.magicItems ?? e.magicItems ?? 0, ...(v?.allowances || e.allowances || {}) },
