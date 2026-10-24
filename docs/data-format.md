@@ -121,9 +121,19 @@ special characters (e.g. Fearfrost). Characters get their allowance from
 `magicItems` (per variant), wizards are marked with `"wizard": true`, and `startingItems` pre-adds signature
 items (e.g. Gorbad's Morgor the Mangler) that the player can still remove.
 
-**Planned extensions** (not built yet):
-- *Dwarf runes*: a `runes` pool replacing `magic`, with rune-specific checks (runes per item, master runes once per
-  army, etc.) added as new rule types in `js/magic.js`.
+**Dwarf runic items.** `magic.runes: "dwarf-runes"` loads a rune catalogue (`"kind": "runes"`) with `types` (weapon,
+armour, protection, engineering, talismanic runes), `forms` (the items runes go on: runic weapon, armour, talisman,
+standard, engineering runes, each naming its rune type and the item kind it counts as) and `runes`
+`{id, name, type, points, page, master?, maxPerItem?, alone?, prideExempt?, battleStandardOnly?, runesmithOnly?, machines?, only?, effect}`.
+A selection's runic item is an extra `{ runic: form, runes: [ids], label?, onBoss? }`; its points are the sum of its runes
+and it counts against the normal magic item allowance. Checks: at most three runes (Rule of Three), runes of the item's
+own type (Rule of Form), one master rune per item and each master rune once per army (Jealous Runes), no two items with
+the same runes (Rule of Pride; a lone Rune of Stone excepted), `maxPerItem`, `alone` (Gromril), `battleStandardOnly`,
+`runesmithOnly` (entry `runesmith: true`), `machines` (entry ids), armour runes need armour or a shield, engineering runes
+only on entries with `engineering: true`. `magic.onePerKind` maps item kinds to names and warns when a model has two
+items of one kind (cards and runic items together). Entry `itemTypes: ["weapon"]` limits what a character may carry
+(Slayer Champions), and `runicItems: [{name, form, runes}]` lists a special character's own runic items so they count
+for the master rune and Rule of Pride checks.
 
 ## Army-wide rules
 
