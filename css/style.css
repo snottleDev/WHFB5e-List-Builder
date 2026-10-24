@@ -125,6 +125,10 @@ label { cursor: pointer; }
 .extras-row.item small { color: var(--muted); flex-basis: 100%; order: 3; }
 .extras-row .pts-sm { font-family: var(--head); color: var(--muted); }
 .extras-row select { max-width: 100%; }
+.extras-row.runic .runes { flex-basis: 100%; order: 4; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.rune { display: inline-flex; align-items: center; gap: 2px; padding: 1px 2px 1px 8px; border: 1px solid var(--line); border-radius: 12px; font-size: 0.92em; white-space: nowrap; }
+.extras-row.item .rune small { color: var(--muted); flex-basis: auto; order: 0; }
+.extras-row.runic .runes select { flex: 1 1 260px; max-width: 460px; }
 
 @media (max-width: 600px) {
   .ed-title input.name { width: 100%; }

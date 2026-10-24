@@ -26,6 +26,11 @@ export function attachMagic(army, catalogues) {
     if (usable && pool) pool.items.push(it);
   };
   for (const cat of catalogues) {
+    // Dwarf runes are not items but parts of runic items the player puts together (see runicName below)
+    if (cat.kind === "runes") {
+      army.runes = { ...cat, byId: new Map(cat.runes.map((r) => [r.id, r])) };
+      continue;
+    }
     Object.assign(army.itemTypes, cat.types || {});
     const pool = poolFor(cat.id);
     for (const item of cat.items) add(item, pool, cat);
@@ -40,16 +45,53 @@ export function extraItem(army, x) {
   return x.itemId ? army.itemById?.get(x.itemId) || null : null;
 }
 export function extraPoints(army, x) {
+  if (x.runic) return runicPoints(army, x);
   const it = extraItem(army, x);
   return it ? it.points : Number(x.points) || 0;
 }
 export function extraName(army, x) {
+  if (x.runic) return runicName(army, x);
   const it = extraItem(army, x);
   return it ? it.name : x.name || "";
 }
 export function extraType(army, x) {
+  if (x.runic) return army.runes?.forms?.[x.runic]?.itemType || x.runic;
   const it = extraItem(army, x);
   return it ? it.type : x.type || (x.kind === "standard" ? "standard" : null);
+}
+
+// ---------- Dwarf runic items ----------
+// A runic item is an extra { runic: form, runes: [runeId, ...], label? } where form is weapon, armour,
+// talisman, standard or engineering. Its points are the sum of its runes; runes may repeat.
+export function runeOf(army, id) {
+  return army.runes?.byId.get(id) || null;
+}
+export function runicPoints(army, x) {
+  return (x.runes || []).reduce((n, id) => n + (runeOf(army, id)?.points || 0), 0);
+}
+// "Rune of Fury ×2, Rune of Cleaving" in the order first chosen
+export function runeList(army, ids) {
+  const counts = new Map();
+  for (const id of ids || []) counts.set(id, (counts.get(id) || 0) + 1);
+  return [...counts].map(([id, n]) => `${runeOf(army, id)?.name || id}${n > 1 ? ` ×${n}` : ""}`).join(", ");
+}
+export function runicName(army, x) {
+  const form = army.runes?.forms?.[x.runic]?.name || "Runic item";
+  const runes = runeList(army, x.runes);
+  return `${x.label || form}${runes ? ` (${runes})` : ""}`;
+}
+// Runes that may go on an item of this form, grouped for a picker
+export function runeGroups(army, form, ctx = {}) {
+  const f = army.runes?.forms?.[form];
+  if (!f) return [];
+  const all = army.runes.runes.filter((r) => r.type === f.runes
+    && (!r.machines || !ctx.entryId || r.machines.includes(ctx.entryId))
+    && (!r.runesmithOnly || ctx.runesmith)
+    && (!r.battleStandardOnly || ctx.canStandard));
+  return [
+    { name: "Master runes (one per item, once per army)", runes: all.filter((r) => r.master) },
+    { name: army.runes.types[f.runes]?.name || "Runes", runes: all.filter((r) => !r.master) },
+  ].filter((g) => g.runes.length);
 }
 
 // Items for a picker, grouped by type, in the order the catalogue lists the types.
@@ -108,6 +150,24 @@ export function checkItems(army, list, ctxFor) {
       if (extras.some((x) => !x.onBoss && x.itemId === need.item) && !extras.some((x) => need.needs.includes(x.itemId)))
         warn(`${ctx.label}: ${need.message}.`, s.uid);
     }
+    // Dwarfs: one magic item of each kind per model, magic item cards and runic items together (Dwarfs p.24)
+    if (army.magic?.onePerKind) {
+      for (const onBoss of [false, true]) {
+        const kinds = new Map();
+        for (const x of extras.filter((e) => !!e.onBoss === onBoss)) {
+          const k = army.magic.onePerKind[extraType(army, x)];
+          if (k) kinds.set(k, (kinds.get(k) || 0) + 1);
+        }
+        const who = onBoss ? `${ctx.label} ${army.championName || "Boss"}` : ctx.label;
+        for (const [k, n] of kinds) if (n > 1) warn(`${who}: ${n} magic items of the same kind (${k}); a model may carry only one of each kind (Dwarfs p.24).`, s.uid);
+      }
+    }
+    // characters limited to some kinds of item (a Slayer Champion may only have a magic weapon)
+    if (ctx.itemTypes) for (const x of extras) {
+      const t = extraType(army, x);
+      if (t && !ctx.itemTypes.includes(t)) warn(`${ctx.label}: may only carry a magic ${ctx.itemTypes.join(" or ")}, not ${extraName(army, x) || "this item"}.`, s.uid);
+    }
+    for (const x of extras.filter((e) => e.runic)) issues.push(...checkRunicItem(army, x, ctx, s, x.onBoss));
     const groups = [
       { who: ctx.label, items: extras.filter((x) => !x.onBoss), races: ctx.races || [ctx.race], wizard: ctx.wizard, canStandard: ctx.canStandard, kind: ctx.kind },
       { who: `${ctx.label} ${army.championName || "Boss"}`, items: extras.filter((x) => x.onBoss), races: ctx.races || [ctx.race], wizard: false, canStandard: false, kind: "boss" },
@@ -121,7 +181,7 @@ export function checkItems(army, list, ctxFor) {
         const name = extraName(army, x) || "Unnamed item";
         if (type === "standard" && g.kind !== "unit" && !g.canStandard)
           warn(`${g.who}: ${name} is a Magic Standard; only standard bearers and the Battle Standard Bearer may carry one.`, s.uid);
-        if (g.kind === "unit" && !x.onBoss && type && type !== "standard")
+        if (g.kind === "unit" && !x.onBoss && type && type !== "standard" && type !== "engineering")
           warn(`${g.who}: ${name} is not a Magic Standard.`, s.uid);
         if (!it) continue;
         if (g.kind !== "boss" && (ctx.allowedItems || []).includes(it.id)) { taken.set(it.id, (taken.get(it.id) || 0) + 1); continue; }
@@ -159,9 +219,70 @@ export function checkItems(army, list, ctxFor) {
       warn(`${pool.oneTypeMessage || `${pool.name}: all must be of one type.`} Found ${[...types].map(([t, who]) => `${name(t)} (${who})`).join(", ")}.`);
     }
   }
+  if (army.runes) issues.push(...checkRunesArmyWide(army, list, ctxFor));
   for (const [id, n] of taken) {
     const it = army.itemById.get(id);
     if (n > 1 && !it.multiple) warn(`${it.name} is taken ${n} times; each magic item may normally be taken only once per army.`);
   }
+  return issues;
+}
+
+// Rules for one runic item (Dwarfs pp.24-30)
+function checkRunicItem(army, x, ctx, s, onBoss) {
+  const issues = [];
+  const who = onBoss ? `${ctx.label} ${army.championName || "Boss"}` : ctx.label;
+  const name = army.runes.forms[x.runic]?.name || "Runic item";
+  const warn = (msg) => issues.push({ msg: `${who}: ${name}: ${msg}`, uid: s.uid });
+  const form = army.runes.forms[x.runic];
+  const runes = (x.runes || []).map((id) => runeOf(army, id)).filter(Boolean);
+  if (!runes.length) warn("no runes chosen yet.");
+  if (runes.length > 3) warn(`${runes.length} runes; no item may carry more than three (Rule of Three, p.24).`);
+  for (const r of runes) if (form && r.type !== form.runes) warn(`${r.name} is not one of the ${army.runes.types[form.runes]?.name.toLowerCase()} (Rule of Form, p.24).`);
+  const masters = runes.filter((r) => r.master);
+  if (masters.length > 1) warn("more than one master rune on one item (p.24).");
+  const count = (id) => runes.filter((r) => r.id === id).length;
+  for (const r of new Set(runes)) {
+    if (r.maxPerItem && count(r.id) > r.maxPerItem) warn(`${r.name} may be used only once on an item (p.${r.page}).`);
+    if (r.master && count(r.id) > 1) warn(`${r.name} may be used only once (p.24).`);
+    if (r.alone && runes.length > 1) warn(`${r.name} cannot be combined with any other armour rune (p.${r.page}).`);
+    if (r.battleStandardOnly && (onBoss || !ctx.canStandard)) warn(`${r.name} may only be placed on the battle standard (p.${r.page}).`);
+    if (r.runesmithOnly && (onBoss || !ctx.runesmith)) warn(`${r.name} may only be used by a Runesmith (p.${r.page}).`);
+    if (r.machines && !r.machines.includes(ctx.entryId)) warn(`${r.name} is ${r.only} (p.${r.page}).`);
+  }
+  if (x.runic === "armour" && !onBoss && ctx.kind === "character" && !ctx.hasArmour)
+    warn("armour runes need armour or a shield to be inscribed on (p.27).");
+  if (x.runic === "standard" && ctx.kind === "character" && !ctx.canStandard)
+    warn("only the Battle Standard Bearer or a unit's standard bearer may carry a runic standard (p.28).");
+  if (x.runic === "engineering" && !ctx.engineering) warn("engineering runes can only be inscribed on Dwarf war machines (p.29).");
+  return issues;
+}
+
+// Master runes once per army (Jealous Runes) and no two items with the same runes (Rule of Pride), p.24.
+// Special characters' own runic items count too.
+function checkRunesArmyWide(army, list, ctxFor) {
+  const issues = [];
+  const items = []; // { who, uid, runes: [ids] }
+  for (const s of list.selections) {
+    const ctx = ctxFor(s);
+    if (!ctx) continue;
+    for (const x of (s.extras || []).filter((e) => e.runic)) items.push({ who: ctx.label, uid: s.uid, runes: x.runes || [] });
+    for (const it of ctx.fixedRunic || []) items.push({ who: ctx.label, uid: s.uid, runes: it.runes, fixed: true });
+  }
+  const masters = new Map();
+  for (const it of items) for (const id of new Set(it.runes)) {
+    const r = runeOf(army, id);
+    if (r?.master) masters.set(id, [...(masters.get(id) || []), it.who]);
+  }
+  for (const [id, whos] of masters) if (whos.length > 1)
+    issues.push({ msg: `${runeOf(army, id).name} is used ${whos.length} times (${whos.join(", ")}); each master rune may be used only once on the battlefield (p.24).` });
+  const combos = new Map();
+  for (const it of items) {
+    if (!it.runes.length) continue;
+    const key = [...it.runes].sort().join("+");
+    if (it.runes.every((id) => runeOf(army, id)?.prideExempt)) continue; // a lone Rune of Stone
+    combos.set(key, [...(combos.get(key) || []), it]);
+  }
+  for (const [, its] of combos) if (its.length > 1)
+    issues.push({ msg: `${runeList(army, its[0].runes)}: the same combination of runes is on ${its.length} items (${its.map((i) => i.who).join(", ")}); no two items may carry the same runes (Rule of Pride, p.24).` });
   return issues;
 }
