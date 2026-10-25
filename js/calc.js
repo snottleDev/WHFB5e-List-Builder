@@ -233,6 +233,11 @@ export function computeSave(army, sel) {
       const g = gearItem(army, gid);
       if (g?.armour) armour.add(g.armour);
     }
+    // magic items that count as armour for the save (4th edition Chaos: the Chaos Armour card)
+    for (const x of sel.extras || []) {
+      const a = army.magic?.itemArmour?.[x.itemId];
+      if (a) armour.add(a);
+    }
     const m = describeMount(army, sel.mount);
     if (m && m.kind === "mount" && !m.noCavalry) {
       cavalry = true;
@@ -458,6 +463,17 @@ export function validate(army, list) {
       // Chaos: the General must be one of the main warband's Warlords, not an ally
       for (const s of list.selections.filter((x) => selectionTags(army, x).includes("general")))
         if (!r.categories.includes(findEntry(army, s.entryId)?.category)) warn(`${selLabel(army, s)}: ${r.message}`, s.uid);
+    }
+    if (r.type === "godRequires") {
+      // 4th edition Chaos: daemons of a god need a Chaos Champion, Hero, Lord or Sorcerer of that god
+      for (const s of list.selections) {
+        const e = findEntry(army, s.entryId);
+        if (!e || !r.categories.includes(e.category)) continue;
+        const god = selectionGod(army, s);
+        if (!god) continue;
+        const ok = list.selections.some((x) => x !== s && selectionTags(army, x).includes(r.tag) && selectionGod(army, x) === god);
+        if (!ok) warn(`${selLabel(army, s)}: ${r.message.replace("{god}", cap(god))}`, s.uid);
+      }
     }
     if (r.type === "maxUnits") {
       // e.g. one unit of Harpies, any number if the General is a Beastman Warlord
