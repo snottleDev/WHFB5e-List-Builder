@@ -12,5 +12,6 @@
   {"id": "chaos-dwarfs", "name": "Chaos Dwarfs", "file": "chaos-dwarfs.json"},
   {"id": "chaos-warriors", "name": "Chaos: Chaos Warrior warband", "file": "chaos-warriors.json"},
   {"id": "chaos-beastmen", "name": "Chaos: Beastman warband", "file": "chaos-beastmen.json"},
-  {"id": "chaos-daemons", "name": "Chaos: Daemon warband", "file": "chaos-daemons.json"}
+  {"id": "chaos-daemons", "name": "Chaos: Daemon warband", "file": "chaos-daemons.json"},
+  {"id": "chaos-4e", "name": "Chaos (4e)", "file": "chaos-4e.json"}
 ]
