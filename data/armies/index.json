@@ -7,6 +7,7 @@
   {"id": "dwarfs", "name": "Dwarfs", "file": "dwarfs.json"},
   {"id": "high-elves", "name": "High Elves", "file": "high-elves.json"},
   {"id": "dark-elves", "name": "Dark Elves", "file": "dark-elves.json"},
+  {"id": "wood-elves", "name": "Wood Elves", "file": "wood-elves.json"},
   {"id": "lizardmen", "name": "Lizardmen", "file": "lizardmen.json"},
   {"id": "bretonnia", "name": "Bretonnia", "file": "bretonnia.json"},
   {"id": "chaos-dwarfs", "name": "Chaos Dwarfs", "file": "chaos-dwarfs.json"},
