@@ -752,4 +752,42 @@ t("Chaos 4e: a Mark is required, daemon mounts need their god, daemons need a Ch
   assert.match(m, /Chaos Warriors: 2 units of Chaos Champion with it, the maximum is 1/);
   assert.match(m, /Dragon Ogres: 4 in 2 units, at most 1 unit/);
 });
+// ---------- Wood Elves ----------
+const wo = attachMagic(load("../data/armies/wood-elves.json"), [load("../data/magic/warhammer-magic.json")]);
+const womsg = (list) => validate(wo, list).map((i) => i.msg).join("\n");
+t("Wood Elves: saves (Glade Riders 5+/3+ with all armour, Warhawk Riders 6+, Glade Guard 6+/5+, Wardancers 6+, Treemen 5+)", () => {
+  assert.equal(computeSave(wo, { entryId: "glade-riders", size: 5 }), "5+");
+  assert.equal(computeSave(wo, { entryId: "glade-riders", size: 5, options: { "light-armour": true, barding: true } }), "3+");
+  assert.equal(computeSave(wo, { entryId: "warhawk-riders", size: 5 }), "6+");
+  assert.equal(computeSave(wo, { entryId: "glade-guard", size: 10, options: { "light-armour": true } }), "6+");
+  assert.equal(computeSave(wo, { entryId: "glade-guard", size: 10, options: { "light-armour": true, shields: true } }), "5+");
+  assert.equal(computeSave(wo, { entryId: "wardancers", size: 10 }), "6+");
+  assert.equal(computeSave(wo, { entryId: "treemen", size: 1 }), "5+");
+  assert.equal(computeSave(wo, { entryId: "hero", gear: ["light-armour", "shield", "barding"], mount: "mount:elven-steed" }), "3+");
+});
+t("Wood Elves: costs (cavalry options, champions by race, chariots, mounts, special characters)", () => {
+  const g = selectionCost(wo, { entryId: "glade-riders", size: 6, options: { spears: true, longbows: true }, boss: { enabled: true } });
+  assert.equal(g.byCategory.regiments, 5 * (27 + 2 + 6));
+  assert.equal(g.byCategory.characters, 48 + 1 + 3 + 1 + 3);
+  assert.equal(selectionCost(wo, { entryId: "wardancers", size: 10, boss: { enabled: true } }).byCategory.characters, 60);
+  assert.equal(selectionCost(wo, { entryId: "archers", size: 10, boss: { enabled: true } }).byCategory.characters, 51);
+  assert.equal(selectionCost(wo, { entryId: "chariots", size: 2, options: { scythes: true, "extra-crew": true, longbows: true } }).total, 2 * 76 + 2 * 20 + 2 * 13 + 3 * 3 * 2);
+  assert.equal(selectionCost(wo, { entryId: "general", mount: "mount:warhawk" }).total, 180);
+  assert.equal(selectionCost(wo, { entryId: "hero", mount: "chariot:chariots" }).total, 180);
+  assert.equal(selectionCost(wo, { entryId: "ariel" }).total, 491);
+  assert.equal(selectionCost(wo, { entryId: "baying-hounds", size: 6 }).total, 30);
+});
+t("Wood Elves: Treemen per 1,000 points, 0-1 Waywatchers, named champions lead their units, Orion is the General", () => {
+  const m = womsg({ points: 2000, selections: [
+    { uid: "o", entryId: "orion" }, { uid: "h", entryId: "baying-hounds", size: 4, attachedTo: "o" },
+    { uid: "t1", entryId: "treemen", size: 2 }, { uid: "t2", entryId: "treemen", size: 1 },
+    { uid: "w1", entryId: "waywatchers", size: 5 }, { uid: "w2", entryId: "waywatchers", size: 5 },
+    { uid: "s", entryId: "scarloc", attachedTo: "w1" }, { uid: "y", entryId: "wychwethyl" },
+    { uid: "d", entryId: "durthu" } ] });
+  assert.match(m, /One Treeman for every full 1,000 points.*You have 3, the maximum is 2/);
+  assert.match(m, /Waywatchers: 2 taken, the maximum is 1/);
+  assert.match(m, /Scarloc: cannot go with Waywatchers/);
+  assert.match(m, /Wychwethyl is the Champion of a unit of Wardancers/);
+  assert.doesNotMatch(m, /led by one General|Baying Hounds/);
+});
 console.log(`${n} tests passed`);
