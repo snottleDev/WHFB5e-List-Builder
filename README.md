@@ -23,7 +23,8 @@ Three, Rule of Form, Rule of Pride and master runes once per army; Slayer Champi
 Throwers per regiment of ten or more, City Guard with mixed weapons), **Lizardmen** (scaly-skin saves, Slann palanquins, Kroxigor with Skinks), **Bretonnia** (knightly
 virtues, free Knight command models, Commoners allowance), **Chaos Dwarfs** and **Chaos** from *Realm of Chaos*
 (Chaos Warrior, Beastman or Daemon warband, with the other warbands and the Monstrous Host as allies; each Warlord's
-retinue must be worth his points; Marks of Chaos, daemonic steeds and Daemonic Rewards). Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
+retinue must be worth his points; Marks of Chaos, daemonic steeds and Daemonic Rewards), and **Chaos (4e)** from the 4th edition *Warhammer Armies: Chaos* (Chaos Champions leading regiments,
+daemons only alongside a Champion or Sorcerer of their god, daemon steeds by Mark, Dragon Ogre, Minotaur, Centaur and Beastman characters). Special rule keywords (Animosity, Fear, Frenzy…) pre-fill the roster's Notes column. Magic items come from the *Warhammer Magic* (5th edition) item summary,
 filtered to what the army may use, with checks for item allowances, one Ward per model, Wizard Arcana,
 race-restricted items and duplicates. Anything missing can still be added as a custom item.
 

@@ -115,6 +115,7 @@ e.g. Lords-only powers), `onFoot` (warned about if the model is mounted) and `wa
 `itemNeeds: [{item, needs: [ids], message}]` under `magic` warns when a model carries `item` without one of `needs`
 (the Carstein Ring needs the Pure Blood power). The same item twice on one model is always warned about.
 
+`itemArmour: {itemId: armour}` under `magic` lets a magic item count as armour for the save (the 4th edition Chaos Armour card).
 `excludeItems: [ids]` blocks catalogue items the army may not use (Chaos Dwarfs and god-specific Chaos items).
 `items` holds army-book items missing from the shared catalogue; `entries: [...]` restricts an item to particular
 special characters (e.g. Fearfrost). Characters get their allowance from
@@ -151,8 +152,11 @@ for the master rune and Rule of Pride checks.
 { "type": "maxUnits", "entry": "harpies", "max": 1, "unlessGeneral": ["chieftain", "shaman"], "message": "…" }
 { "type": "generalFrom", "categories": ["w-warlords"], "message": "…" }
 { "type": "perPoints", "entry": "banshees", "per": 1000, "max"?: 1, "message": "…" }
+{ "type": "godRequires", "categories": ["daemons"], "tag": "chaos-champion", "message": "… {god} …" }
 ```
 
+`godRequires` (4th edition Chaos): every selection in these categories that serves a god (`god` on the entry) needs another
+selection with `tag` serving the same god; `{god}` in the message is replaced by the god's name.
 `perPoints`: at most `max` (default 1) models of the entry for every full `per` points of the army's points limit.
 In `perUnits`, a `per` id may name one variant as `"entry:variant"` (e.g. `"battle-standard:thrall"` counts only a
 Vampire Thrall standard bearer when allowing half-cost Bat Swarms per Vampire).
