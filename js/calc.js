@@ -472,7 +472,7 @@ export function validate(army, list) {
         const god = selectionGod(army, s);
         if (!god) continue;
         const ok = list.selections.some((x) => x !== s && selectionTags(army, x).includes(r.tag) && selectionGod(army, x) === god);
-        if (!ok) warn(`${selLabel(army, s)}: ${r.message.replace("{god}", cap(god))}`, s.uid);
+        if (!ok) warn(`${selLabel(army, s)}: ${r.message.replace(/\{god\}/g, cap(god))}`, s.uid);
       }
     }
     if (r.type === "maxUnits") {
