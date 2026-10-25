@@ -274,6 +274,15 @@ export function fmt(n) {
   return n.toFixed(2);
 }
 
+// A category percentage for display. When rounding would hide a broken limit
+// (501 of 2000 = 25.05% shows as "25%" against a 25% maximum), show ">25%" / "<25%" instead.
+export function pctLabel(pct, min, max, digits = 0) {
+  const s = pct.toFixed(digits);
+  if (max != null && pct > max && Number(s) <= max) return `>${max}%`;
+  if (min != null && pct < min && Number(s) >= min) return `<${min}%`;
+  return `${s}%`;
+}
+
 // ---------- whole list ----------
 
 export function listTotals(army, list) {
@@ -381,18 +390,18 @@ export function validate(army, list) {
     const pts = byCategory[c.id] || 0;
     const pct = limit ? (pts / limit) * 100 : 0;
     if (c.max != null && pts > (limit * c.max) / 100)
-      warn(`${c.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) exceeds the ${c.max}% maximum of ${fmt((limit * c.max) / 100)} pts.`);
+      warn(`${c.name}: ${fmt(pts)} pts (${pctLabel(pct, null, c.max, 1)}) exceeds the ${c.max}% maximum of ${fmt((limit * c.max) / 100)} pts.`);
     if (c.min != null && pts < (limit * c.min) / 100)
-      warn(`${c.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) is below the ${c.min}% minimum of ${fmt((limit * c.min) / 100)} pts.`);
+      warn(`${c.name}: ${fmt(pts)} pts (${pctLabel(pct, c.min, null, 1)}) is below the ${c.min}% minimum of ${fmt((limit * c.min) / 100)} pts.`);
   }
   // limits over several categories together (Chaos: the main warband 75%+, allies up to 25%)
   for (const g of army.limits || []) {
     const pts = g.categories.reduce((n, id) => n + (byCategory[id] || 0), 0);
     const pct = limit ? (pts / limit) * 100 : 0;
     if (g.max != null && pts > (limit * g.max) / 100)
-      warn(`${g.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) exceeds the ${g.max}% maximum of ${fmt((limit * g.max) / 100)} pts.`);
+      warn(`${g.name}: ${fmt(pts)} pts (${pctLabel(pct, null, g.max, 1)}) exceeds the ${g.max}% maximum of ${fmt((limit * g.max) / 100)} pts.`);
     if (g.min != null && pts < (limit * g.min) / 100)
-      warn(`${g.name}: ${fmt(pts)} pts (${pct.toFixed(1)}%) is below the ${g.min}% minimum of ${fmt((limit * g.min) / 100)} pts.`);
+      warn(`${g.name}: ${fmt(pts)} pts (${pctLabel(pct, g.min, null, 1)}) is below the ${g.min}% minimum of ${fmt((limit * g.min) / 100)} pts.`);
   }
 
   // per-entry maximums (0-1 choices, special characters)

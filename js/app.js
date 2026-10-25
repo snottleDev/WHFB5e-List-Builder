@@ -1,7 +1,7 @@
 import { findEntry, variantOf, selectionCost, computeSave, listTotals, validate, fmt, canHaveBoss, bossCost, unitSize } from "./calc.js";
 import { exportPdf, rosterRows } from "./pdf.js";
 import { attachMagic, extraItem, pickerGroups, usedType, runeOf, runicPoints, runeGroups } from "./magic.js";
-import { itemContext, defaultNotes, parentOf, attachedParent, bossName, retinueValue, isWarlord, selLabel } from "./calc.js";
+import { itemContext, defaultNotes, parentOf, attachedParent, bossName, retinueValue, isWarlord, selLabel, pctLabel } from "./calc.js";
 
 const STORE_KEY = "whfb5e.lists.v1";
 const app = document.getElementById("app");
@@ -558,7 +558,7 @@ function refreshSummary() {
     const bad = (c.max != null && pct > c.max) || (c.min != null && pct < c.min);
     const ref = c.max ?? 100;
     return h("div", { class: `cat-chip${bad ? " bad" : ""}` },
-      h("b", {}, c.name), ` ${fmt(pts)} · ${pct.toFixed(0)}% `, h("small", {}, c.max != null ? `(max ${c.max}%)` : c.min != null ? `(min ${c.min}%)` : ""),
+      h("b", {}, c.name), ` ${fmt(pts)} · ${pctLabel(pct, c.min, c.max)} `, h("small", {}, c.max != null ? `(max ${c.max}%)` : c.min != null ? `(min ${c.min}%)` : ""),
       h("div", { class: "bar" }, h("i", { style: `width:${Math.min(100, (pct / ref) * 100)}%` })));
   });
   summary.replaceChildren(h("div", { class: "totals" },
