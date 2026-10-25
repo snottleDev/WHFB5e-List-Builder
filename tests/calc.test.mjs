@@ -708,4 +708,48 @@ t("Dark Elves: one Reaper per regiment of ten or more, Assassins hidden one per 
   const wk = demsg({ points: 3000, selections: [{ uid: "w", entryId: "witch-king" }, { uid: "s", entryId: "spearmen", size: 20 }, { uid: "b", entryId: "bolt-throwers", size: 1 }] });
   assert.doesNotMatch(wk, /led by one General|Reaper/);
 });
+// ---------- Chaos (4th edition) ----------
+const c4 = attachMagic(load("../data/armies/chaos-4e.json"), [load("../data/magic/warhammer-magic.json")]);
+const c4msg = (list) => validate(c4, list).map((i) => i.msg).join("\n");
+t("Chaos 4e: saves (Knights 2+/1+, Warriors 5+/4+/3+, Khorne Lord in Chaos armour 4+, Chaos Armour card counts), Dragon Ogres 5+/4+", () => {
+  assert.equal(computeSave(c4, { entryId: "chaos-knights", size: 5 }), "2+");
+  assert.equal(computeSave(c4, { entryId: "chaos-knights", size: 5, options: { "chaos-armour": true } }), "1+");
+  assert.equal(computeSave(c4, { entryId: "chaos-warriors", size: 10 }), "5+");
+  assert.equal(computeSave(c4, { entryId: "chaos-warriors", size: 10, options: { "chaos-armour": true, shields: true } }), "3+");
+  assert.equal(computeSave(c4, { entryId: "general", options: { "mark-khorne": true } }), "4+");
+  assert.equal(computeSave(c4, { entryId: "hero", gear: ["shield"], options: { "mark-nurgle": true, "chaos-steed": true }, extras: [{ itemId: "chaos-armour" }] }), "2+");
+  assert.equal(computeSave(c4, { entryId: "dragon-ogres", size: 3 }), "5+");
+  assert.equal(computeSave(c4, { entryId: "dragon-ogres", size: 3, options: { "light-armour": true } }), "4+");
+});
+t("Chaos 4e: costs (Lord on Juggernaut, champions by race, Dragon Ogre champion, chariots, special characters)", () => {
+  assert.equal(selectionCost(c4, { entryId: "general", options: { "mark-khorne": true, juggernaut: true }, gear: ["shield"] }).total, 305 + 70 + 1);
+  const b = selectionCost(c4, { entryId: "beastmen", size: 20, options: { shields: true, "light-armour": true }, standard: true, boss: { enabled: true } });
+  assert.equal(b.byCategory.regiments, 19 * 13 + 13);
+  assert.equal(b.byCategory.characters, 60 + 1 + 2);
+  assert.equal(selectionCost(c4, { entryId: "dragon-ogres", size: 4, boss: { enabled: true } }).total, 3 * 87 + 155);
+  assert.equal(selectionCost(c4, { entryId: "chaos-chariots", variant: "beastmen", size: 2, options: { scythes: true, shields: true } }).total, 2 * 86 + 2 * 20 + 2 * 2);
+  assert.equal(selectionCost(c4, { entryId: "egrimm" }).total, 1121);
+  assert.equal(selectionCost(c4, { entryId: "bloodletters", size: 5, options: { juggernauts: true } }).total, 5 * 90);
+});
+t("Chaos 4e: a Mark is required, daemon mounts need their god, daemons need a Champion of their god, race characters need their regiment", () => {
+  const m = c4msg({ points: 3000, selections: [
+    { uid: "g", entryId: "general", options: { "mark-tzeentch": true, juggernaut: true } },
+    { uid: "h", entryId: "hero", options: {} },
+    { uid: "w", entryId: "chaos-warriors", size: 10 },
+    { uid: "c", entryId: "champion", options: { "mark-khorne": true }, attachedTo: "w" },
+    { uid: "c2", entryId: "champion", options: { "mark-slaanesh": true }, attachedTo: "w" },
+    { uid: "b", entryId: "bloodletters", size: 10 },
+    { uid: "p", entryId: "plaguebearers", size: 10 },
+    { uid: "l", entryId: "lord-of-change" },
+    { uid: "m", entryId: "minotaur-hero" },
+    { uid: "d1", entryId: "dragon-ogres", size: 2 }, { uid: "d2", entryId: "dragon-ogres", size: 2 } ] });
+  assert.match(m, /Chaos Hero: must owe allegiance to one of the Chaos Gods/);
+  assert.match(m, /Juggernaut of Khorne needs Khorne/);
+  assert.doesNotMatch(m, /Bloodletters of Khorne: Daemons/);
+  assert.match(m, /Plaguebearers of Nurgle: Daemons of Nurgle need a Chaos Champion/);
+  assert.doesNotMatch(m, /Lord of Change \(Tzeentch\): Daemons/);
+  assert.match(m, /Minotaur Hero: requires at least one regiment of Minotaurs/);
+  assert.match(m, /Chaos Warriors: 2 units of Chaos Champion with it, the maximum is 1/);
+  assert.match(m, /Dragon Ogres: 4 in 2 units, at most 1 unit/);
+});
 console.log(`${n} tests passed`);
