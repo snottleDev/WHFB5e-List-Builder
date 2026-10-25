@@ -790,4 +790,17 @@ t("Wood Elves: Treemen per 1,000 points, 0-1 Waywatchers, named champions lead t
   assert.match(m, /Wychwethyl is the Champion of a unit of Wardancers/);
   assert.doesNotMatch(m, /led by one General|Baying Hounds/);
 });
+// ---------- percentage labels ----------
+import { pctLabel } from "../js/calc.js";
+t("percentages: rounding never hides a broken limit", () => {
+  assert.equal(pctLabel(501 / 2000 * 100, null, 25), ">25%");
+  assert.equal(pctLabel(500 / 2000 * 100, null, 25), "25%");
+  assert.equal(pctLabel(30, null, 25), "30%");
+  assert.equal(pctLabel(499 / 2000 * 100, 25, null), "<25%");
+  assert.equal(pctLabel(750.5 / 3000 * 100, null, 25, 1), ">25%");
+  assert.equal(pctLabel(12.34, null, 50, 1), "12.3%");
+  // 1000 of 3999 = 25.006%: the warning must not say "25.0% exceeds the 25% maximum"
+  const m = msgs({ points: 3999, selections: [{ uid: "c", entryId: "doom-diver", size: 10 }] });
+  assert.match(m, /War Machines: 1000 pts \(>25%\) exceeds the 25% maximum/);
+});
 console.log(`${n} tests passed`);
